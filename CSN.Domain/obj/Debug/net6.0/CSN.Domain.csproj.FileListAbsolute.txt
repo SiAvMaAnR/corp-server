@@ -1,0 +1,12 @@
+C:\Users\samar\source\repos\CSN.WebApi\CSN.Domain\bin\Debug\net6.0\CSN.Domain.deps.json
+C:\Users\samar\source\repos\CSN.WebApi\CSN.Domain\bin\Debug\net6.0\CSN.Domain.dll
+C:\Users\samar\source\repos\CSN.WebApi\CSN.Domain\bin\Debug\net6.0\CSN.Domain.pdb
+C:\Users\samar\source\repos\CSN.WebApi\CSN.Domain\obj\Debug\net6.0\CSN.Domain.csproj.AssemblyReference.cache
+C:\Users\samar\source\repos\CSN.WebApi\CSN.Domain\obj\Debug\net6.0\CSN.Domain.GeneratedMSBuildEditorConfig.editorconfig
+C:\Users\samar\source\repos\CSN.WebApi\CSN.Domain\obj\Debug\net6.0\CSN.Domain.AssemblyInfoInputs.cache
+C:\Users\samar\source\repos\CSN.WebApi\CSN.Domain\obj\Debug\net6.0\CSN.Domain.AssemblyInfo.cs
+C:\Users\samar\source\repos\CSN.WebApi\CSN.Domain\obj\Debug\net6.0\CSN.Domain.csproj.CoreCompileInputs.cache
+C:\Users\samar\source\repos\CSN.WebApi\CSN.Domain\obj\Debug\net6.0\CSN.Domain.dll
+C:\Users\samar\source\repos\CSN.WebApi\CSN.Domain\obj\Debug\net6.0\refint\CSN.Domain.dll
+C:\Users\samar\source\repos\CSN.WebApi\CSN.Domain\obj\Debug\net6.0\CSN.Domain.pdb
+C:\Users\samar\source\repos\CSN.WebApi\CSN.Domain\obj\Debug\net6.0\ref\CSN.Domain.dll
