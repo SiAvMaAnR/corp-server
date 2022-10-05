@@ -6,27 +6,23 @@ using System.Threading.Tasks;
 
 namespace CSN.Domain.Shared.Enums
 {
-    public static class Enum
+    public enum EmployeeState
     {
-        public enum Activity
-        {
-            /// <summary>
-            /// В сети
-            /// </summary>
-            Online,
-            /// <summary>
-            /// Не в сети
-            /// </summary>
-            Offline,
-            /// <summary>
-            /// Не беспокоить
-            /// </summary>
-            NotDisturb,
-            /// <summary>
-            /// Нет на месте
-            /// </summary>
-            Away
-        }
+        /// <summary>
+        /// В сети
+        /// </summary>
+        Online,
+        /// <summary>
+        /// Не в сети
+        /// </summary>
+        Offline,
+        /// <summary>
+        /// Не беспокоить
+        /// </summary>
+        NotDisturb,
+        /// <summary>
+        /// Нет на месте
+        /// </summary>
+        Away
     }
-    
 }
