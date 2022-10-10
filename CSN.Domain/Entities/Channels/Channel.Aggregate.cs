@@ -5,9 +5,9 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace CSN.Domain.Entities.Employee
+namespace CSN.Domain.Entities.Channels
 {
-    public partial class Employee: BaseEntity
+    public partial class Channel: IAggregateRoot
     {
     }
 }

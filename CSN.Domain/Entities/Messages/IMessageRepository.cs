@@ -5,7 +5,7 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace CSN.Domain.Entities.Message
+namespace CSN.Domain.Entities.Messages
 {
     public interface IMessageRepository : IAsyncRepository<Message>
     {

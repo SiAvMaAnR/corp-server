@@ -5,9 +5,9 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace CSN.Domain.Entities.Employee
+namespace CSN.Domain.Entities.Channels
 {
-    public interface IEmployeeRepository : IAsyncRepository<Employee>
+    public interface IChannelRepository: IAsyncRepository<Channel>
     {
     }
 }

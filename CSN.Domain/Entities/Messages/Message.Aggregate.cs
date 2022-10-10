@@ -5,9 +5,9 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace CSN.Domain.Entities.Employee
+namespace CSN.Domain.Entities.Messages
 {
-    public partial class Employee: IAggregateRoot
+    public partial class Message: IAggregateRoot
     {
     }
 }

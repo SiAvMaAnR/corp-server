@@ -7,5 +7,10 @@ namespace CSN.WebApi.Controllers
     [ApiController]
     public class AccEmployeeController : ControllerBase
     {
+        [HttpGet()]
+        public IActionResult Get()
+        {
+            return Ok("OK");
+        }
     }
 }
