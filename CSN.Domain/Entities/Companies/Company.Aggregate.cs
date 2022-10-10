@@ -5,9 +5,9 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace CSN.Domain.Entities.Company
+namespace CSN.Domain.Entities.Companies
 {
-    public partial class Company : BaseEntity
+    public partial class Company: IAggregateRoot
     {
     }
 }
