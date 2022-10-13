@@ -5,7 +5,7 @@ namespace CSN.WebApi.Controllers
 {
     [Route("api/[controller]")]
     [ApiController]
-    public class AccCompanyController : ControllerBase
+    public class AccountCompanyController : ControllerBase
     {
 
         [HttpGet("Info")]

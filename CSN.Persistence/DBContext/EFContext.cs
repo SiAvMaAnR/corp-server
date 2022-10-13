@@ -1,6 +1,7 @@
-﻿using CSN.Domain.Entities.Company;
-using CSN.Domain.Entities.Employee;
-using CSN.Domain.Entities.Message;
+﻿using CSN.Domain.Entities.Channels;
+using CSN.Domain.Entities.Companies;
+using CSN.Domain.Entities.Employees;
+using CSN.Domain.Entities.Messages;
 using CSN.Persistence.DBContext;
 using CSN.Persistence.EntityConfigurations;
 using Microsoft.EntityFrameworkCore;
@@ -18,10 +19,11 @@ namespace CSN.Persistence.DBContext
         public DbSet<Message> Messages { get; set; } = null!;
         public DbSet<Employee> Employees { get; set; } = null!;
         public DbSet<Company> Companies { get; set; } = null!;
+        public DbSet<Channel> Channels { get; set; } = null!;
 
         public EFContext(DbContextOptions<EFContext> options) : base(options)
         {
-            Database.EnsureDeleted();
+            //Database.EnsureDeleted();
             Database.EnsureCreated();
         }
 

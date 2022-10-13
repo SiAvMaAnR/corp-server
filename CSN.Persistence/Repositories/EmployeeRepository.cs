@@ -1,4 +1,4 @@
-﻿using CSN.Domain.Entities.Employee;
+﻿using CSN.Domain.Entities.Employees;
 using CSN.Persistence.DBContext;
 using CSN.Persistence.Repositories.Common;
 using System;

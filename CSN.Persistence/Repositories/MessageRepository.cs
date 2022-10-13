@@ -1,4 +1,4 @@
-﻿using CSN.Domain.Entities.Message;
+﻿using CSN.Domain.Entities.Messages;
 using CSN.Domain.Interfaces;
 using CSN.Persistence.DBContext;
 using CSN.Persistence.Repositories.Common;

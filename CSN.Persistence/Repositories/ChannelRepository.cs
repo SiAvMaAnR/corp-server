@@ -1,4 +1,4 @@
-﻿using CSN.Domain.Entities.Companies;
+﻿using CSN.Domain.Entities.Channels;
 using CSN.Persistence.DBContext;
 using CSN.Persistence.Repositories.Common;
 using System;
@@ -9,9 +9,9 @@ using System.Threading.Tasks;
 
 namespace CSN.Persistence.Repositories
 {
-    public class CompanyRepository : BaseRepository<Company>, ICompanyRepository
+    public class ChannelRepository : BaseRepository<Channel>, IChannelRepository
     {
-        public CompanyRepository(EFContext dbContext) : base(dbContext)
+        public ChannelRepository(EFContext dbContext) : base(dbContext)
         {
         }
     }
