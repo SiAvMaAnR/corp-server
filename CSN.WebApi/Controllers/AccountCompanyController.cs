@@ -7,16 +7,20 @@ namespace CSN.WebApi.Controllers
     [ApiController]
     public class AccountCompanyController : ControllerBase
     {
-
-        [HttpGet("Info")]
-        public IActionResult Info()
+        [HttpPost("Login")]
+        public IActionResult Login()
         {
             return Ok();
         }
 
-
-        [HttpGet("Register")]
+        [HttpPost("Register")]
         public IActionResult Register()
+        {
+            return Ok();
+        }
+
+        [HttpGet("Info")]
+        public IActionResult Info()
         {
             return Ok();
         }

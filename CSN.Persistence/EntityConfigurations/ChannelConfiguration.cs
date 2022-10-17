@@ -1,4 +1,5 @@
-﻿using CSN.Domain.Entities.Companies;
+﻿using CSN.Domain.Entities.Channels;
+using CSN.Domain.Entities.Companies;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Metadata.Builders;
 using System;
@@ -9,9 +10,9 @@ using System.Threading.Tasks;
 
 namespace CSN.Persistence.EntityConfigurations
 {
-    internal class CompanyConfiguraton : IEntityTypeConfiguration<Company>
+    internal class ChannelConfiguration : IEntityTypeConfiguration<Channel>
     {
-        public void Configure(EntityTypeBuilder<Company> builder)
+        public void Configure(EntityTypeBuilder<Channel> builder)
         {
             throw new NotImplementedException();
         }

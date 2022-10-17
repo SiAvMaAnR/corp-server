@@ -33,6 +33,7 @@ namespace CSN.Persistence.DBContext
             modelBuilder.ApplyConfiguration(new MessageConfiguration());
             modelBuilder.ApplyConfiguration(new EmployeeConfiguration());
             modelBuilder.ApplyConfiguration(new CompanyConfiguraton());
+            modelBuilder.ApplyConfiguration(new ChannelConfiguration());
 
             base.OnModelCreating(modelBuilder);
         }

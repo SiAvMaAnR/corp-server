@@ -7,7 +7,7 @@ using System.Threading.Tasks;
 
 namespace CSN.Domain.Entities.Messages
 {
-    public partial class Message: IAggregateRoot
+    public partial class Message : IAggregateRoot
     {
     }
 }

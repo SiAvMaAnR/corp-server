@@ -12,9 +12,9 @@ namespace CSN.Domain.Interfaces.UnitOfWork
 {
     public partial interface IUnitOfWork
     {
-        ICompanyRepository CompanyRepository { get; }
-        IEmployeeRepository EmployeeRepository { get; }
-        IMessageRepository MessageRepository { get; }
-        IChannelRepository ChannelRepository { get; }
+        ICompanyRepository Company { get; }
+        IEmployeeRepository Employee { get; }
+        IMessageRepository Message { get; }
+        IChannelRepository Channel { get; }
     }
 }

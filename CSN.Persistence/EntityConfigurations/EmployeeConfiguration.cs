@@ -1,4 +1,4 @@
-﻿using CSN.Domain.Entities.Employee;
+﻿using CSN.Domain.Entities.Employees;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Metadata.Builders;
 using System;
