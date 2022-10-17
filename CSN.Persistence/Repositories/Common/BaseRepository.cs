@@ -1,5 +1,5 @@
 ﻿using CSN.Domain.Entities.Common;
-using CSN.Domain.Interfaces;
+using CSN.Domain.Interfaces.Repository;
 using CSN.Infrastructure.Extensions;
 using CSN.Persistence.DBContext;
 using Microsoft.EntityFrameworkCore;

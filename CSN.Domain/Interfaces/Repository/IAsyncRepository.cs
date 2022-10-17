@@ -5,7 +5,7 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace CSN.Domain.Interfaces
+namespace CSN.Domain.Interfaces.Repository
 {
     public interface IAsyncRepository<TEntity> where TEntity : BaseEntity
     {

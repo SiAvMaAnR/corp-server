@@ -1,4 +1,4 @@
-﻿using CSN.Domain.Interfaces;
+﻿using CSN.Domain.Interfaces.Repository;
 using System;
 using System.Collections.Generic;
 using System.Linq;
