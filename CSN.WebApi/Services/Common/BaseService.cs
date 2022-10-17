@@ -1,4 +1,5 @@
 ﻿using CSN.Domain.Entities.Common;
+using CSN.Domain.Entities.Companies;
 using CSN.Domain.Interfaces.UnitOfWork;
 using CSN.Persistence.DBContext;
 using CSN.Persistence.Repositories;

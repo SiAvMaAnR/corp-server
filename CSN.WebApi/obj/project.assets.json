@@ -835,6 +835,19 @@
           "bin/placeholder/CSN.Domain.dll": {}
         }
       },
+      "CSN.Infrastructure/1.0.0": {
+        "type": "project",
+        "framework": ".NETCoreApp,Version=v6.0",
+        "dependencies": {
+          "CSN.Domain": "1.0.0"
+        },
+        "compile": {
+          "bin/placeholder/CSN.Infrastructure.dll": {}
+        },
+        "runtime": {
+          "bin/placeholder/CSN.Infrastructure.dll": {}
+        }
+      },
       "CSN.Persistence/1.0.0": {
         "type": "project",
         "framework": ".NETCoreApp,Version=v6.0",
@@ -2349,6 +2362,11 @@
       "path": "../CSN.Domain/CSN.Domain.csproj",
       "msbuildProject": "../CSN.Domain/CSN.Domain.csproj"
     },
+    "CSN.Infrastructure/1.0.0": {
+      "type": "project",
+      "path": "../CSN.Infrastructure/CSN.Infrastructure.csproj",
+      "msbuildProject": "../CSN.Infrastructure/CSN.Infrastructure.csproj"
+    },
     "CSN.Persistence/1.0.0": {
       "type": "project",
       "path": "../CSN.Persistence/CSN.Persistence.csproj",
@@ -2357,6 +2375,7 @@
   },
   "projectFileDependencyGroups": {
     "net6.0": [
+      "CSN.Infrastructure >= 1.0.0",
       "CSN.Persistence >= 1.0.0",
       "Swashbuckle.AspNetCore >= 6.4.0"
     ]
@@ -2394,6 +2413,9 @@
         "net6.0": {
           "targetAlias": "net6.0",
           "projectReferences": {
+            "C:\\Users\\samar\\source\\repos\\CSN\\CSN.Infrastructure\\CSN.Infrastructure.csproj": {
+              "projectPath": "C:\\Users\\samar\\source\\repos\\CSN\\CSN.Infrastructure\\CSN.Infrastructure.csproj"
+            },
             "C:\\Users\\samar\\source\\repos\\CSN\\CSN.Persistence\\CSN.Persistence.csproj": {
               "projectPath": "C:\\Users\\samar\\source\\repos\\CSN\\CSN.Persistence\\CSN.Persistence.csproj"
             }

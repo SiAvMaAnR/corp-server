@@ -124,3 +124,5 @@ C:\Users\samar\source\repos\CSN\CSN.WebApi\obj\Debug\net6.0\refint\CSN.WebApi.dl
 C:\Users\samar\source\repos\CSN\CSN.WebApi\obj\Debug\net6.0\CSN.WebApi.pdb
 C:\Users\samar\source\repos\CSN\CSN.WebApi\obj\Debug\net6.0\CSN.WebApi.genruntimeconfig.cache
 C:\Users\samar\source\repos\CSN\CSN.WebApi\obj\Debug\net6.0\ref\CSN.WebApi.dll
+C:\Users\samar\source\repos\CSN\CSN.WebApi\bin\Debug\net6.0\CSN.Infrastructure.dll
+C:\Users\samar\source\repos\CSN\CSN.WebApi\bin\Debug\net6.0\CSN.Infrastructure.pdb

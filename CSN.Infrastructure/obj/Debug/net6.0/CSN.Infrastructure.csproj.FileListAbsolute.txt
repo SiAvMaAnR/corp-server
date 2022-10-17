@@ -1,0 +1,15 @@
+C:\Users\samar\source\repos\CSN\CSN.Infrastructure\bin\Debug\net6.0\CSN.Infrastructure.deps.json
+C:\Users\samar\source\repos\CSN\CSN.Infrastructure\bin\Debug\net6.0\CSN.Infrastructure.dll
+C:\Users\samar\source\repos\CSN\CSN.Infrastructure\bin\Debug\net6.0\CSN.Infrastructure.pdb
+C:\Users\samar\source\repos\CSN\CSN.Infrastructure\bin\Debug\net6.0\CSN.Domain.dll
+C:\Users\samar\source\repos\CSN\CSN.Infrastructure\bin\Debug\net6.0\CSN.Domain.pdb
+C:\Users\samar\source\repos\CSN\CSN.Infrastructure\obj\Debug\net6.0\CSN.Infrastructure.csproj.AssemblyReference.cache
+C:\Users\samar\source\repos\CSN\CSN.Infrastructure\obj\Debug\net6.0\CSN.Infrastructure.GeneratedMSBuildEditorConfig.editorconfig
+C:\Users\samar\source\repos\CSN\CSN.Infrastructure\obj\Debug\net6.0\CSN.Infrastructure.AssemblyInfoInputs.cache
+C:\Users\samar\source\repos\CSN\CSN.Infrastructure\obj\Debug\net6.0\CSN.Infrastructure.AssemblyInfo.cs
+C:\Users\samar\source\repos\CSN\CSN.Infrastructure\obj\Debug\net6.0\CSN.Infrastructure.csproj.CoreCompileInputs.cache
+C:\Users\samar\source\repos\CSN\CSN.Infrastructure\obj\Debug\net6.0\CSN.Infrastructure.csproj.CopyComplete
+C:\Users\samar\source\repos\CSN\CSN.Infrastructure\obj\Debug\net6.0\CSN.Infrastructure.dll
+C:\Users\samar\source\repos\CSN\CSN.Infrastructure\obj\Debug\net6.0\refint\CSN.Infrastructure.dll
+C:\Users\samar\source\repos\CSN\CSN.Infrastructure\obj\Debug\net6.0\CSN.Infrastructure.pdb
+C:\Users\samar\source\repos\CSN\CSN.Infrastructure\obj\Debug\net6.0\ref\CSN.Infrastructure.dll

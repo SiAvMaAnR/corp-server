@@ -8,6 +8,7 @@
     ".NETCoreApp,Version=v6.0": {
       "CSN.WebApi/1.0.0": {
         "dependencies": {
+          "CSN.Infrastructure": "1.0.0",
           "CSN.Persistence": "1.0.0",
           "Swashbuckle.AspNetCore": "6.4.0"
         },
@@ -459,6 +460,14 @@
           "CSN.Domain.dll": {}
         }
       },
+      "CSN.Infrastructure/1.0.0": {
+        "dependencies": {
+          "CSN.Domain": "1.0.0"
+        },
+        "runtime": {
+          "CSN.Infrastructure.dll": {}
+        }
+      },
       "CSN.Persistence/1.0.0": {
         "dependencies": {
           "CSN.Domain": "1.0.0",
@@ -800,6 +809,11 @@
       "hashPath": "system.windows.extensions.4.7.0.nupkg.sha512"
     },
     "CSN.Domain/1.0.0": {
+      "type": "project",
+      "serviceable": false,
+      "sha512": ""
+    },
+    "CSN.Infrastructure/1.0.0": {
       "type": "project",
       "serviceable": false,
       "sha512": ""
