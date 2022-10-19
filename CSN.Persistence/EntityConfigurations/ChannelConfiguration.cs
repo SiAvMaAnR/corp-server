@@ -14,7 +14,6 @@ namespace CSN.Persistence.EntityConfigurations
     {
         public void Configure(EntityTypeBuilder<Channel> builder)
         {
-            throw new NotImplementedException();
         }
     }
 }

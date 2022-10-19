@@ -1,4 +1,5 @@
-﻿using CSN.Domain.Entities.Employees;
+﻿using CSN.Domain.Entities.Companies;
+using CSN.Domain.Entities.Employees;
 using CSN.Domain.Interfaces.UnitOfWork;
 using CSN.Infrastructure.Interfaces.Services;
 using CSN.Persistence.DBContext;
@@ -11,6 +12,24 @@ namespace CSN.WebApi.Services
         public EmployeeService(EFContext eFContext, IUnitOfWork unitOfWork)
             : base(eFContext, unitOfWork)
         {
+        }
+
+
+        public async Task AddAsync(Employee employee)
+        {
+            await unitOfWork.Employee.AddAsync(employee);
+            await unitOfWork.SaveChangesAsync();
+        }
+
+
+        public async Task<IEnumerable<Employee>?> GetAllAsync()
+        {
+            return await unitOfWork.Employee.GetAllAsync();
+        }
+
+        public async Task<Employee?> GetAsync(int id)
+        {
+            return await unitOfWork.Employee.GetAsync(employee => employee.Id == id);
         }
     }
 }

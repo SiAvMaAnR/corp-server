@@ -1,5 +1,7 @@
 ﻿using CSN.Domain.Entities.Companies;
+using CSN.Infrastructure.Interfaces.Services;
 using CSN.Persistence.DBContext;
+using CSN.WebApi.DTOs.Controller;
 using CSN.WebApi.Services;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
@@ -11,22 +13,30 @@ namespace CSN.WebApi.Controllers
     public class CompanyController : ControllerBase
     {
         private readonly EFContext eFContext;
-        private readonly CompanyService companyService;
+        private readonly ICompanyService companyService;
         private readonly ILogger<CompanyController> logger;
 
-        public CompanyController(EFContext eFContext, CompanyService companyService, ILogger<CompanyController> logger)
+        public CompanyController(EFContext eFContext, ICompanyService companyService, ILogger<CompanyController> logger)
         {
             this.eFContext = eFContext;
             this.companyService = companyService;
             this.logger = logger;
         }
 
-        [HttpPost("Create")]
-        public async Task<IActionResult> AddAsync([FromBody] Company company)
+        [HttpPost]
+        public async Task<IActionResult> AddAsync([FromBody] CompanyAddRequest request)
         {
             try
             {
-                await this.companyService.AddAsync(company);
+                await this.companyService.AddAsync(new Company()
+                {
+                    Name = request.Name,
+                    Email = request.Email,
+                    Image = new byte[10],
+                    Description = request.Description,
+                    PasswordHash = new byte[10],
+                    PasswordSalt = new byte[10]
+                });
                 return Ok();
             }
             catch (Exception)
@@ -35,13 +45,27 @@ namespace CSN.WebApi.Controllers
             }
         }
 
-        [HttpGet("All")]
+        [HttpGet]
         public async Task<IActionResult> GetAllAsync()
         {
             try
             {
                 IEnumerable<Company>? companies = await this.companyService.GetAllAsync();
                 return Ok(companies);
+            }
+            catch (Exception)
+            {
+                return BadRequest();
+            }
+        }
+
+        [HttpGet("{id:int}")]
+        public async Task<IActionResult> GetAllAsync(int id)
+        {
+            try
+            {
+                Company? company = await this.companyService.GetAsync(id);
+                return Ok(company);
             }
             catch (Exception)
             {

@@ -13,7 +13,6 @@ namespace CSN.Persistence.EntityConfigurations
     {
         public void Configure(EntityTypeBuilder<Employee> builder)
         {
-            throw new NotImplementedException();
         }
     }
 }

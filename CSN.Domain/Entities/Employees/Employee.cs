@@ -11,13 +11,12 @@ namespace CSN.Domain.Entities.Employees
 {
     public partial class Employee : BaseEntity
     {
-        public string Nickname { get; set; } = null!;
-        public string Fullname { get; set; } = null!;
+        public string Login { get; set; } = null!;
         public string Email { get; set; } = null!;
         public byte[] PasswordHash { get; set; } = null!;
         public byte[] PasswordSalt { get; set; } = null!;
         public string Role { get; set; } = null!;
-        public byte[] Image { get; set; } = null!;
+        public byte[]? Image { get; set; } = null!;
         public Company Company { get; set; } = null!;
         public int CompanyId { get; set; }
     }

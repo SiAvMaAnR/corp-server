@@ -126,3 +126,8 @@ C:\Users\samar\source\repos\CSN\CSN.WebApi\obj\Debug\net6.0\CSN.WebApi.genruntim
 C:\Users\samar\source\repos\CSN\CSN.WebApi\obj\Debug\net6.0\ref\CSN.WebApi.dll
 C:\Users\samar\source\repos\CSN\CSN.WebApi\bin\Debug\net6.0\CSN.Infrastructure.dll
 C:\Users\samar\source\repos\CSN\CSN.WebApi\bin\Debug\net6.0\CSN.Infrastructure.pdb
+C:\Users\samar\source\repos\CSN\CSN.WebApi\bin\Debug\net6.0\Microsoft.AspNetCore.Authentication.JwtBearer.dll
+C:\Users\samar\source\repos\CSN\CSN.WebApi\bin\Debug\net6.0\Microsoft.Extensions.DependencyModel.dll
+C:\Users\samar\source\repos\CSN\CSN.WebApi\bin\Debug\net6.0\Scrutor.dll
+C:\Users\samar\source\repos\CSN\CSN.WebApi\bin\Debug\net6.0\Swashbuckle.AspNetCore.Filters.dll
+C:\Users\samar\source\repos\CSN\CSN.WebApi\bin\Debug\net6.0\Swashbuckle.AspNetCore.Filters.Abstractions.dll
