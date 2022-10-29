@@ -1,6 +1,7 @@
 ﻿using CSN.Domain.Entities.Channels;
 using CSN.Domain.Entities.Companies;
 using CSN.Domain.Entities.Employees;
+using CSN.Domain.Entities.Messages;
 using CSN.Domain.Interfaces.UnitOfWork;
 using CSN.Infrastructure.Interfaces.Services;
 using CSN.Persistence.DBContext;
@@ -22,12 +23,17 @@ namespace CSN.WebApi.Extensions.ServiceConfigurations
         public static IServiceCollection AddScopedDependencies(this IServiceCollection serviceCollection)
         {
             serviceCollection.AddScoped<IUnitOfWork, UnitOfWork>();
+
             serviceCollection.AddScoped<ICompanyRepository, CompanyRepository>();
             serviceCollection.AddScoped<IEmployeeRepository, EmployeeRepository>();
             serviceCollection.AddScoped<IChannelRepository, ChannelRepository>();
+            serviceCollection.AddScoped<IMessageRepository, MessageRepository>();
+
             serviceCollection.AddScoped<ICompanyService, CompanyService>();
             serviceCollection.AddScoped<IEmployeeService, EmployeeService>();
             serviceCollection.AddScoped<IChannelService, ChannelService>();
+            serviceCollection.AddScoped<IAccCompanyService, AccCompanyService>();
+            serviceCollection.AddScoped<IAccEmployeeService, AccEmployeeService>();
             return serviceCollection;
         }
 

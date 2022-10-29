@@ -7,7 +7,16 @@
   </PropertyGroup>
 
   <ItemGroup>
+    <Compile Remove="Новая папка\**" />
+    <EmbeddedResource Remove="Новая папка\**" />
+    <None Remove="Новая папка\**" />
+  </ItemGroup>
+
+  <ItemGroup>
     <Folder Include="Extensions\" />
+    <Folder Include="Models\Company\" />
+    <Folder Include="Models\AccEmployee\" />
+    <Folder Include="Models\Employee\" />
   </ItemGroup>
 
   <ItemGroup>

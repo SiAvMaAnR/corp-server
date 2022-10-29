@@ -7,21 +7,14 @@
   </PropertyGroup>
 
   <ItemGroup>
-    <Compile Remove="DTOs\Employee\**" />
-    <Content Remove="DTOs\Employee\**" />
-    <EmbeddedResource Remove="DTOs\Employee\**" />
-    <None Remove="DTOs\Employee\**" />
-  </ItemGroup>
-
-  <ItemGroup>
     <PackageReference Include="Microsoft.AspNetCore.Authentication.JwtBearer" Version="6.0.10" />
     <PackageReference Include="Swashbuckle.AspNetCore" Version="6.4.0" />
     <PackageReference Include="Swashbuckle.AspNetCore.Filters" Version="7.0.5" />
   </ItemGroup>
 
   <ItemGroup>
-    <Folder Include="DTOs\Service\" />
     <Folder Include="Middlewares\" />
+    <Folder Include="Models\AccEmployee\" />
   </ItemGroup>
 
   <ItemGroup>

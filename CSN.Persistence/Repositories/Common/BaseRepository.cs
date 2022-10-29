@@ -68,13 +68,19 @@ namespace CSN.Persistence.Repositories.Common
                 .AsNoTracking());
         }
 
-        public virtual async Task<IEnumerable<TEntity>?> GetAllAsync(Func<TEntity, bool> predicate,
+        public virtual async Task<IEnumerable<TEntity>?> GetAllAsync(Expression<Func<TEntity, bool>> predicate,
             params Expression<Func<TEntity, object>>[] includeProperties)
         {
             return await Task.FromResult(dbSet
                 .MultipleInclude(includeProperties)
                 .AsNoTracking()
                 .Where(predicate));
+
+        }
+
+        public virtual async Task<bool> AnyAsync(Expression<Func<TEntity, bool>> predicate)
+        {
+            return await dbSet.AnyAsync(predicate);
         }
     }
 }

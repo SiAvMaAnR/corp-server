@@ -1,6 +1,6 @@
-﻿namespace CSN.WebApi.DTOs.Controller
+﻿namespace CSN.Infrastructure.Models.AccCompany
 {
-    public class CompanyAddRequest
+    public class AccCompanyRegisterRequest
     {
         public string Name { get; set; } = null!;
         public string Email { get; set; } = null!;

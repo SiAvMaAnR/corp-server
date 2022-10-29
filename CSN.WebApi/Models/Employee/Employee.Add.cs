@@ -1,8 +1,8 @@
 ﻿using CSN.Domain.Entities.Companies;
 
-namespace CSN.WebApi.DTOs.Controller
+namespace CSN.WebApi.Models.Employee
 {
-    public class EmployeeAddRequest
+    public class EmployeeAdd
     {
         public string Login { get; set; } = null!;
         public string Email { get; set; } = null!;

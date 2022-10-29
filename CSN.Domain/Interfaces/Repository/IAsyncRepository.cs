@@ -19,7 +19,9 @@ namespace CSN.Domain.Interfaces.Repository
         Task<IEnumerable<TEntity>?> GetAllAsync(Expression<Func<TEntity, bool>> predicate);
         Task<IEnumerable<TEntity>?> GetAllAsync();
         Task<IEnumerable<TEntity>?> GetAllAsync(params Expression<Func<TEntity, object>>[] includeProperties);
-        Task<IEnumerable<TEntity>?> GetAllAsync(Func<TEntity, bool> predicate,
+        Task<IEnumerable<TEntity>?> GetAllAsync(Expression<Func<TEntity, bool>> predicate,
            params Expression<Func<TEntity, object>>[] includeProperties);
+
+        Task<bool> AnyAsync(Expression<Func<TEntity, bool>> predicate);
     }
 }

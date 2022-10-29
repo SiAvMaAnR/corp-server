@@ -4,12 +4,12 @@
     {
         public static void ProductionConfiguration(this WebApplication webApplication)
         {
-            webApplication.UseExceptionHandler("/Error");
+            //webApplication.UseExceptionHandler("/Error");
         }
 
         public static void DevelopmentConfiguration(this WebApplication webApplication)
         {
-            webApplication.UseExceptionHandler("/Error-Dev");
+            //webApplication.UseExceptionHandler("/Error-Dev");
             webApplication.UseSwagger();
             webApplication.UseSwaggerUI();
         }
