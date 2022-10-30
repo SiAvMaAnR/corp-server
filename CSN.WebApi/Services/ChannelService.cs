@@ -9,8 +9,8 @@ namespace CSN.WebApi.Services
 {
     public class ChannelService : BaseService<Channel>, IChannelService
     {
-        public ChannelService(EFContext eFContext, IUnitOfWork unitOfWork, ClaimsPrincipal claimsPrincipal) 
-            : base(eFContext, unitOfWork, claimsPrincipal)
+        public ChannelService(EFContext eFContext, IUnitOfWork unitOfWork, IHttpContextAccessor context) 
+            : base(eFContext, unitOfWork, context)
         {
         }
     }

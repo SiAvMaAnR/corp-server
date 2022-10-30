@@ -4,10 +4,11 @@ using CSN.Infrastructure.Helpers;
 using CSN.Infrastructure.Interfaces.Services;
 using CSN.Infrastructure.Models.AccCompany;
 using CSN.Persistence.DBContext;
+using CSN.WebApi.Extensions;
+using CSN.WebApi.Extensions.CustomExceptions;
 using CSN.WebApi.Services.Common;
 using Microsoft.AspNetCore.Mvc;
 using System.Security.Claims;
-using static Microsoft.EntityFrameworkCore.DbLoggerCategory.Database;
 
 namespace CSN.WebApi.Services
 {
@@ -15,8 +16,8 @@ namespace CSN.WebApi.Services
     {
         private readonly IConfiguration configuration;
 
-        public AccCompanyService(EFContext eFContext, IUnitOfWork unitOfWork, ClaimsPrincipal claimsPrincipal, IConfiguration configuration)
-            : base(eFContext, unitOfWork, claimsPrincipal)
+        public AccCompanyService(EFContext eFContext, IUnitOfWork unitOfWork, IHttpContextAccessor context, IConfiguration configuration)
+            : base(eFContext, unitOfWork, context)
         {
             this.configuration = configuration;
         }
@@ -27,14 +28,14 @@ namespace CSN.WebApi.Services
 
             if (company == null)
             {
-                throw new Exception("Company not found");
+                throw new NotFoundException("Company not found");
             }
 
             bool isVerify = AuthOptions.VerifyPasswordHash(request.Password, company.PasswordHash, company.PasswordSalt);
 
             if (!isVerify)
             {
-                throw new Exception("Email or Password incorrect");
+                throw new BadRequestException("Incorrect email or password");
             }
 
             var claims = new List<Claim>()
@@ -66,12 +67,12 @@ namespace CSN.WebApi.Services
         {
             if (await unitOfWork.Company.AnyAsync(company => company.Email == request.Email))
             {
-                throw new Exception("User arleady exists");
+                throw new BadRequestException("User already exists");
             }
 
             if (!AuthOptions.CreatePasswordHash(request.Password, out byte[] passwordHash, out byte[] passwordSalt))
             {
-                throw new Exception("Password incorrect");
+                throw new BadRequestException("Incorrect password");
             }
 
             var image = Convert.FromBase64String(request.Image ?? "");
@@ -97,12 +98,12 @@ namespace CSN.WebApi.Services
 
         public async Task<AccCompanyInfoResponse> InfoAsync(AccCompanyInfoRequest request)
         {
-            var company = await unitOfWork.Company.GetAsync(company => request.Id == company.Id);
 
+            var company = await claimsPrincipal.GetCompanyAsync(unitOfWork);
 
             if (company == null)
             {
-                throw new Exception("User not exists");
+                throw new NotFoundException("User is not found");
             }
 
             return new AccCompanyInfoResponse()

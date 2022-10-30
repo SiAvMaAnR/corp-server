@@ -12,8 +12,8 @@ namespace CSN.WebApi.Services
     {
         private readonly IConfiguration configuration;
 
-        public AccEmployeeService(EFContext eFContext, IUnitOfWork unitOfWork, ClaimsPrincipal claimsPrincipal, IConfiguration configuration)
-            : base(eFContext, unitOfWork, claimsPrincipal)
+        public AccEmployeeService(EFContext eFContext, IUnitOfWork unitOfWork, IHttpContextAccessor context, IConfiguration configuration)
+            : base(eFContext, unitOfWork, context)
         {
             this.configuration = configuration;
         }

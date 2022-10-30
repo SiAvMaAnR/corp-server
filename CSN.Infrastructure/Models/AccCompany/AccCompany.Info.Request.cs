@@ -8,6 +8,5 @@ namespace CSN.Infrastructure.Models.AccCompany
 {
     public class AccCompanyInfoRequest
     {
-        public int Id { get; set; }
     }
 }

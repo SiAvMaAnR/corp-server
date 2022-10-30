@@ -9,11 +9,10 @@ namespace CSN.WebApi.Services
 {
     public class CompanyService : BaseService<Company>, ICompanyService
     {
-        public CompanyService(EFContext eFContext, IUnitOfWork unitOfWork, ClaimsPrincipal claimsPrincipal)
-            : base(eFContext, unitOfWork, claimsPrincipal)
+        public CompanyService(EFContext eFContext, IUnitOfWork unitOfWork, IHttpContextAccessor context)
+            : base(eFContext, unitOfWork, context)
         {
         }
-
 
         public async Task AddAsync(Company company)
         {
@@ -21,12 +20,10 @@ namespace CSN.WebApi.Services
             await unitOfWork.SaveChangesAsync();
         }
 
-
         public async Task<IEnumerable<Company>?> GetAllAsync()
         {
             return await unitOfWork.Company.GetAllAsync();
         }
-
         public async Task<Company?> GetAsync(int id)
         {
             return await unitOfWork.Company.GetAsync(company => company.Id == id);

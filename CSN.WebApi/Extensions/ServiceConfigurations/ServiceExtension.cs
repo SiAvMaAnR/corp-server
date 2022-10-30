@@ -18,7 +18,6 @@ namespace CSN.WebApi.Extensions.ServiceConfigurations
     {
         public static IServiceCollection AddTransientDependencies(this IServiceCollection serviceCollection)
         {
-            serviceCollection.AddTransient(provider => provider.GetService<HttpContext>()?.User ?? new ClaimsPrincipal());
             return serviceCollection;
         }
 

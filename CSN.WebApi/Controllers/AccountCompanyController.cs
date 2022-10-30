@@ -15,7 +15,6 @@ namespace CSN.WebApi.Controllers
     [ApiController]
     public class AccountCompanyController : ControllerBase
     {
-
         private readonly EFContext eFContext;
         private readonly IAccCompanyService accCompanyService;
         private readonly ILogger<AccountCompanyController> logger;
@@ -37,6 +36,7 @@ namespace CSN.WebApi.Controllers
                     Email = request.Email,
                     Password = request.Password
                 });
+
                 return Ok(new
                 {
                     response.IsSuccess,
@@ -82,11 +82,18 @@ namespace CSN.WebApi.Controllers
         }
 
         [HttpGet("Info"), Authorize(Roles = "Company")]
-        public IActionResult Info()
+        public async Task<IActionResult> Info()
         {
+            var response = await accCompanyService.InfoAsync(new AccCompanyInfoRequest());
+
             return Ok(new
             {
-                user = User.Identity
+                response.Id,
+                response.Name,
+                response.Email,
+                response.Role,
+                response.Description,
+                response.Image
             });
         }
     }

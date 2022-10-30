@@ -10,8 +10,8 @@ namespace CSN.WebApi.Services
 {
     public class EmployeeService : BaseService<Employee>, IEmployeeService
     {
-        public EmployeeService(EFContext eFContext, IUnitOfWork unitOfWork, ClaimsPrincipal claimsPrincipal)
-            : base(eFContext, unitOfWork, claimsPrincipal)
+        public EmployeeService(EFContext eFContext, IUnitOfWork unitOfWork, IHttpContextAccessor context)
+            : base(eFContext, unitOfWork, context)
         {
         }
 

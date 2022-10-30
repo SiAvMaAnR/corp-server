@@ -12,13 +12,13 @@ namespace CSN.WebApi.Services.Common
     {
         protected readonly IUnitOfWork unitOfWork;
         protected readonly EFContext eFContext;
-        private readonly ClaimsPrincipal claimsPrincipal;
+        protected readonly ClaimsPrincipal? claimsPrincipal;
 
-        public BaseService(EFContext eFContext, IUnitOfWork unitOfWork, ClaimsPrincipal claimsPrincipal)
+        public BaseService(EFContext eFContext, IUnitOfWork unitOfWork, IHttpContextAccessor context)
         {
             this.eFContext = eFContext;
             this.unitOfWork = unitOfWork;
-            this.claimsPrincipal = claimsPrincipal;
+            this.claimsPrincipal = context.HttpContext?.User;
         }
     }
 }
