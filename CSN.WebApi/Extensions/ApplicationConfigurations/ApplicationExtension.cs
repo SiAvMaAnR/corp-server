@@ -7,7 +7,7 @@
             webApplication.UseExceptionHandler(new ExceptionHandlerOptions()
             {
                 AllowStatusCode404Response = true,
-                ExceptionHandlingPath = "/api/Error/Production"
+                ExceptionHandlingPath = "/Production"
             });
         }
 
@@ -16,7 +16,7 @@
             webApplication.UseExceptionHandler(new ExceptionHandlerOptions()
             {
                 AllowStatusCode404Response = true,
-                ExceptionHandlingPath = "/api/Error/Development"
+                ExceptionHandlingPath = "/Development"
             });
             webApplication.UseSwagger();
             webApplication.UseSwaggerUI();

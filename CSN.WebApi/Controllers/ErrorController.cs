@@ -5,12 +5,12 @@ using Microsoft.AspNetCore.Mvc;
 
 namespace CSN.WebApi.Controllers
 {
-    [Route("api/[controller]")]
     [ApiController]
+    [ApiExplorerSettings(IgnoreApi = true)]
     public class ErrorController : ControllerBase
     {
-        [HttpGet("Development")]
-        public IActionResult HandleErrorDevelopment()
+        [Route("Production")]
+        public IActionResult HandleErrorProduction()
         {
             IExceptionHandlerFeature? exceptionHandlerFeature = HttpContext.Features.Get<IExceptionHandlerFeature>()!;
 
@@ -24,8 +24,8 @@ namespace CSN.WebApi.Controllers
         }
 
 
-        [HttpGet("Production")]
-        public IActionResult HandleErrorProduction()
+        [Route("Development")]
+        public IActionResult HandleErrorDevelopment()
         {
             IExceptionHandlerFeature? exceptionHandlerFeature = HttpContext.Features.Get<IExceptionHandlerFeature>()!;
 
@@ -34,9 +34,12 @@ namespace CSN.WebApi.Controllers
             var errorInfo = new
             {
                 exception.Message,
+                exception.Source,
                 exception.StackTrace,
                 exception.InnerException,
-                exception.Source,
+                exception.Data,
+                exception.HelpLink,
+                exception.HResult
             };
 
             if (exception is BadRequestException) return BadRequest(errorInfo);

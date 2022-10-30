@@ -3,6 +3,7 @@ using CSN.Infrastructure.Helpers;
 using CSN.Infrastructure.Interfaces.Services;
 using CSN.Infrastructure.Models.AccCompany;
 using CSN.Persistence.DBContext;
+using CSN.WebApi.Extensions.CustomExceptions;
 using CSN.WebApi.Models.AccCompany;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Http;
@@ -29,8 +30,6 @@ namespace CSN.WebApi.Controllers
         [HttpPost("Login")]
         public async Task<IActionResult> Login([FromBody] AccCompanyLogin request)
         {
-            try
-            {
                 var response = await accCompanyService.LoginAsync(new AccCompanyLoginRequest()
                 {
                     Email = request.Email,
@@ -43,23 +42,15 @@ namespace CSN.WebApi.Controllers
                     response.TokenType,
                     response.Token
                 });
-            }
-            catch (Exception ex)
-            {
-                return BadRequest(ex.Message);
-            }
         }
 
         [HttpPost("Register")]
         public async Task<IActionResult> Register([FromBody] AccCompanyRegister request)
         {
-            try
-            {
                 if (!ModelState.IsValid)
                 {
-                    throw new Exception("Model not valid");
+                    throw new BadRequestException("Model is not correct");
                 }
-
 
                 var response = await accCompanyService.RegisterAsync(new AccCompanyRegisterRequest()
                 {
@@ -74,27 +65,22 @@ namespace CSN.WebApi.Controllers
                 {
                     isSuccess = response.IsSuccess
                 });
-            }
-            catch (Exception ex)
-            {
-                return BadRequest(ex.Message);
-            }
         }
 
         [HttpGet("Info"), Authorize(Roles = "Company")]
         public async Task<IActionResult> Info()
         {
-            var response = await accCompanyService.InfoAsync(new AccCompanyInfoRequest());
+                var response = await accCompanyService.InfoAsync(new AccCompanyInfoRequest());
 
-            return Ok(new
-            {
-                response.Id,
-                response.Name,
-                response.Email,
-                response.Role,
-                response.Description,
-                response.Image
-            });
+                return Ok(new
+                {
+                    response.Id,
+                    response.Name,
+                    response.Email,
+                    response.Role,
+                    response.Description,
+                    response.Image
+                });
         }
     }
 }
