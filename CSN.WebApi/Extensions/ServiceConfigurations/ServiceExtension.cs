@@ -10,6 +10,7 @@ using CSN.Persistence.UnitOfWork;
 using CSN.WebApi.Services;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.EntityFrameworkCore;
+using System.Security.Claims;
 
 namespace CSN.WebApi.Extensions.ServiceConfigurations
 {
@@ -17,6 +18,7 @@ namespace CSN.WebApi.Extensions.ServiceConfigurations
     {
         public static IServiceCollection AddTransientDependencies(this IServiceCollection serviceCollection)
         {
+            serviceCollection.AddTransient(provider => provider.GetService<HttpContext>()?.User ?? new ClaimsPrincipal());
             return serviceCollection;
         }
 

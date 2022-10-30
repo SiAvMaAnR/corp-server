@@ -4,6 +4,7 @@ using CSN.Domain.Interfaces.UnitOfWork;
 using CSN.Persistence.DBContext;
 using CSN.Persistence.Repositories;
 using CSN.Persistence.UnitOfWork;
+using System.Security.Claims;
 
 namespace CSN.WebApi.Services.Common
 {
@@ -11,11 +12,13 @@ namespace CSN.WebApi.Services.Common
     {
         protected readonly IUnitOfWork unitOfWork;
         protected readonly EFContext eFContext;
+        private readonly ClaimsPrincipal claimsPrincipal;
 
-        public BaseService(EFContext eFContext, IUnitOfWork unitOfWork)
+        public BaseService(EFContext eFContext, IUnitOfWork unitOfWork, ClaimsPrincipal claimsPrincipal)
         {
             this.eFContext = eFContext;
             this.unitOfWork = unitOfWork;
+            this.claimsPrincipal = claimsPrincipal;
         }
     }
 }

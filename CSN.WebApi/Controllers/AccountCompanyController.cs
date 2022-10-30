@@ -25,7 +25,6 @@ namespace CSN.WebApi.Controllers
             this.eFContext = eFContext;
             this.accCompanyService = accCompanyService;
             this.logger = logger;
-            User
         }
 
         [HttpPost("Login")]
@@ -82,7 +81,7 @@ namespace CSN.WebApi.Controllers
             }
         }
 
-        [HttpGet("Info"), Authorize]
+        [HttpGet("Info"), Authorize(Roles = "Company")]
         public IActionResult Info()
         {
             return Ok(new

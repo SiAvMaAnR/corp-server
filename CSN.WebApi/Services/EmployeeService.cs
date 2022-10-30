@@ -4,13 +4,14 @@ using CSN.Domain.Interfaces.UnitOfWork;
 using CSN.Infrastructure.Interfaces.Services;
 using CSN.Persistence.DBContext;
 using CSN.WebApi.Services.Common;
+using System.Security.Claims;
 
 namespace CSN.WebApi.Services
 {
     public class EmployeeService : BaseService<Employee>, IEmployeeService
     {
-        public EmployeeService(EFContext eFContext, IUnitOfWork unitOfWork)
-            : base(eFContext, unitOfWork)
+        public EmployeeService(EFContext eFContext, IUnitOfWork unitOfWork, ClaimsPrincipal claimsPrincipal)
+            : base(eFContext, unitOfWork, claimsPrincipal)
         {
         }
 
