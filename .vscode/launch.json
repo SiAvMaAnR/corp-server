@@ -14,13 +14,12 @@
             "cwd": "${workspaceFolder}/CSN.WebApi",
             "stopAtEntry": false,
             "console": "integratedTerminal",
+            "serverReadyAction": {
+                "uriFormat": "%s/swagger"
+            },
             "env": {
                 "ASPNETCORE_ENVIRONMENT": "Development"
-            },
-            "serverReadyAction":{
-                "uriFormat": "%s/swagger"
             }
-    
         },
         {
             "name": ".NET Core Attach",
