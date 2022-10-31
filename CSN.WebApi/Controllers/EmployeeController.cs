@@ -2,7 +2,7 @@
 using CSN.Domain.Entities.Employees;
 using CSN.Infrastructure.Interfaces.Services;
 using CSN.Persistence.DBContext;
-using CSN.WebApi.DTOs.Controller;
+using CSN.WebApi.Models.Employee;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
@@ -25,7 +25,7 @@ namespace CSN.WebApi.Controllers
         }
 
         [HttpPost]
-        public async Task<IActionResult> AddAsync([FromBody] EmployeeAddRequest request)
+        public async Task<IActionResult> AddAsync([FromBody] EmployeeAdd request)
         {
             try
             {

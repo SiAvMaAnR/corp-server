@@ -1,4 +1,5 @@
-﻿using CSN.Domain.Entities.Employees;
+﻿using CSN.Domain.Entities.Companies;
+using CSN.Domain.Entities.Employees;
 using Microsoft.IdentityModel.Tokens;
 using System;
 using System.Collections.Generic;
@@ -9,50 +10,39 @@ using System.Security.Cryptography;
 using System.Text;
 using System.Threading.Tasks;
 
+
+
+
 namespace CSN.Infrastructure.Helpers
 {
     public class AuthOptions
     {
-        public static Task<string> CreateEmployeeTokenAsync(Employee? employee, Dictionary<string, string> tokenParams)
+        public static string CreateToken(List<Claim> claims, Dictionary<string, string> tokenParams)
         {
-            return Task.Run(() =>
+            try
             {
-                try
-                {
-                    if (employee == null) throw new Exception();
+                ClaimsIdentity claimsIdentity = new ClaimsIdentity(claims, "Token", ClaimTypes.Email, ClaimTypes.Role);
 
-                    List<Claim> claims = new List<Claim>
-                    {
-                        new Claim(ClaimTypes.NameIdentifier, employee.Id.ToString()),
-                        new Claim(ClaimTypes.Name, employee.Login),
-                        new Claim(ClaimTypes.Email, employee.Email),
-                        new Claim(ClaimTypes.Role, employee.Role)
-                    };
+                var key = new SymmetricSecurityKey(Encoding.UTF8.GetBytes(tokenParams["secretKey"]));
 
-                    ClaimsIdentity claimsIdentity = new ClaimsIdentity(claims, "Token", ClaimTypes.Name, ClaimTypes.Role);
+                var creds = new SigningCredentials(key, SecurityAlgorithms.HmacSha512Signature);
 
-                    var key = new SymmetricSecurityKey(Encoding.UTF8.GetBytes(tokenParams["secretKey"]));
+                var token = new JwtSecurityToken(
+                    audience: tokenParams["audience"],
+                    issuer: tokenParams["issuer"],
+                    claims: claims,
+                    expires: DateTime.Now.AddMinutes(double.Parse(tokenParams["lifeTime"])),
+                    signingCredentials: creds);
 
-                    var creds = new SigningCredentials(key, SecurityAlgorithms.HmacSha512Signature);
-
-                    var token = new JwtSecurityToken(
-                        audience: tokenParams["audience"],
-                        issuer: tokenParams["issuer"],
-                        claims: claims,
-                        expires: DateTime.Now.AddMinutes(double.Parse(tokenParams["lifeTime"])),
-                        signingCredentials: creds);
-
-                    return new JwtSecurityTokenHandler().WriteToken(token);
-                }
-                catch (Exception)
-                {
-                    return "";
-                }
-
-            });
+                return new JwtSecurityTokenHandler().WriteToken(token);
+            }
+            catch (Exception)
+            {
+                return "";
+            }
         }
 
-        public static bool CreatePasswordHash(string password, out byte[]? passwordHash, out byte[]? passwordSalt)
+        public static bool CreatePasswordHash(string password, out byte[] passwordHash, out byte[] passwordSalt)
         {
             try
             {
@@ -65,8 +55,8 @@ namespace CSN.Infrastructure.Helpers
             }
             catch (Exception)
             {
-                passwordSalt = default;
-                passwordHash = default;
+                passwordSalt = new byte[0];
+                passwordHash = new byte[0];
                 return false;
             }
         }

@@ -12,13 +12,9 @@ builder.Services.AddSingletonDependencies();
 var app = builder.Build();
 
 if (app.Environment.IsDevelopment())
-{
     app.DevelopmentConfiguration();
-}
 else
-{
     app.ProductionConfiguration();
-}
 
 app.CommonConfiguration();
 app.Run();

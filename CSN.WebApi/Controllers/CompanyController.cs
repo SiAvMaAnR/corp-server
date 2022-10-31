@@ -1,7 +1,7 @@
 ﻿using CSN.Domain.Entities.Companies;
 using CSN.Infrastructure.Interfaces.Services;
 using CSN.Persistence.DBContext;
-using CSN.WebApi.DTOs.Controller;
+using CSN.WebApi.Models.Company;
 using CSN.WebApi.Services;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
@@ -24,7 +24,7 @@ namespace CSN.WebApi.Controllers
         }
 
         [HttpPost]
-        public async Task<IActionResult> AddAsync([FromBody] CompanyAddRequest request)
+        public async Task<IActionResult> AddAsync([FromBody] CompanyAdd request)
         {
             try
             {
