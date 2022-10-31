@@ -98,8 +98,7 @@ namespace CSN.WebApi.Services
 
         public async Task<AccCompanyInfoResponse> InfoAsync(AccCompanyInfoRequest request)
         {
-
-            var company = await claimsPrincipal.GetCompanyAsync(unitOfWork);
+            Company? company = await claimsPrincipal!.GetCompanyAsync(unitOfWork);
 
             if (company == null)
             {
