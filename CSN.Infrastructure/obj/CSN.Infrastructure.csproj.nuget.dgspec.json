@@ -1,32 +1,25 @@
 {
   "format": 1,
   "restore": {
-    "C:\\Users\\samar\\source\\repos\\CSN\\CSN.Infrastructure\\CSN.Infrastructure.csproj": {}
+    "/home/ivan/Desktop/net/Corporate-Social-Network/CSN.Infrastructure/CSN.Infrastructure.csproj": {}
   },
   "projects": {
-    "C:\\Users\\samar\\source\\repos\\CSN\\CSN.Domain\\CSN.Domain.csproj": {
+    "/home/ivan/Desktop/net/Corporate-Social-Network/CSN.Domain/CSN.Domain.csproj": {
       "version": "1.0.0",
       "restore": {
-        "projectUniqueName": "C:\\Users\\samar\\source\\repos\\CSN\\CSN.Domain\\CSN.Domain.csproj",
+        "projectUniqueName": "/home/ivan/Desktop/net/Corporate-Social-Network/CSN.Domain/CSN.Domain.csproj",
         "projectName": "CSN.Domain",
-        "projectPath": "C:\\Users\\samar\\source\\repos\\CSN\\CSN.Domain\\CSN.Domain.csproj",
-        "packagesPath": "C:\\Users\\samar\\.nuget\\packages\\",
-        "outputPath": "C:\\Users\\samar\\source\\repos\\CSN\\CSN.Domain\\obj\\",
+        "projectPath": "/home/ivan/Desktop/net/Corporate-Social-Network/CSN.Domain/CSN.Domain.csproj",
+        "packagesPath": "/home/ivan/.nuget/packages/",
+        "outputPath": "/home/ivan/Desktop/net/Corporate-Social-Network/CSN.Domain/obj/",
         "projectStyle": "PackageReference",
-        "fallbackFolders": [
-          "C:\\Program Files (x86)\\Microsoft Visual Studio\\Shared\\NuGetPackages"
-        ],
         "configFilePaths": [
-          "C:\\Users\\samar\\AppData\\Roaming\\NuGet\\NuGet.Config",
-          "C:\\Program Files (x86)\\NuGet\\Config\\Microsoft.VisualStudio.FallbackLocation.config",
-          "C:\\Program Files (x86)\\NuGet\\Config\\Microsoft.VisualStudio.Offline.config"
+          "/home/ivan/.nuget/NuGet/NuGet.Config"
         ],
         "originalTargetFrameworks": [
           "net6.0"
         ],
         "sources": {
-          "C:\\Program Files (x86)\\Microsoft SDKs\\NuGetPackages\\": {},
-          "C:\\Program Files\\dotnet\\library-packs": {},
           "https://api.nuget.org/v3/index.json": {}
         },
         "frameworks": {
@@ -60,41 +53,34 @@
               "privateAssets": "all"
             }
           },
-          "runtimeIdentifierGraphPath": "C:\\Program Files\\dotnet\\sdk\\6.0.400\\RuntimeIdentifierGraph.json"
+          "runtimeIdentifierGraphPath": "/usr/share/dotnet/sdk/6.0.402/RuntimeIdentifierGraph.json"
         }
       }
     },
-    "C:\\Users\\samar\\source\\repos\\CSN\\CSN.Infrastructure\\CSN.Infrastructure.csproj": {
+    "/home/ivan/Desktop/net/Corporate-Social-Network/CSN.Infrastructure/CSN.Infrastructure.csproj": {
       "version": "1.0.0",
       "restore": {
-        "projectUniqueName": "C:\\Users\\samar\\source\\repos\\CSN\\CSN.Infrastructure\\CSN.Infrastructure.csproj",
+        "projectUniqueName": "/home/ivan/Desktop/net/Corporate-Social-Network/CSN.Infrastructure/CSN.Infrastructure.csproj",
         "projectName": "CSN.Infrastructure",
-        "projectPath": "C:\\Users\\samar\\source\\repos\\CSN\\CSN.Infrastructure\\CSN.Infrastructure.csproj",
-        "packagesPath": "C:\\Users\\samar\\.nuget\\packages\\",
-        "outputPath": "C:\\Users\\samar\\source\\repos\\CSN\\CSN.Infrastructure\\obj\\",
+        "projectPath": "/home/ivan/Desktop/net/Corporate-Social-Network/CSN.Infrastructure/CSN.Infrastructure.csproj",
+        "packagesPath": "/home/ivan/.nuget/packages/",
+        "outputPath": "/home/ivan/Desktop/net/Corporate-Social-Network/CSN.Infrastructure/obj/",
         "projectStyle": "PackageReference",
-        "fallbackFolders": [
-          "C:\\Program Files (x86)\\Microsoft Visual Studio\\Shared\\NuGetPackages"
-        ],
         "configFilePaths": [
-          "C:\\Users\\samar\\AppData\\Roaming\\NuGet\\NuGet.Config",
-          "C:\\Program Files (x86)\\NuGet\\Config\\Microsoft.VisualStudio.FallbackLocation.config",
-          "C:\\Program Files (x86)\\NuGet\\Config\\Microsoft.VisualStudio.Offline.config"
+          "/home/ivan/.nuget/NuGet/NuGet.Config"
         ],
         "originalTargetFrameworks": [
           "net6.0"
         ],
         "sources": {
-          "C:\\Program Files (x86)\\Microsoft SDKs\\NuGetPackages\\": {},
-          "C:\\Program Files\\dotnet\\library-packs": {},
           "https://api.nuget.org/v3/index.json": {}
         },
         "frameworks": {
           "net6.0": {
             "targetAlias": "net6.0",
             "projectReferences": {
-              "C:\\Users\\samar\\source\\repos\\CSN\\CSN.Domain\\CSN.Domain.csproj": {
-                "projectPath": "C:\\Users\\samar\\source\\repos\\CSN\\CSN.Domain\\CSN.Domain.csproj"
+              "/home/ivan/Desktop/net/Corporate-Social-Network/CSN.Domain/CSN.Domain.csproj": {
+                "projectPath": "/home/ivan/Desktop/net/Corporate-Social-Network/CSN.Domain/CSN.Domain.csproj"
               }
             }
           }
@@ -134,7 +120,7 @@
               "privateAssets": "all"
             }
           },
-          "runtimeIdentifierGraphPath": "C:\\Program Files\\dotnet\\sdk\\6.0.400\\RuntimeIdentifierGraph.json"
+          "runtimeIdentifierGraphPath": "/usr/share/dotnet/sdk/6.0.402/RuntimeIdentifierGraph.json"
         }
       }
     }

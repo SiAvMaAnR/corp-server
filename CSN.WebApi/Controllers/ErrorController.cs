@@ -20,7 +20,7 @@ namespace CSN.WebApi.Controllers
             if (exception is UnauthorizedException) return Unauthorized(exception.Message);
             if (exception is NotFoundException) return NotFound(exception.Message);
             if (exception is ForbiddenException) return Forbid();
-            return BadRequest("Unknown error");
+            return BadRequest(exception.Message);
         }
 
 
@@ -46,7 +46,7 @@ namespace CSN.WebApi.Controllers
             if (exception is UnauthorizedException) return Unauthorized(errorInfo);
             if (exception is NotFoundException) return NotFound(errorInfo);
             if (exception is ForbiddenException) return Forbid();
-            return BadRequest("Unknown error");
+            return BadRequest(errorInfo);
         }
     }
 }

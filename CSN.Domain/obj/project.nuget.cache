@@ -1,8 +1,8 @@
 {
   "version": 2,
-  "dgSpecHash": "mX25tRukWQRoUqMYuUVpI0kChE3U+43B5KuGTUoBo4plDo8ZCl4d/mrLiA5lBMpUKG8OIUCaxaq7xkHat7Un5A==",
+  "dgSpecHash": "FdfNv+FDY7wy6UUFm8uUVho2r3ZxOqKH2Mh1/BzJXTrheJ0BeTwbyvH+Cu3uxAPwlMeKvAQHKNc8HTArn2SPdg==",
   "success": true,
-  "projectFilePath": "C:\\Users\\samar\\source\\repos\\CSN\\CSN.Domain\\CSN.Domain.csproj",
+  "projectFilePath": "/home/ivan/Desktop/net/Corporate-Social-Network/CSN.Domain/CSN.Domain.csproj",
   "expectedPackageFiles": [],
   "logs": []
 }
