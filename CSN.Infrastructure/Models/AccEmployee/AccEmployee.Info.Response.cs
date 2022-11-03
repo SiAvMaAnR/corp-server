@@ -1,11 +1,11 @@
-﻿namespace CSN.WebApi.Models.Employee;
+namespace CSN.Infrastructure.Models.AccEmployee;
 
-public class EmployeeAdd
+public class AccEmployeeInfoResponse
 {
+    public int Id { get; set; }
     public string Login { get; set; } = null!;
     public string Email { get; set; } = null!;
-    public string Password { get; set; } = null!;
     public string Role { get; set; } = null!;
-    public string? Image { get; set; } = null!;
+    public byte[]? Image { get; set; }
     public int CompanyId { get; set; }
 }

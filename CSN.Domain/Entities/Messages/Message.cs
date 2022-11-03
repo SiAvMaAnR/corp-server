@@ -7,9 +7,8 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace CSN.Domain.Entities.Messages
+namespace CSN.Domain.Entities.Messages;
+
+public partial class Message : BaseEntity
 {
-    public partial class Message : BaseEntity
-    {
-    }
 }

@@ -30,57 +30,65 @@ namespace CSN.WebApi.Controllers
         [HttpPost("Login")]
         public async Task<IActionResult> Login([FromBody] AccCompanyLogin request)
         {
-                var response = await accCompanyService.LoginAsync(new AccCompanyLoginRequest()
-                {
-                    Email = request.Email,
-                    Password = request.Password
-                });
+            if (!ModelState.IsValid)
+            {
+                throw new BadRequestException("Data is not correct");
+            }
 
-                return Ok(new
-                {
-                    response.IsSuccess,
-                    response.TokenType,
-                    response.Token
-                });
+            var response = await accCompanyService.LoginAsync(new AccCompanyLoginRequest()
+            {
+                Email = request.Email,
+                Password = request.Password
+            });
+
+            return Ok(new
+            {
+                response.IsSuccess,
+                response.TokenType,
+                response.Token
+            });
         }
 
         [HttpPost("Register")]
         public async Task<IActionResult> Register([FromBody] AccCompanyRegister request)
         {
-                if (!ModelState.IsValid)
-                {
-                    throw new BadRequestException("Model is not correct");
-                }
+            if (!ModelState.IsValid)
+            {
+                throw new BadRequestException("Data is not correct");
+            }
 
-                var response = await accCompanyService.RegisterAsync(new AccCompanyRegisterRequest()
-                {
-                    Name = request.Name,
-                    Email = request.Email,
-                    Password = request.Password,
-                    Image = request.Image,
-                    Description = request.Description,
-                });
+            string role = "Company";
 
-                return Ok(new
-                {
-                    isSuccess = response.IsSuccess
-                });
+            var response = await accCompanyService.RegisterAsync(new AccCompanyRegisterRequest()
+            {
+                Name = request.Name,
+                Email = request.Email,
+                Password = request.Password,
+                Image = request.Image,
+                Description = request.Description,
+                Role = role
+            });
+
+            return Ok(new
+            {
+                isSuccess = response.IsSuccess
+            });
         }
 
         [HttpGet("Info"), Authorize(Roles = "Company")]
         public async Task<IActionResult> Info()
         {
-                var response = await accCompanyService.InfoAsync(new AccCompanyInfoRequest());
+            var response = await accCompanyService.InfoAsync(new AccCompanyInfoRequest());
 
-                return Ok(new
-                {
-                    response.Id,
-                    response.Name,
-                    response.Email,
-                    response.Role,
-                    response.Description,
-                    response.Image
-                });
+            return Ok(new
+            {
+                response.Id,
+                response.Name,
+                response.Email,
+                response.Role,
+                response.Description,
+                response.Image
+            });
         }
     }
 }

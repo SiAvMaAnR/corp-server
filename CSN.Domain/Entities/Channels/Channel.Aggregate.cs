@@ -5,9 +5,8 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace CSN.Domain.Entities.Channels
+namespace CSN.Domain.Entities.Channels;
+
+public partial class Channel : IAggregateRoot
 {
-    public partial class Channel: IAggregateRoot
-    {
-    }
 }

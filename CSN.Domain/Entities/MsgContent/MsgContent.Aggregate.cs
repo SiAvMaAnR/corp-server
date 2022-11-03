@@ -5,9 +5,8 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace CSN.Domain.Entities.MsgContent
+namespace CSN.Domain.Entities.MsgContent;
+
+public partial class MsgContent : IAggregateRoot
 {
-    public partial class MsgContent : IAggregateRoot
-    {
-    }
 }

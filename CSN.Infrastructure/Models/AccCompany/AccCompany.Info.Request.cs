@@ -1,12 +1,5 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
+﻿namespace CSN.Infrastructure.Models.AccCompany;
 
-namespace CSN.Infrastructure.Models.AccCompany
+public class AccCompanyInfoRequest
 {
-    public class AccCompanyInfoRequest
-    {
-    }
 }

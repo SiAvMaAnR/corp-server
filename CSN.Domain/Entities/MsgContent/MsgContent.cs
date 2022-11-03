@@ -5,9 +5,8 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace CSN.Domain.Entities.MsgContent
+namespace CSN.Domain.Entities.MsgContent;
+
+public partial class MsgContent : BaseEntity
 {
-    public partial class MsgContent : BaseEntity
-    {
-    }
 }

@@ -1,6 +1,6 @@
-﻿namespace CSN.WebApi.Models.Employee;
+namespace CSN.Infrastructure.Models.AccEmployee;
 
-public class EmployeeAdd
+public class AccEmployeeRegisterRequest
 {
     public string Login { get; set; } = null!;
     public string Email { get; set; } = null!;

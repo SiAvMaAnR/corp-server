@@ -1,6 +1,6 @@
-﻿namespace CSN.Infrastructure.Models.AccCompany;
+namespace CSN.Infrastructure.Models.AccEmployee;
 
-public class AccCompanyLoginResponse
+public class AccEmployeeLoginResponse
 {
     public string Token { get; set; } = null!;
     public string TokenType { get; set; } = null!;

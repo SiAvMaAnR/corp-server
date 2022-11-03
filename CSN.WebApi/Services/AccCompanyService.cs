@@ -28,7 +28,7 @@ namespace CSN.WebApi.Services
 
             if (company == null)
             {
-                throw new NotFoundException("Company not found");
+                throw new NotFoundException("Account not found");
             }
 
             bool isVerify = AuthOptions.VerifyPasswordHash(request.Password, company.PasswordHash, company.PasswordSalt);
@@ -67,7 +67,7 @@ namespace CSN.WebApi.Services
         {
             if (await unitOfWork.Company.AnyAsync(company => company.Email == request.Email))
             {
-                throw new BadRequestException("User already exists");
+                throw new BadRequestException("Account already exists");
             }
 
             if (!AuthOptions.CreatePasswordHash(request.Password, out byte[] passwordHash, out byte[] passwordSalt))
@@ -85,7 +85,7 @@ namespace CSN.WebApi.Services
                 PasswordHash = passwordHash,
                 PasswordSalt = passwordSalt,
                 Description = request.Description,
-
+                Role = request.Role
             });
 
             await unitOfWork.SaveChangesAsync();
@@ -102,7 +102,7 @@ namespace CSN.WebApi.Services
 
             if (company == null)
             {
-                throw new NotFoundException("User is not found");
+                throw new NotFoundException("Account is not found");
             }
 
             return new AccCompanyInfoResponse()
@@ -113,7 +113,6 @@ namespace CSN.WebApi.Services
                 Image = company.Image,
                 Role = company.Role,
                 Description = company.Description,
-                Employees = company.Employees
             };
         }
     }

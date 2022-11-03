@@ -1,31 +1,24 @@
 <Project Sdk="Microsoft.NET.Sdk">
-
   <PropertyGroup>
     <TargetFramework>net6.0</TargetFramework>
     <ImplicitUsings>enable</ImplicitUsings>
     <Nullable>enable</Nullable>
   </PropertyGroup>
-
   <ItemGroup>
     <Compile Remove="Новая папка\**" />
     <EmbeddedResource Remove="Новая папка\**" />
     <None Remove="Новая папка\**" />
   </ItemGroup>
-
   <ItemGroup>
     <Folder Include="Extensions\" />
     <Folder Include="Models\Company\" />
-    <Folder Include="Models\AccEmployee\" />
     <Folder Include="Models\Employee\" />
   </ItemGroup>
-
   <ItemGroup>
     <PackageReference Include="Microsoft.IdentityModel.Tokens" Version="6.10.0" />
     <PackageReference Include="System.IdentityModel.Tokens.Jwt" Version="6.10.0" />
   </ItemGroup>
-
   <ItemGroup>
     <ProjectReference Include="..\CSN.Domain\CSN.Domain.csproj" />
   </ItemGroup>
-
 </Project>

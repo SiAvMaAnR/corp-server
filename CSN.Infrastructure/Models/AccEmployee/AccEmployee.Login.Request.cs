@@ -1,6 +1,6 @@
-﻿namespace CSN.Infrastructure.Models.AccCompany;
+namespace CSN.Infrastructure.Models.AccEmployee;
 
-public class AccCompanyLoginRequest
+public class AccEmployeeLoginRequest
 {
     public string Email { get; set; } = null!;
     public string Password { get; set; } = null!;
