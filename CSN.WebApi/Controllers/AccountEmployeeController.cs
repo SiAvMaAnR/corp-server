@@ -69,7 +69,7 @@ namespace CSN.WebApi.Controllers
 
             return Ok(new
             {
-                isSuccess = response.IsSuccess
+                response.IsSuccess
             });
         }
 
@@ -85,6 +85,7 @@ namespace CSN.WebApi.Controllers
                 response.Email,
                 response.Role,
                 response.CompanyId,
+                response.Company,
                 response.Image
             });
         }

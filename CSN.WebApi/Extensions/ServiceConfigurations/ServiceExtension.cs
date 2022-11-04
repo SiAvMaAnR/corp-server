@@ -11,6 +11,7 @@ using CSN.WebApi.Services;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.EntityFrameworkCore;
 using System.Security.Claims;
+using System.Text.Json.Serialization;
 
 namespace CSN.WebApi.Extensions.ServiceConfigurations
 {
@@ -48,7 +49,7 @@ namespace CSN.WebApi.Extensions.ServiceConfigurations
             string connection = config.GetConnectionString("LinuxConnection");
 
             serviceCollection.AddDbContext<EFContext>(options => options.UseSqlServer(connection));
-            serviceCollection.AddControllers();
+            serviceCollection.AddControllers().AddJsonOptions(x => x.JsonSerializerOptions.ReferenceHandler = ReferenceHandler.IgnoreCycles);
             serviceCollection.AddEndpointsApiExplorer();
             serviceCollection.AddHttpContextAccessor();
             serviceCollection.AddLogging();

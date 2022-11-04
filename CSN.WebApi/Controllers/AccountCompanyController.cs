@@ -71,7 +71,7 @@ namespace CSN.WebApi.Controllers
 
             return Ok(new
             {
-                isSuccess = response.IsSuccess
+                response.IsSuccess
             });
         }
 
@@ -88,6 +88,19 @@ namespace CSN.WebApi.Controllers
                 response.Role,
                 response.Description,
                 response.Image
+            });
+        }
+
+
+        [HttpGet("Employees"), Authorize(Roles = "Company")]
+        public async Task<IActionResult> Employees()
+        {
+            var response = await accCompanyService.EmployeesAsync(new AccCompanyEmployeesRequest());
+
+            return Ok(new
+            {
+                response.Employees.Count,
+                response.Employees
             });
         }
     }

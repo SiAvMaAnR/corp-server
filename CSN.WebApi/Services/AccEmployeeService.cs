@@ -1,4 +1,5 @@
-﻿using CSN.Domain.Entities.Employees;
+﻿using CSN.Domain.Entities.Companies;
+using CSN.Domain.Entities.Employees;
 using CSN.Domain.Interfaces.UnitOfWork;
 using CSN.Infrastructure.Helpers;
 using CSN.Infrastructure.Interfaces.Services;
@@ -77,16 +78,25 @@ namespace CSN.WebApi.Services
 
             var image = Convert.FromBase64String(request.Image ?? "");
 
-            await unitOfWork.Employee.AddAsync(new Employee()
+            Company? company = await unitOfWork.Company.GetAsync(company => company.Id == request.CompanyId);
+
+            if (company == null)
+            {
+                throw new BadRequestException("Incorrect company");
+            }
+
+            var employee = new Employee()
             {
                 Login = request.Login,
                 Email = request.Email,
                 Image = image,
                 PasswordHash = passwordHash,
                 PasswordSalt = passwordSalt,
-                CompanyId = request.CompanyId,
                 Role = request.Role,
-            });
+                CompanyId = request.CompanyId,
+            };
+
+            await unitOfWork.Employee.AddAsync(employee);
 
             await unitOfWork.SaveChangesAsync();
 
@@ -98,7 +108,7 @@ namespace CSN.WebApi.Services
 
         public async Task<AccEmployeeInfoResponse> InfoAsync(AccEmployeeInfoRequest request)
         {
-            Employee? employee = await claimsPrincipal!.GetEmployeeAsync(unitOfWork);
+            Employee? employee = await claimsPrincipal!.GetEmployeeAsync(unitOfWork, employee => employee.Company);
 
             if (employee == null)
             {
@@ -112,7 +122,8 @@ namespace CSN.WebApi.Services
                 Email = employee.Email,
                 Image = employee.Image,
                 Role = employee.Role,
-                CompanyId = employee.CompanyId
+                CompanyId = employee.CompanyId,
+                Company = employee.Company
             };
         }
     }

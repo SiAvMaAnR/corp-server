@@ -27,52 +27,31 @@ namespace CSN.WebApi.Controllers
         [HttpPost]
         public async Task<IActionResult> AddAsync([FromBody] EmployeeAdd request)
         {
-            try
+            await this.employeeService.AddAsync(new Employee()
             {
-                await this.employeeService.AddAsync(new Employee()
-                {
-                    Login = request.Login,
-                    Email = request.Email,
-                    PasswordHash = new byte[10],
-                    PasswordSalt = new byte[10],
-                    Role = request.Role,
-                    Image = new byte[10],
-                    CompanyId = request.CompanyId
-                });
-                return Ok();
-            }
-            catch (Exception)
-            {
-                return BadRequest();
-            }
+                Login = request.Login,
+                Email = request.Email,
+                PasswordHash = new byte[10],
+                PasswordSalt = new byte[10],
+                Role = request.Role,
+                Image = new byte[10],
+                CompanyId = request.CompanyId
+            });
+            return Ok();
         }
 
         [HttpGet]
         public async Task<IActionResult> GetAllAsync()
         {
-            try
-            {
-                IEnumerable<Employee>? employees = await this.employeeService.GetAllAsync();
-                return Ok(employees);
-            }
-            catch (Exception)
-            {
-                return BadRequest();
-            }
+            IEnumerable<Employee>? employees = await this.employeeService.GetAllAsync();
+            return Ok(employees);
         }
 
         [HttpGet("{id:int}"), Authorize]
         public async Task<IActionResult> GetAllAsync(int id)
         {
-            try
-            {
-                Employee? employee = await this.employeeService.GetAsync(id);
-                return Ok(employee);
-            }
-            catch (Exception)
-            {
-                return BadRequest();
-            }
+            Employee? employee = await this.employeeService.GetAsync(id);
+            return Ok(employee);
         }
     }
 }

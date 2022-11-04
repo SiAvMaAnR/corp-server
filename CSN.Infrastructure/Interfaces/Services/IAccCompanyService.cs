@@ -13,5 +13,6 @@ namespace CSN.Infrastructure.Interfaces.Services
         Task<AccCompanyLoginResponse> LoginAsync(AccCompanyLoginRequest request);
         Task<AccCompanyRegisterResponse> RegisterAsync(AccCompanyRegisterRequest request);
         Task<AccCompanyInfoResponse> InfoAsync(AccCompanyInfoRequest request);
+        Task<AccCompanyEmployeesResponse> EmployeesAsync(AccCompanyEmployeesRequest request);
     }
 }

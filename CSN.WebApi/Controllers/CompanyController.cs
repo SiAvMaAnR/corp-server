@@ -26,51 +26,30 @@ namespace CSN.WebApi.Controllers
         [HttpPost]
         public async Task<IActionResult> AddAsync([FromBody] CompanyAdd request)
         {
-            try
+            await this.companyService.AddAsync(new Company()
             {
-                await this.companyService.AddAsync(new Company()
-                {
-                    Name = request.Name,
-                    Email = request.Email,
-                    Image = new byte[10],
-                    Description = request.Description,
-                    PasswordHash = new byte[10],
-                    PasswordSalt = new byte[10]
-                });
-                return Ok();
-            }
-            catch (Exception)
-            {
-                return BadRequest();
-            }
+                Name = request.Name,
+                Email = request.Email,
+                Image = new byte[10],
+                Description = request.Description,
+                PasswordHash = new byte[10],
+                PasswordSalt = new byte[10]
+            });
+            return Ok();
         }
 
         [HttpGet]
         public async Task<IActionResult> GetAllAsync()
         {
-            try
-            {
-                IEnumerable<Company>? companies = await this.companyService.GetAllAsync();
-                return Ok(companies);
-            }
-            catch (Exception)
-            {
-                return BadRequest();
-            }
+            IEnumerable<Company>? companies = await this.companyService.GetAllAsync();
+            return Ok(companies);
         }
 
         [HttpGet("{id:int}")]
         public async Task<IActionResult> GetAllAsync(int id)
         {
-            try
-            {
-                Company? company = await this.companyService.GetAsync(id);
-                return Ok(company);
-            }
-            catch (Exception)
-            {
-                return BadRequest();
-            }
+            Company? company = await this.companyService.GetAsync(id);
+            return Ok(company);
         }
 
     }
