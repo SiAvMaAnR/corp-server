@@ -1,6 +1,7 @@
 ﻿using System.Text.Json.Serialization;
 using CSN.Domain.Entities.Common;
 using CSN.Domain.Entities.Employees;
+using CSN.Domain.Entities.Invitations;
 
 namespace CSN.Domain.Entities.Companies;
 
@@ -16,4 +17,5 @@ public partial class Company : BaseEntity
     public byte[]? Image { get; set; }
     public string? Description { get; set; }
     public ICollection<Employee> Employees { get; set; } = new List<Employee>();
+    public ICollection<Invitation> Invitations { get; set; } = new List<Invitation>();
 }

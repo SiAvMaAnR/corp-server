@@ -1,10 +1,4 @@
-﻿using CSN.Domain.Entities.Companies;
-using CSN.Infrastructure.Models.AccCompany;
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
+﻿using CSN.Infrastructure.Models.AccCompany;
 
 namespace CSN.Infrastructure.Interfaces.Services
 {
@@ -13,6 +7,5 @@ namespace CSN.Infrastructure.Interfaces.Services
         Task<AccCompanyLoginResponse> LoginAsync(AccCompanyLoginRequest request);
         Task<AccCompanyRegisterResponse> RegisterAsync(AccCompanyRegisterRequest request);
         Task<AccCompanyInfoResponse> InfoAsync(AccCompanyInfoRequest request);
-        Task<AccCompanyEmployeesResponse> EmployeesAsync(AccCompanyEmployeesRequest request);
     }
 }

@@ -57,8 +57,6 @@ namespace CSN.WebApi.Controllers
                 throw new BadRequestException("Data is not correct");
             }
 
-            string role = "Company";
-
             var response = await accCompanyService.RegisterAsync(new AccCompanyRegisterRequest()
             {
                 Name = request.Name,
@@ -66,7 +64,7 @@ namespace CSN.WebApi.Controllers
                 Password = request.Password,
                 Image = request.Image,
                 Description = request.Description,
-                Role = role
+                Role = "Company"
             });
 
             return Ok(new
@@ -88,19 +86,6 @@ namespace CSN.WebApi.Controllers
                 response.Role,
                 response.Description,
                 response.Image
-            });
-        }
-
-
-        [HttpGet("Employees"), Authorize(Roles = "Company")]
-        public async Task<IActionResult> Employees()
-        {
-            var response = await accCompanyService.EmployeesAsync(new AccCompanyEmployeesRequest());
-
-            return Ok(new
-            {
-                response.Employees.Count,
-                response.Employees
             });
         }
     }

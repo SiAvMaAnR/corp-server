@@ -11,8 +11,7 @@
   </ItemGroup>
   <ItemGroup>
     <Folder Include="Extensions\" />
-    <Folder Include="Models\Company\" />
-    <Folder Include="Models\Employee\" />
+    <Folder Include="Models\EmployeeDto\" />
   </ItemGroup>
   <ItemGroup>
     <PackageReference Include="Microsoft.IdentityModel.Tokens" Version="6.10.0" />

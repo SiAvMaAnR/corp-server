@@ -1,8 +1,10 @@
 ﻿using CSN.Domain.Entities.Companies;
 using CSN.Infrastructure.Interfaces.Services;
+using CSN.Infrastructure.Models.CompanyDto;
 using CSN.Persistence.DBContext;
 using CSN.WebApi.Models.Company;
 using CSN.WebApi.Services;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 
@@ -14,42 +16,40 @@ namespace CSN.WebApi.Controllers
     {
         private readonly EFContext eFContext;
         private readonly ICompanyService companyService;
+        private readonly IEmailService emailService;
         private readonly ILogger<CompanyController> logger;
 
-        public CompanyController(EFContext eFContext, ICompanyService companyService, ILogger<CompanyController> logger)
+        public CompanyController(EFContext eFContext, ICompanyService companyService, IEmailService emailService, ILogger<CompanyController> logger)
         {
             this.eFContext = eFContext;
             this.companyService = companyService;
+            this.emailService = emailService;
             this.logger = logger;
         }
 
-        [HttpPost]
-        public async Task<IActionResult> AddAsync([FromBody] CompanyAdd request)
+
+
+
+        [HttpPost("Invite"), Authorize(Roles = "Company")]
+        public async Task<IActionResult> SendInviteAsync([FromBody] CompanyInvite invite)
         {
-            await this.companyService.AddAsync(new Company()
-            {
-                Name = request.Name,
-                Email = request.Email,
-                Image = new byte[10],
-                Description = request.Description,
-                PasswordHash = new byte[10],
-                PasswordSalt = new byte[10]
-            });
+            await this.emailService.SendInviteAsync(invite.Email);
+
             return Ok();
         }
 
-        [HttpGet]
-        public async Task<IActionResult> GetAllAsync()
-        {
-            IEnumerable<Company>? companies = await this.companyService.GetAllAsync();
-            return Ok(companies);
-        }
 
-        [HttpGet("{id:int}")]
-        public async Task<IActionResult> GetAllAsync(int id)
+
+        [HttpGet("Employees"), Authorize(Roles = "Company")]
+        public async Task<IActionResult> GetEmployees()
         {
-            Company? company = await this.companyService.GetAsync(id);
-            return Ok(company);
+            var response = await companyService.EmployeesAsync(new CompanyEmployeesRequest());
+
+            return Ok(new
+            {
+                response.Employees.Count,
+                response.Employees
+            });
         }
 
     }

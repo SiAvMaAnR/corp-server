@@ -1,4 +1,4 @@
-namespace CSN.Infrastructure.Models.AccEmployee;
+namespace CSN.Infrastructure.Models.AccEmployeeDto;
 
 public class AccEmployeeLoginRequest
 {

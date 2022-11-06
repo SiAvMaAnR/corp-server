@@ -115,21 +115,5 @@ namespace CSN.WebApi.Services
                 Description = company.Description,
             };
         }
-
-
-        public async Task<AccCompanyEmployeesResponse> EmployeesAsync(AccCompanyEmployeesRequest request)
-        {
-            Company? company = await claimsPrincipal!.GetCompanyAsync(unitOfWork, company => company.Employees);
-
-            if (company == null)
-            {
-                throw new NotFoundException("Account is not found");
-            }
-
-            return new AccCompanyEmployeesResponse()
-            {
-                Employees = company.Employees
-            };
-        }
     }
 }

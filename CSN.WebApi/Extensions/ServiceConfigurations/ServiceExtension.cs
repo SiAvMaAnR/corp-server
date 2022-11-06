@@ -36,6 +36,7 @@ namespace CSN.WebApi.Extensions.ServiceConfigurations
             serviceCollection.AddScoped<IChannelService, ChannelService>();
             serviceCollection.AddScoped<IAccCompanyService, AccCompanyService>();
             serviceCollection.AddScoped<IAccEmployeeService, AccEmployeeService>();
+            serviceCollection.AddScoped<IEmailService, EmailService>();
             return serviceCollection;
         }
 

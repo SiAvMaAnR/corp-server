@@ -1,8 +1,8 @@
 using CSN.Domain.Entities.Employees;
 
-namespace CSN.Infrastructure.Models.AccCompany;
+namespace CSN.Infrastructure.Models.CompanyDto;
 
-public class AccCompanyEmployeesResponse
+public class CompanyEmployeesResponse
 {
     public ICollection<Employee> Employees { get; set; } = null!;
 }

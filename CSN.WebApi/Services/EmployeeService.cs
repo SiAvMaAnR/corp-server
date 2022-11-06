@@ -14,23 +14,6 @@ namespace CSN.WebApi.Services
             : base(eFContext, unitOfWork, context)
         {
         }
-
-
-        public async Task AddAsync(Employee employee)
-        {
-            await unitOfWork.Employee.AddAsync(employee);
-            await unitOfWork.SaveChangesAsync();
-        }
-
-
-        public async Task<IEnumerable<Employee>?> GetAllAsync()
-        {
-            return await unitOfWork.Employee.GetAllAsync();
-        }
-
-        public async Task<Employee?> GetAsync(int id)
-        {
-            return await unitOfWork.Employee.GetAsync(employee => employee.Id == id);
-        }
+        
     }
 }

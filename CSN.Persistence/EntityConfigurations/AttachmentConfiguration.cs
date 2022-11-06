@@ -1,4 +1,4 @@
-﻿using CSN.Domain.Entities.MsgContent;
+﻿using System.Net.Mail;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Metadata.Builders;
 using System;
@@ -9,9 +9,9 @@ using System.Threading.Tasks;
 
 namespace CSN.Persistence.EntityConfigurations
 {
-    internal class MsgContentConfiguration : IEntityTypeConfiguration<MsgContent>
+    internal class AttachmentConfiguration : IEntityTypeConfiguration<Attachment>
     {
-        public void Configure(EntityTypeBuilder<MsgContent> builder)
+        public void Configure(EntityTypeBuilder<Attachment> builder)
         {
         }
     }

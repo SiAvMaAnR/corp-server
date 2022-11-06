@@ -1,9 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-using CSN.Infrastructure.Models.AccEmployee;
+﻿using CSN.Infrastructure.Models.AccEmployeeDto;
 
 namespace CSN.Infrastructure.Interfaces.Services
 {

@@ -1,5 +1,5 @@
 ﻿using CSN.Infrastructure.Interfaces.Services;
-using CSN.Infrastructure.Models.AccEmployee;
+using CSN.Infrastructure.Models.AccEmployeeDto;
 using CSN.Persistence.DBContext;
 using CSN.WebApi.Extensions.CustomExceptions;
 using CSN.WebApi.Models.AccEmployee;

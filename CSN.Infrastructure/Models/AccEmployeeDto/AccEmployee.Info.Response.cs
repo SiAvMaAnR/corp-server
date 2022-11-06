@@ -1,6 +1,6 @@
 using CSN.Domain.Entities.Companies;
+namespace CSN.Infrastructure.Models.AccEmployeeDto;
 
-namespace CSN.Infrastructure.Models.AccEmployee;
 
 public class AccEmployeeInfoResponse
 {
