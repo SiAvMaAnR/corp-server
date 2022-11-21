@@ -1,16 +1,14 @@
-﻿using CSN.Domain.Entities.Companies;
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
+﻿using CSN.Infrastructure.Models.CompanyDto;
 
 namespace CSN.Infrastructure.Interfaces.Services
 {
     public interface ICompanyService
     {
-        Task AddAsync(Company company);
-        Task<IEnumerable<Company>?> GetAllAsync();
-        Task<Company?> GetAsync(int id);
+        Task<CompanyEmployeesResponse> GetEmployeesAsync(CompanyEmployeesRequest request);
+        Task<CompanyLoginResponse> LoginAsync(CompanyLoginRequest request);
+        Task<CompanyRegisterResponse> RegisterAsync(CompanyRegisterRequest request);
+        Task<CompanyInfoResponse> GetInfoAsync(CompanyInfoRequest request);
+        Task<CompanyRemoveEmployeeResponse> RemoveEmployeeAsync(CompanyRemoveEmployeeRequest request);
+        Task<CompanyConfirmationResponse> ConfirmAccountAsync(CompanyConfirmationRequest request);
     }
 }

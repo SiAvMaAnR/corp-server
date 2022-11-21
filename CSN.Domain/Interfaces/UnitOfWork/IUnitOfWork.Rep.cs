@@ -1,6 +1,8 @@
-﻿using CSN.Domain.Entities.Channels;
+﻿using CSN.Domain.Entities.Attachments;
+using CSN.Domain.Entities.Channels;
 using CSN.Domain.Entities.Companies;
 using CSN.Domain.Entities.Employees;
+using CSN.Domain.Entities.Invitations;
 using CSN.Domain.Entities.Messages;
 using System;
 using System.Collections.Generic;
@@ -16,5 +18,7 @@ namespace CSN.Domain.Interfaces.UnitOfWork
         IEmployeeRepository Employee { get; }
         IMessageRepository Message { get; }
         IChannelRepository Channel { get; }
+        IInvitationRepository Invitation { get; }
+        IAttachmentRepository Attachment { get; }
     }
 }

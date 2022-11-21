@@ -1,7 +1,9 @@
 ﻿using CSN.Domain.Entities.Companies;
 using CSN.Domain.Entities.Employees;
 using CSN.Infrastructure.Interfaces.Services;
+using CSN.Infrastructure.Models.EmployeeDto;
 using CSN.Persistence.DBContext;
+using CSN.WebApi.Extensions.CustomExceptions;
 using CSN.WebApi.Models.Employee;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Http;
@@ -13,66 +15,76 @@ namespace CSN.WebApi.Controllers
     [ApiController]
     public class EmployeeController : ControllerBase
     {
-        private readonly EFContext eFContext;
         private readonly IEmployeeService employeeService;
         private readonly ILogger<EmployeeController> logger;
 
-        public EmployeeController(EFContext eFContext, IEmployeeService employeeService, ILogger<EmployeeController> logger)
+        public EmployeeController(IEmployeeService employeeService, ILogger<EmployeeController> logger)
         {
-            this.eFContext = eFContext;
             this.employeeService = employeeService;
             this.logger = logger;
         }
 
-        [HttpPost]
-        public async Task<IActionResult> AddAsync([FromBody] EmployeeAdd request)
+        [HttpPost("Login")]
+        public async Task<IActionResult> Login([FromBody] EmployeeLogin request)
         {
-            try
+            var response = await this.employeeService.LoginAsync(new EmployeeLoginRequest()
             {
-                await this.employeeService.AddAsync(new Employee()
-                {
-                    Login = request.Login,
-                    Email = request.Email,
-                    PasswordHash = new byte[10],
-                    PasswordSalt = new byte[10],
-                    Role = request.Role,
-                    Image = new byte[10],
-                    CompanyId = request.CompanyId
-                });
-                return Ok();
-            }
-            catch (Exception)
+                Email = request.Email,
+                Password = request.Password
+            });
+
+            return Ok(new
             {
-                return BadRequest();
-            }
+                response.IsSuccess,
+                response.TokenType,
+                response.Token
+            });
         }
 
-        [HttpGet]
-        public async Task<IActionResult> GetAllAsync()
+        [HttpPost("Register")]
+        public async Task<IActionResult> Register([FromBody] EmployeeRegister request)
         {
-            try
+            var response = await this.employeeService.RegisterAsync(new EmployeeRegisterRequest()
             {
-                IEnumerable<Employee>? employees = await this.employeeService.GetAllAsync();
-                return Ok(employees);
-            }
-            catch (Exception)
+                Login = request.Login,
+                Invite = request.Invite,
+                Password = request.Password,
+                Image = request.Image,
+                Role = "Employee",
+            });
+
+            return Ok(new
             {
-                return BadRequest();
-            }
+                response.IsSuccess
+            });
         }
 
-        [HttpGet("{id:int}"), Authorize]
-        public async Task<IActionResult> GetAllAsync(int id)
+        [HttpGet("Info"), Authorize(Roles = "Employee")]
+        public async Task<IActionResult> Info()
         {
-            try
+            var response = await this.employeeService.GetInfoAsync(new EmployeeInfoRequest());
+
+            return Ok(new
             {
-                Employee? employee = await this.employeeService.GetAsync(id);
-                return Ok(employee);
-            }
-            catch (Exception)
+                response.Id,
+                response.Login,
+                response.Email,
+                response.Role,
+                response.CompanyId,
+                response.Company,
+                response.Image
+            });
+        }
+
+        [HttpGet("Remove"), Authorize(Roles = "Employee")]
+        public async Task<IActionResult> Remove()
+        {
+            var response = await this.employeeService.RemoveAsync(new EmployeeRemoveRequest());
+
+            return Ok(new
             {
-                return BadRequest();
-            }
+                response.IsSuccess
+            });
         }
     }
 }

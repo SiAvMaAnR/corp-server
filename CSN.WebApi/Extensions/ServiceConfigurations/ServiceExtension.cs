@@ -1,16 +1,21 @@
-﻿using CSN.Domain.Entities.Channels;
+﻿using CSN.Domain.Entities.Attachments;
+using CSN.Domain.Entities.Channels;
 using CSN.Domain.Entities.Companies;
 using CSN.Domain.Entities.Employees;
+using CSN.Domain.Entities.Invitations;
 using CSN.Domain.Entities.Messages;
 using CSN.Domain.Interfaces.UnitOfWork;
 using CSN.Infrastructure.Interfaces.Services;
 using CSN.Persistence.DBContext;
 using CSN.Persistence.Repositories;
 using CSN.Persistence.UnitOfWork;
+using CSN.WebApi.Filters;
 using CSN.WebApi.Services;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
+using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 using System.Security.Claims;
+using System.Text.Json.Serialization;
 
 namespace CSN.WebApi.Extensions.ServiceConfigurations
 {
@@ -29,12 +34,13 @@ namespace CSN.WebApi.Extensions.ServiceConfigurations
             serviceCollection.AddScoped<IEmployeeRepository, EmployeeRepository>();
             serviceCollection.AddScoped<IChannelRepository, ChannelRepository>();
             serviceCollection.AddScoped<IMessageRepository, MessageRepository>();
+            serviceCollection.AddScoped<IAttachmentRepository, AttachmentRepository>();
+            serviceCollection.AddScoped<IInvitationRepository, InvitationRepository>();
 
             serviceCollection.AddScoped<ICompanyService, CompanyService>();
             serviceCollection.AddScoped<IEmployeeService, EmployeeService>();
             serviceCollection.AddScoped<IChannelService, ChannelService>();
-            serviceCollection.AddScoped<IAccCompanyService, AccCompanyService>();
-            serviceCollection.AddScoped<IAccEmployeeService, AccEmployeeService>();
+            serviceCollection.AddScoped<IInvitationService, InvitationService>();
             return serviceCollection;
         }
 
@@ -43,12 +49,20 @@ namespace CSN.WebApi.Extensions.ServiceConfigurations
             return serviceCollection;
         }
 
+
         public static IServiceCollection AddCommonDependencies(this IServiceCollection serviceCollection, ConfigurationManager config)
         {
             string connection = config.GetConnectionString("LinuxConnection");
 
             serviceCollection.AddDbContext<EFContext>(options => options.UseSqlServer(connection));
-            serviceCollection.AddControllers();
+            serviceCollection.Configure<ApiBehaviorOptions>(options =>
+            {
+                options.SuppressModelStateInvalidFilter = true;
+            });
+            serviceCollection.AddControllers(config =>
+            {
+                config.Filters.Add(new ValidationFilterAttribute());
+            }).AddJsonOptions(x => x.JsonSerializerOptions.ReferenceHandler = ReferenceHandler.IgnoreCycles);
             serviceCollection.AddEndpointsApiExplorer();
             serviceCollection.AddHttpContextAccessor();
             serviceCollection.AddLogging();
@@ -56,6 +70,7 @@ namespace CSN.WebApi.Extensions.ServiceConfigurations
             serviceCollection.AddAuthorization();
             serviceCollection.AddSwaggerGen(options => options.Config());
             serviceCollection.AddAuthentication(JwtBearerDefaults.AuthenticationScheme).AddJwtBearer(options => options.Config(config));
+            serviceCollection.AddDataProtection();
             return serviceCollection;
         }
     }

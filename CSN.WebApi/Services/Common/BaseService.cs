@@ -11,12 +11,10 @@ namespace CSN.WebApi.Services.Common
     public abstract class BaseService<TEntity> where TEntity : BaseEntity
     {
         protected readonly IUnitOfWork unitOfWork;
-        protected readonly EFContext eFContext;
         protected readonly ClaimsPrincipal? claimsPrincipal;
 
-        public BaseService(EFContext eFContext, IUnitOfWork unitOfWork, IHttpContextAccessor context)
+        public BaseService(IUnitOfWork unitOfWork, IHttpContextAccessor context)
         {
-            this.eFContext = eFContext;
             this.unitOfWork = unitOfWork;
             this.claimsPrincipal = context.HttpContext?.User;
         }

@@ -1,8 +1,12 @@
-﻿using CSN.Domain.Entities.Companies;
+﻿using System.Linq;
+using CSN.Domain.Entities.Companies;
 using CSN.Infrastructure.Interfaces.Services;
+using CSN.Infrastructure.Models.CompanyDto;
 using CSN.Persistence.DBContext;
+using CSN.WebApi.Extensions.CustomExceptions;
 using CSN.WebApi.Models.Company;
 using CSN.WebApi.Services;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 
@@ -12,66 +16,103 @@ namespace CSN.WebApi.Controllers
     [ApiController]
     public class CompanyController : ControllerBase
     {
-        private readonly EFContext eFContext;
         private readonly ICompanyService companyService;
         private readonly ILogger<CompanyController> logger;
 
-        public CompanyController(EFContext eFContext, ICompanyService companyService, ILogger<CompanyController> logger)
+        public CompanyController(ICompanyService companyService, ILogger<CompanyController> logger)
         {
-            this.eFContext = eFContext;
             this.companyService = companyService;
             this.logger = logger;
         }
 
-        [HttpPost]
-        public async Task<IActionResult> AddAsync([FromBody] CompanyAdd request)
+        [HttpPost("Login")]
+        public async Task<IActionResult> Login([FromBody] CompanyLogin request)
         {
-            try
+            var response = await this.companyService.LoginAsync(new CompanyLoginRequest()
             {
-                await this.companyService.AddAsync(new Company()
-                {
-                    Name = request.Name,
-                    Email = request.Email,
-                    Image = new byte[10],
-                    Description = request.Description,
-                    PasswordHash = new byte[10],
-                    PasswordSalt = new byte[10]
-                });
-                return Ok();
-            }
-            catch (Exception)
+                Email = request.Email,
+                Password = request.Password
+            });
+
+            return Ok(new
             {
-                return BadRequest();
-            }
+                response.IsSuccess,
+                response.TokenType,
+                response.Token
+            });
         }
 
-        [HttpGet]
-        public async Task<IActionResult> GetAllAsync()
+        [HttpPost("Register")]
+        public async Task<IActionResult> Register([FromBody] CompanyRegister request)
         {
-            try
+            var response = await this.companyService.RegisterAsync(new CompanyRegisterRequest()
             {
-                IEnumerable<Company>? companies = await this.companyService.GetAllAsync();
-                return Ok(companies);
-            }
-            catch (Exception)
+                Login = request.Login,
+                Email = request.Email,
+                Password = request.Password,
+                Image = request.Image,
+                Description = request.Description,
+            });
+
+            return Ok(new
             {
-                return BadRequest();
-            }
+                response.IsSuccess
+            });
         }
 
-        [HttpGet("{id:int}")]
-        public async Task<IActionResult> GetAllAsync(int id)
+
+        [HttpPost("Confirm")]
+        public async Task<IActionResult> Confirmation([FromBody] CompanyConfirm request)
         {
-            try
+            var response = await this.companyService.ConfirmAccountAsync(new CompanyConfirmationRequest()
             {
-                Company? company = await this.companyService.GetAsync(id);
-                return Ok(company);
-            }
-            catch (Exception)
+                Confirmation = request.Confirmation
+            });
+
+            return Ok(new
             {
-                return BadRequest();
-            }
+                response.IsSuccess
+            });
         }
 
+        [HttpGet("Info"), Authorize(Roles = "Company")]
+        public async Task<IActionResult> Info()
+        {
+            var response = await this.companyService.GetInfoAsync(new CompanyInfoRequest());
+
+            return Ok(new
+            {
+                response.Id,
+                response.Login,
+                response.Email,
+                response.Role,
+                response.Description,
+                response.Image
+            });
+        }
+
+        [HttpGet("GetEmployees"), Authorize(Roles = "Company")]
+        public async Task<IActionResult> GetEmployees()
+        {
+            var response = await this.companyService.GetEmployeesAsync(new CompanyEmployeesRequest());
+
+            return Ok(new
+            {
+                response.Employees.Count,
+                response.Employees
+            });
+        }
+
+
+        [HttpPost("RemoveEmployee"), Authorize(Roles = "Company")]
+        public async Task<IActionResult> RemoveEmployee([FromBody] CompanyRemoveEmployee request)
+        {
+            var response = await this.companyService.RemoveEmployeeAsync(new CompanyRemoveEmployeeRequest(request.Id));
+
+            return Ok(new
+            {
+                response.IsSuccess
+            });
+        }
     }
 }

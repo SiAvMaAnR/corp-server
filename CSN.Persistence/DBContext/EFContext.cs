@@ -11,19 +11,23 @@ using System.Linq;
 using System.Reflection.Emit;
 using System.Text;
 using System.Threading.Tasks;
+using CSN.Domain.Entities.Invitations;
+using CSN.Domain.Entities.Attachments;
 
 namespace CSN.Persistence.DBContext
 {
-    public class EFContext: DbContext
+    public class EFContext : DbContext
     {
         public DbSet<Message> Messages { get; set; } = null!;
         public DbSet<Employee> Employees { get; set; } = null!;
         public DbSet<Company> Companies { get; set; } = null!;
         public DbSet<Channel> Channels { get; set; } = null!;
+        public DbSet<Attachment> Attachments { get; set; } = null!;
+        public DbSet<Invitation> Invitations { get; set; } = null!;
 
         public EFContext(DbContextOptions<EFContext> options) : base(options)
         {
-            //Database.EnsureDeleted();
+            // Database.EnsureDeleted();
             Database.EnsureCreated();
         }
 
@@ -34,6 +38,8 @@ namespace CSN.Persistence.DBContext
             modelBuilder.ApplyConfiguration(new EmployeeConfiguration());
             modelBuilder.ApplyConfiguration(new CompanyConfiguraton());
             modelBuilder.ApplyConfiguration(new ChannelConfiguration());
+            modelBuilder.ApplyConfiguration(new AttachmentConfiguration());
+            modelBuilder.ApplyConfiguration(new InvitationConfiguration());
 
             base.OnModelCreating(modelBuilder);
         }
