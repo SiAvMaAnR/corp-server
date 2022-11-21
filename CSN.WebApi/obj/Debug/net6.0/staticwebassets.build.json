@@ -1,0 +1,23 @@
+{
+  "Version": 1,
+  "Hash": "80IFFt6xLRd99dJwbva9nDWc/sz1XQ1mecAFE5Ciyoc=",
+  "Source": "CSN.WebApi",
+  "BasePath": "_content/CSN.WebApi",
+  "Mode": "Default",
+  "ManifestType": "Build",
+  "ReferencedProjectsConfiguration": [
+    {
+      "Identity": "/home/ivan/Desktop/net/Corporate-Social-Network/CSN.Email/CSN.Email.csproj",
+      "Version": 2,
+      "Source": "CSN.Email",
+      "GetPublishAssetsTargets": "ComputeReferencedStaticWebAssetsPublishManifest;GetCurrentProjectPublishStaticWebAssetItems",
+      "AdditionalPublishProperties": "Configuration=Debug;Platform=AnyCPU",
+      "AdditionalPublishPropertiesToRemove": "WebPublishProfileFile;TargetFramework;RuntimeIdentifier",
+      "GetBuildAssetsTargets": "GetCurrentProjectBuildStaticWebAssetItems",
+      "AdditionalBuildProperties": "Configuration=Debug;Platform=AnyCPU",
+      "AdditionalBuildPropertiesToRemove": "WebPublishProfileFile;TargetFramework;RuntimeIdentifier"
+    }
+  ],
+  "DiscoveryPatterns": [],
+  "Assets": []
+}
