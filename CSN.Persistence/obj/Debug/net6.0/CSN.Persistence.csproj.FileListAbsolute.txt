@@ -43,3 +43,5 @@ C:/Users/samar/source/repos/CSN/CSN.Persistence/obj/Debug/net6.0/ref/CSN.Persist
 /home/ivan/Desktop/net/Corporate-Social-Network/CSN.Persistence/obj/Debug/net6.0/refint/CSN.Persistence.dll
 /home/ivan/Desktop/net/Corporate-Social-Network/CSN.Persistence/obj/Debug/net6.0/CSN.Persistence.pdb
 /home/ivan/Desktop/net/Corporate-Social-Network/CSN.Persistence/obj/Debug/net6.0/ref/CSN.Persistence.dll
+/home/ivan/Desktop/net/Corporate-Social-Network/CSN.Persistence/bin/Debug/net6.0/CSN.Persistence.runtimeconfig.json
+/home/ivan/Desktop/net/Corporate-Social-Network/CSN.Persistence/obj/Debug/net6.0/CSN.Persistence.genruntimeconfig.cache
