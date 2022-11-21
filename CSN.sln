@@ -13,6 +13,8 @@ Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "CSN.Persistence", "CSN.Pers
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "CSN.Email", "CSN.Email\CSN.Email.csproj", "{33A9F147-13CC-4ACF-9AE2-C398062B5EA2}"
 EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "CSN.Chat", "CSN.Chat\CSN.Chat.csproj", "{FAEBAFD7-D15C-4A0B-8818-73D808642B96}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -39,6 +41,10 @@ Global
 		{33A9F147-13CC-4ACF-9AE2-C398062B5EA2}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{33A9F147-13CC-4ACF-9AE2-C398062B5EA2}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{33A9F147-13CC-4ACF-9AE2-C398062B5EA2}.Release|Any CPU.Build.0 = Release|Any CPU
+		{FAEBAFD7-D15C-4A0B-8818-73D808642B96}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{FAEBAFD7-D15C-4A0B-8818-73D808642B96}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{FAEBAFD7-D15C-4A0B-8818-73D808642B96}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{FAEBAFD7-D15C-4A0B-8818-73D808642B96}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE

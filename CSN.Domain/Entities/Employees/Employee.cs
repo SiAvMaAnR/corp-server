@@ -4,7 +4,7 @@ using CSN.Domain.Entities.Companies;
 
 namespace CSN.Domain.Entities.Employees;
 
-public partial class Employee : BaseEntity
+public partial class Employee : BaseEntity, IAccount
 {
     public string Login { get; set; } = null!;
     public string Email { get; set; } = null!;

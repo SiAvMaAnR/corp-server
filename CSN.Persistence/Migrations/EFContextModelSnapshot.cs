@@ -22,6 +22,23 @@ namespace CSN.Persistence.Migrations
 
             SqlServerModelBuilderExtensions.UseIdentityColumns(modelBuilder, 1L, 1);
 
+            modelBuilder.Entity("CSN.Domain.Entities.Attachments.Attachment", b =>
+                {
+                    b.Property<int>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("int");
+
+                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"), 1L, 1);
+
+                    b.Property<byte[]>("Content")
+                        .IsRequired()
+                        .HasColumnType("varbinary(max)");
+
+                    b.HasKey("Id");
+
+                    b.ToTable("Attachments");
+                });
+
             modelBuilder.Entity("CSN.Domain.Entities.Channels.Channel", b =>
                 {
                     b.Property<int>("Id")
@@ -128,6 +145,34 @@ namespace CSN.Persistence.Migrations
                     b.ToTable("Employees");
                 });
 
+            modelBuilder.Entity("CSN.Domain.Entities.Invitations.Invitation", b =>
+                {
+                    b.Property<int>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("int");
+
+                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"), 1L, 1);
+
+                    b.Property<int>("CompanyId")
+                        .HasColumnType("int");
+
+                    b.Property<DateTime>("CreatedDate")
+                        .HasColumnType("datetime2");
+
+                    b.Property<string>("Email")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<bool>("IsRemoved")
+                        .HasColumnType("bit");
+
+                    b.HasKey("Id");
+
+                    b.HasIndex("CompanyId");
+
+                    b.ToTable("Invitations");
+                });
+
             modelBuilder.Entity("CSN.Domain.Entities.Messages.Message", b =>
                 {
                     b.Property<int>("Id")
@@ -152,9 +197,22 @@ namespace CSN.Persistence.Migrations
                     b.Navigation("Company");
                 });
 
+            modelBuilder.Entity("CSN.Domain.Entities.Invitations.Invitation", b =>
+                {
+                    b.HasOne("CSN.Domain.Entities.Companies.Company", "Company")
+                        .WithMany("Invitations")
+                        .HasForeignKey("CompanyId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.Navigation("Company");
+                });
+
             modelBuilder.Entity("CSN.Domain.Entities.Companies.Company", b =>
                 {
                     b.Navigation("Employees");
+
+                    b.Navigation("Invitations");
                 });
 #pragma warning restore 612, 618
         }

@@ -1,7 +1,9 @@
-﻿using CSN.Domain.Entities.Companies;
+﻿using System.Linq;
+using CSN.Domain.Entities.Companies;
 using CSN.Infrastructure.Interfaces.Services;
 using CSN.Infrastructure.Models.CompanyDto;
 using CSN.Persistence.DBContext;
+using CSN.WebApi.Extensions.CustomExceptions;
 using CSN.WebApi.Models.Company;
 using CSN.WebApi.Services;
 using Microsoft.AspNetCore.Authorization;
@@ -14,36 +16,85 @@ namespace CSN.WebApi.Controllers
     [ApiController]
     public class CompanyController : ControllerBase
     {
-        private readonly EFContext eFContext;
         private readonly ICompanyService companyService;
-        private readonly IEmailService emailService;
         private readonly ILogger<CompanyController> logger;
 
-        public CompanyController(EFContext eFContext, ICompanyService companyService, IEmailService emailService, ILogger<CompanyController> logger)
+        public CompanyController(ICompanyService companyService, ILogger<CompanyController> logger)
         {
-            this.eFContext = eFContext;
             this.companyService = companyService;
-            this.emailService = emailService;
             this.logger = logger;
         }
 
-
-
-
-        [HttpPost("Invite"), Authorize(Roles = "Company")]
-        public async Task<IActionResult> SendInviteAsync([FromBody] CompanyInvite invite)
+        [HttpPost("Login")]
+        public async Task<IActionResult> Login([FromBody] CompanyLogin request)
         {
-            await this.emailService.SendInviteAsync(invite.Email);
+            var response = await this.companyService.LoginAsync(new CompanyLoginRequest()
+            {
+                Email = request.Email,
+                Password = request.Password
+            });
 
-            return Ok();
+            return Ok(new
+            {
+                response.IsSuccess,
+                response.TokenType,
+                response.Token
+            });
+        }
+
+        [HttpPost("Register")]
+        public async Task<IActionResult> Register([FromBody] CompanyRegister request)
+        {
+            var response = await this.companyService.RegisterAsync(new CompanyRegisterRequest()
+            {
+                Login = request.Login,
+                Email = request.Email,
+                Password = request.Password,
+                Image = request.Image,
+                Description = request.Description,
+            });
+
+            return Ok(new
+            {
+                response.IsSuccess
+            });
         }
 
 
+        [HttpPost("Confirm")]
+        public async Task<IActionResult> Confirmation([FromBody] CompanyConfirm request)
+        {
+            var response = await this.companyService.ConfirmAccountAsync(new CompanyConfirmationRequest()
+            {
+                Confirmation = request.Confirmation
+            });
 
-        [HttpGet("Employees"), Authorize(Roles = "Company")]
+            return Ok(new
+            {
+                response.IsSuccess
+            });
+        }
+
+        [HttpGet("Info"), Authorize(Roles = "Company")]
+        public async Task<IActionResult> Info()
+        {
+            var response = await this.companyService.GetInfoAsync(new CompanyInfoRequest());
+
+            return Ok(new
+            {
+                response.Id,
+                response.Login,
+                response.Email,
+                response.Role,
+                response.Description,
+                response.Image
+            });
+        }
+
+        [HttpGet("GetEmployees"), Authorize(Roles = "Company")]
         public async Task<IActionResult> GetEmployees()
         {
-            var response = await companyService.EmployeesAsync(new CompanyEmployeesRequest());
+            var response = await this.companyService.GetEmployeesAsync(new CompanyEmployeesRequest());
 
             return Ok(new
             {
@@ -52,5 +103,16 @@ namespace CSN.WebApi.Controllers
             });
         }
 
+
+        [HttpPost("RemoveEmployee"), Authorize(Roles = "Company")]
+        public async Task<IActionResult> RemoveEmployee([FromBody] CompanyRemoveEmployee request)
+        {
+            var response = await this.companyService.RemoveEmployeeAsync(new CompanyRemoveEmployeeRequest(request.Id));
+
+            return Ok(new
+            {
+                response.IsSuccess
+            });
+        }
     }
 }

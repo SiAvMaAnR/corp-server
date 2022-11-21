@@ -23,5 +23,6 @@ namespace CSN.Domain.Interfaces.Repository
            params Expression<Func<TEntity, object>>[] includeProperties);
 
         Task<bool> AnyAsync(Expression<Func<TEntity, bool>> predicate);
+        Task<bool> AllAsync(Expression<Func<TEntity, bool>> predicate);
     }
 }

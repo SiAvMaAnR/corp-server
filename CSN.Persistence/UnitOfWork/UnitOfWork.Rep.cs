@@ -1,6 +1,8 @@
-﻿using CSN.Domain.Entities.Channels;
+﻿using CSN.Domain.Entities.Attachments;
+using CSN.Domain.Entities.Channels;
 using CSN.Domain.Entities.Companies;
 using CSN.Domain.Entities.Employees;
+using CSN.Domain.Entities.Invitations;
 using CSN.Domain.Entities.Messages;
 using CSN.Domain.Interfaces;
 using CSN.Persistence.DBContext;
@@ -21,6 +23,8 @@ namespace CSN.Persistence.UnitOfWork
         public IEmployeeRepository Employee { get; }
         public IMessageRepository Message { get; }
         public IChannelRepository Channel { get; }
+        public IInvitationRepository Invitation { get; }
+        public IAttachmentRepository Attachment { get; }
 
         public UnitOfWork(EFContext eFContext)
         {
@@ -29,6 +33,8 @@ namespace CSN.Persistence.UnitOfWork
             this.Employee = new EmployeeRepository(eFContext);
             this.Message = new MessageRepository(eFContext);
             this.Channel = new ChannelRepository(eFContext);
+            this.Invitation = new InvitationRepository(eFContext);
+            this.Attachment = new AttachmentRepository(eFContext);
         }
     }
 }

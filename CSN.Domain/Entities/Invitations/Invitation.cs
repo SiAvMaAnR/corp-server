@@ -7,7 +7,7 @@ public partial class Invitation : BaseEntity
 {
     public string Email { get; set; } = null!;
     public DateTime CreatedDate { get; set; } = DateTime.Now;
-    public bool IsRemoved { get; set; } = false;
+    public bool IsActive { get; set; } = true;
     public Company Company { get; set; } = null!;
     public int CompanyId { get; set; }
 }

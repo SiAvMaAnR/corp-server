@@ -1,4 +1,4 @@
-﻿using System.Net.Mail;
+﻿using CSN.Domain.Entities.Attachments;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Metadata.Builders;
 using System;

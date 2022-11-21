@@ -10,9 +10,9 @@ namespace CSN.WebApi.Controllers;
 public class TestController : ControllerBase
 {
     private readonly IConfiguration configuration;
-    private readonly ILogger<AccountEmployeeController> logger;
+    private readonly ILogger<TestController> logger;
 
-    public TestController(IConfiguration configuration, IEmailService emailService, ILogger<AccountEmployeeController> logger)
+    public TestController(IConfiguration configuration, IInvitationService invitationService, ILogger<TestController> logger)
     {
         this.configuration = configuration;
         this.logger = logger;

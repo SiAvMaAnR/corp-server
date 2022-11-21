@@ -82,5 +82,10 @@ namespace CSN.Persistence.Repositories.Common
         {
             return await dbSet.AnyAsync(predicate);
         }
+
+        public virtual async Task<bool> AllAsync(Expression<Func<TEntity, bool>> predicate)
+        {
+            return await dbSet.AllAsync(predicate);
+        }
     }
 }
