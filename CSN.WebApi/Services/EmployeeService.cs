@@ -59,7 +59,6 @@ namespace CSN.WebApi.Services
                 { "lifeTime" , this.configuration["Authorization:LifeTime"] },
             });
 
-
             return new EmployeeLoginResponse()
             {
                 IsSuccess = true,
@@ -120,7 +119,7 @@ namespace CSN.WebApi.Services
                 Image = image,
                 PasswordHash = passwordHash,
                 PasswordSalt = passwordSalt,
-                Role = request.Role,
+                Role = invite.Role.ToString(),
                 CompanyId = invite.CompanyId,
             };
 

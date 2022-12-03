@@ -50,7 +50,6 @@ namespace CSN.WebApi.Controllers
                 Invite = request.Invite,
                 Password = request.Password,
                 Image = request.Image,
-                Role = "Employee",
             });
 
             return Ok(new

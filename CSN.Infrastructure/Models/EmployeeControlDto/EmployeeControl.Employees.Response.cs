@@ -1,8 +1,8 @@
 using CSN.Domain.Entities.Employees;
 
-namespace CSN.Infrastructure.Models.CompanyDto;
+namespace CSN.Infrastructure.Models.EmployeeControlDto;
 
-public class CompanyEmployeesResponse
+public class EmployeeControlEmployeesResponse
 {
     public IList<CompanyEmployee> Employees { get; set; } = null!;
 }

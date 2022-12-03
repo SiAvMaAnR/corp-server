@@ -1,5 +1,4 @@
 ﻿using CSN.Domain.Entities.Companies;
-using CSN.Domain.Entities.Employees;
 using CSN.Domain.Interfaces.UnitOfWork;
 using CSN.Email;
 using CSN.Email.Models;
@@ -7,7 +6,6 @@ using CSN.Infrastructure.Helpers;
 using CSN.Infrastructure.Interfaces.Services;
 using CSN.Infrastructure.Models.Common;
 using CSN.Infrastructure.Models.CompanyDto;
-using CSN.Persistence.DBContext;
 using CSN.WebApi.Extensions;
 using CSN.WebApi.Extensions.CustomExceptions;
 using CSN.WebApi.Services.Common;
@@ -142,54 +140,6 @@ namespace CSN.WebApi.Services
                 Image = company.Image,
                 Role = company.Role,
                 Description = company.Description,
-            };
-        }
-
-        public async Task<CompanyEmployeesResponse> GetEmployeesAsync(CompanyEmployeesRequest request)
-        {
-            Company? company = await this.claimsPrincipal!.GetCompanyAsync(unitOfWork, company => company.Employees);
-
-            if (company == null)
-            {
-                throw new NotFoundException("Account is not found");
-            }
-
-            return new CompanyEmployeesResponse()
-            {
-                Employees = company.Employees.Select(employee => new CompanyEmployee()
-                {
-                    Id = employee.Id,
-                    Login = employee.Login,
-                    Email = employee.Email,
-                    Role = employee.Role,
-                    Image = employee.Image
-                }).ToList()
-            };
-        }
-
-        public async Task<CompanyRemoveEmployeeResponse> RemoveEmployeeAsync(CompanyRemoveEmployeeRequest request)
-        {
-            Company? company = await this.claimsPrincipal!.GetCompanyAsync(unitOfWork);
-
-            if (company == null)
-            {
-                throw new NotFoundException("Account is not found");
-            }
-
-            Employee? employee = await this.unitOfWork.Employee.GetAsync(employee =>
-                employee.Id == request.Id && company.Id == employee.CompanyId);
-
-            if (employee == null)
-            {
-                throw new NotFoundException("Employee is not found");
-            }
-
-            await this.unitOfWork.Employee.DeleteAsync(employee);
-            await this.unitOfWork.SaveChangesAsync();
-
-            return new CompanyRemoveEmployeeResponse()
-            {
-                IsSuccess = true
             };
         }
 

@@ -39,6 +39,7 @@ namespace CSN.WebApi.Extensions.ServiceConfigurations
 
             serviceCollection.AddScoped<ICompanyService, CompanyService>();
             serviceCollection.AddScoped<IEmployeeService, EmployeeService>();
+            serviceCollection.AddScoped<IEmployeeControlService, EmployeeControlService>();
             serviceCollection.AddScoped<IChannelService, ChannelService>();
             serviceCollection.AddScoped<IInvitationService, InvitationService>();
             return serviceCollection;
