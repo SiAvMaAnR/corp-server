@@ -60,14 +60,21 @@ public class InvitationService : BaseService<Company>, IInvitationService
         var invitation = new Invitation()
         {
             Email = request.EmployeeEmail,
-            CompanyId = company.Id
+            CompanyId = company.Id,
+            Role = request.EmployeeRole
         };
 
         await this.unitOfWork.Invitation.AddAsync(invitation);
 
         await this.unitOfWork.SaveChangesAsync();
 
-        string inviteJson = JsonSerializer.Serialize(new Invite(invitation.Id, invitation.Email, company.Id));
+        string inviteJson = JsonSerializer.Serialize(new Invite()
+        {
+            Id = invitation.Id,
+            Email = invitation.Email,
+            Role = invitation.Role,
+            CompanyId = company.Id
+        });
 
         string invite = protector.Protect(inviteJson);
 

@@ -14,7 +14,6 @@ using CSN.WebApi.Services;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
-using System.Security.Claims;
 using System.Text.Json.Serialization;
 
 namespace CSN.WebApi.Extensions.ServiceConfigurations
@@ -39,6 +38,7 @@ namespace CSN.WebApi.Extensions.ServiceConfigurations
 
             serviceCollection.AddScoped<ICompanyService, CompanyService>();
             serviceCollection.AddScoped<IEmployeeService, EmployeeService>();
+            serviceCollection.AddScoped<IEmployeeControlService, EmployeeControlService>();
             serviceCollection.AddScoped<IChannelService, ChannelService>();
             serviceCollection.AddScoped<IInvitationService, InvitationService>();
             return serviceCollection;

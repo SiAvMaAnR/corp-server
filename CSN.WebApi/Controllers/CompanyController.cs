@@ -90,29 +90,5 @@ namespace CSN.WebApi.Controllers
                 response.Image
             });
         }
-
-        [HttpGet("GetEmployees"), Authorize(Roles = "Company")]
-        public async Task<IActionResult> GetEmployees()
-        {
-            var response = await this.companyService.GetEmployeesAsync(new CompanyEmployeesRequest());
-
-            return Ok(new
-            {
-                response.Employees.Count,
-                response.Employees
-            });
-        }
-
-
-        [HttpPost("RemoveEmployee"), Authorize(Roles = "Company")]
-        public async Task<IActionResult> RemoveEmployee([FromBody] CompanyRemoveEmployee request)
-        {
-            var response = await this.companyService.RemoveEmployeeAsync(new CompanyRemoveEmployeeRequest(request.Id));
-
-            return Ok(new
-            {
-                response.IsSuccess
-            });
-        }
     }
 }

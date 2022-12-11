@@ -50,7 +50,6 @@ namespace CSN.WebApi.Controllers
                 Invite = request.Invite,
                 Password = request.Password,
                 Image = request.Image,
-                Role = "Employee",
             });
 
             return Ok(new
@@ -76,7 +75,7 @@ namespace CSN.WebApi.Controllers
             });
         }
 
-        [HttpGet("Remove"), Authorize(Roles = "Employee")]
+        [HttpDelete("Remove"), Authorize(Roles = "Employee")]
         public async Task<IActionResult> Remove()
         {
             var response = await this.employeeService.RemoveAsync(new EmployeeRemoveRequest());

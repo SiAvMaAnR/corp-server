@@ -1,4 +1,5 @@
 using CSN.Domain.Entities.Common;
+using CSN.Domain.Entities.Messages;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -10,7 +11,7 @@ namespace CSN.Domain.Entities.Attachments;
 public partial class Attachment : BaseEntity
 {
     public byte[] Content { get; set; } = null!;
-    //ArrByte Content
-    //Type content string
-    //MessageID
+    public string ContentType { get; set; } = null!;
+    public int MessageId { get; set; }
+    public Message Message { get; set; } = null!;
 }

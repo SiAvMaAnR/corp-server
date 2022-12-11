@@ -25,7 +25,11 @@ public class InvitationController : ControllerBase
     [HttpPost("Send"), Authorize(Roles = "Company")]
     public async Task<IActionResult> SendInvite([FromBody] InviteSend request)
     {
-        var response = await this.invitationService.SendInviteAsync(new InvitationSendInviteRequest(request.Email));
+        var response = await this.invitationService.SendInviteAsync(new InvitationSendInviteRequest()
+        {
+            EmployeeEmail = request.Email,
+            EmployeeRole = request.EmployeeRole
+        });
 
         return Ok(new
         {

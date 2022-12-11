@@ -13,11 +13,13 @@ using System.Text;
 using System.Threading.Tasks;
 using CSN.Domain.Entities.Invitations;
 using CSN.Domain.Entities.Attachments;
+using CSN.Domain.Entities.Users;
 
 namespace CSN.Persistence.DBContext
 {
     public class EFContext : DbContext
     {
+        public DbSet<User> Users { get; set; } = null!;
         public DbSet<Message> Messages { get; set; } = null!;
         public DbSet<Employee> Employees { get; set; } = null!;
         public DbSet<Company> Companies { get; set; } = null!;
