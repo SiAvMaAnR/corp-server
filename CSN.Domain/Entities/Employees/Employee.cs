@@ -1,19 +1,14 @@
-﻿using System.Text.Json.Serialization;
+﻿using System.ComponentModel.DataAnnotations.Schema;
+using System.Text.Json.Serialization;
 using CSN.Domain.Entities.Common;
 using CSN.Domain.Entities.Companies;
+using CSN.Domain.Entities.Users;
 
 namespace CSN.Domain.Entities.Employees;
 
-public partial class Employee : BaseEntity, IAccount
+[Table("Employees")]
+public partial class Employee : User
 {
-    public string Login { get; set; } = null!;
-    public string Email { get; set; } = null!;
-    [JsonIgnore]
-    public byte[] PasswordHash { get; set; } = null!;
-    [JsonIgnore]
-    public byte[] PasswordSalt { get; set; } = null!;
-    public string Role { get; set; } = null!;
-    public byte[]? Image { get; set; } = null!;
     public Company Company { get; set; } = null!;
     public int CompanyId { get; set; }
 }

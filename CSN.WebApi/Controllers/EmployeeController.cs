@@ -75,7 +75,7 @@ namespace CSN.WebApi.Controllers
             });
         }
 
-        [HttpGet("Remove"), Authorize(Roles = "Employee")]
+        [HttpDelete("Remove"), Authorize(Roles = "Employee")]
         public async Task<IActionResult> Remove()
         {
             var response = await this.employeeService.RemoveAsync(new EmployeeRemoveRequest());
