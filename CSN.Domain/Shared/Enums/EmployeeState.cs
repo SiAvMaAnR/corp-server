@@ -1,16 +1,9 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
+﻿namespace CSN.Domain.Shared.Enums;
 
-namespace CSN.Domain.Shared.Enums
+public enum EmployeeState
 {
-    public enum EmployeeState
-    {
-        Online,
-        Offline,
-        NotDisturb,
-        Away
-    }
+    Online,
+    Offline,
+    NotDisturb,
+    Away
 }

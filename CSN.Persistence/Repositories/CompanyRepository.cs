@@ -8,5 +8,6 @@ public class CompanyRepository : BaseRepository<Company>, ICompanyRepository
 {
     public CompanyRepository(EFContext dbContext) : base(dbContext)
     {
+        
     }
 }

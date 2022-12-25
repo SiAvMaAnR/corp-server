@@ -7,7 +7,6 @@ public enum EmployeeRole
     // ProjectManager,
     // Tester,
     // Designer,
-    // Guest
-
+    // Guest,
     Employee
 }
