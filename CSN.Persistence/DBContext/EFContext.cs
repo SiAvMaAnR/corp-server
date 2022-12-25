@@ -2,15 +2,8 @@
 using CSN.Domain.Entities.Companies;
 using CSN.Domain.Entities.Employees;
 using CSN.Domain.Entities.Messages;
-using CSN.Persistence.DBContext;
 using CSN.Persistence.EntityConfigurations;
 using Microsoft.EntityFrameworkCore;
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Reflection.Emit;
-using System.Text;
-using System.Threading.Tasks;
 using CSN.Domain.Entities.Invitations;
 using CSN.Domain.Entities.Attachments;
 using CSN.Domain.Entities.Users;
@@ -20,9 +13,9 @@ namespace CSN.Persistence.DBContext
     public class EFContext : DbContext
     {
         public DbSet<User> Users { get; set; } = null!;
-        public DbSet<Message> Messages { get; set; } = null!;
         public DbSet<Employee> Employees { get; set; } = null!;
         public DbSet<Company> Companies { get; set; } = null!;
+        public DbSet<Message> Messages { get; set; } = null!;
         public DbSet<Channel> Channels { get; set; } = null!;
         public DbSet<Attachment> Attachments { get; set; } = null!;
         public DbSet<Invitation> Invitations { get; set; } = null!;

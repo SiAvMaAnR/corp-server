@@ -18,9 +18,9 @@ public class TestController : ControllerBase
         this.logger = logger;
     }
 
-    [HttpPost]
+    [HttpGet]
     public IActionResult Test()
     {
-        return Ok();
+        return Ok("OK");
     }
 }

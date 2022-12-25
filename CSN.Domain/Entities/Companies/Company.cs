@@ -1,7 +1,4 @@
-﻿using System.ComponentModel.DataAnnotations;
-using System.ComponentModel.DataAnnotations.Schema;
-using System.Text.Json.Serialization;
-using CSN.Domain.Entities.Common;
+﻿using System.ComponentModel.DataAnnotations.Schema;
 using CSN.Domain.Entities.Employees;
 using CSN.Domain.Entities.Invitations;
 using CSN.Domain.Entities.Users;
