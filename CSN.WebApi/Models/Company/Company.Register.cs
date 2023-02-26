@@ -9,7 +9,6 @@ public class CompanyRegister
     [MaxLength(35), EmailAddress]
     public string Email { get; set; } = null!;
     public string Password { get; set; } = null!;
-    public string? Image { get; set; } = null!;
     [MaxLength(400)]
     public string? Description { get; set; }
 }

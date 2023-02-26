@@ -11,7 +11,6 @@ namespace CSN.Domain.Entities.Messages;
 public partial class Message : AttachableEntity
 {
     public string? Text { get; set; }
-    public DateTime CreatedDate { get; set; } = DateTime.Now;
     public DateTime? ModifiedDate { get; set; }
     public bool IsRead { get; set; }
     public User Author { get; set; } = null!;

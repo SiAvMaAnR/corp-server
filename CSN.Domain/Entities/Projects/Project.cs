@@ -15,5 +15,4 @@ public partial class Project : BaseEntity
     public ProjectState State { get; set; }
     public ICollection<User> Users { get; set; } = new List<User>();
     public ICollection<ProjectTask> Tasks { get; set; } = new List<ProjectTask>();
-    public DateTime CreatedDate { get; set; } = DateTime.Now;
 }

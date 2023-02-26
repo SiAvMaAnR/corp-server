@@ -1,13 +1,7 @@
-﻿using System.Linq;
-using CSN.Domain.Entities.Companies;
-using CSN.Infrastructure.Interfaces.Services;
-using CSN.Infrastructure.Models.CompanyDto;
-using CSN.Persistence.DBContext;
-using CSN.WebApi.Extensions.CustomExceptions;
+﻿using CSN.Application.Interfaces.Services;
+using CSN.Application.Models.CompanyDto;
 using CSN.WebApi.Models.Company;
-using CSN.WebApi.Services;
 using Microsoft.AspNetCore.Authorization;
-using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 
 namespace CSN.WebApi.Controllers
@@ -50,7 +44,6 @@ namespace CSN.WebApi.Controllers
                 Login = request.Login,
                 Email = request.Email,
                 Password = request.Password,
-                Image = request.Image,
                 Description = request.Description,
             });
 
@@ -60,6 +53,21 @@ namespace CSN.WebApi.Controllers
             });
         }
 
+        [HttpPost("Edit"), Authorize(Roles = "Company")]
+        public async Task<IActionResult> Edit([FromBody] CompanyEdit request)
+        {
+            var response = await this.companyService.EditAsync(new CompanyEditRequest()
+            {
+                Login = request.Login,
+                Image = request.Image,
+                Description = request.Description,
+            });
+
+            return Ok(new
+            {
+                response.IsSuccess
+            });
+        }
 
         [HttpPost("Confirm")]
         public async Task<IActionResult> Confirmation([FromBody] CompanyConfirm request)

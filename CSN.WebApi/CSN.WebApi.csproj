@@ -10,8 +10,8 @@
       <IncludeAssets>runtime; build; native; contentfiles; analyzers; buildtransitive</IncludeAssets>
       <PrivateAssets>all</PrivateAssets>
     </PackageReference>
-    <PackageReference Include="Swashbuckle.AspNetCore" Version="6.4.0" />
-    <PackageReference Include="Swashbuckle.AspNetCore.Filters" Version="7.0.5" />
+    <PackageReference Include="Swashbuckle.AspNetCore" Version="6.5.0" />
+    <PackageReference Include="Swashbuckle.AspNetCore.Filters" Version="7.0.6" />
   </ItemGroup>
   <ItemGroup>
     <Folder Include="Middlewares\" />
@@ -20,5 +20,6 @@
     <ProjectReference Include="..\CSN.Infrastructure\CSN.Infrastructure.csproj" />
     <ProjectReference Include="..\CSN.Persistence\CSN.Persistence.csproj" />
     <ProjectReference Include="..\CSN.Email\CSN.Email.csproj" />
+    <ProjectReference Include="..\CSN.Application\CSN.Application.csproj" />
   </ItemGroup>
 </Project>

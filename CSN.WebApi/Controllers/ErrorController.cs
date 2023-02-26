@@ -1,6 +1,5 @@
-﻿using CSN.WebApi.Extensions.CustomExceptions;
+﻿using CSN.Domain.Extensions.CustomExceptions;
 using Microsoft.AspNetCore.Diagnostics;
-using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 
 namespace CSN.WebApi.Controllers

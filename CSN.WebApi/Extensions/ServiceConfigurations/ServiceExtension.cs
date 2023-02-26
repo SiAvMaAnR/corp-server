@@ -1,16 +1,17 @@
-﻿using CSN.Domain.Entities.Attachments;
+﻿using CSN.Application.Interfaces.Services;
+using CSN.Application.Services;
+using CSN.Domain.Entities.Attachments;
 using CSN.Domain.Entities.Channels;
 using CSN.Domain.Entities.Companies;
 using CSN.Domain.Entities.Employees;
 using CSN.Domain.Entities.Invitations;
 using CSN.Domain.Entities.Messages;
 using CSN.Domain.Interfaces.UnitOfWork;
-using CSN.Infrastructure.Interfaces.Services;
+using CSN.Infrastructure.Extensions;
 using CSN.Persistence.DBContext;
 using CSN.Persistence.Repositories;
 using CSN.Persistence.UnitOfWork;
 using CSN.WebApi.Filters;
-using CSN.WebApi.Services;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
@@ -53,7 +54,6 @@ namespace CSN.WebApi.Extensions.ServiceConfigurations
         public static IServiceCollection AddCommonDependencies(this IServiceCollection serviceCollection, ConfigurationManager config)
         {
             string connection = config.GetConnectionString("LinuxConnection");
-
             serviceCollection.AddDbContext<EFContext>(options => options.UseSqlServer(connection));
             serviceCollection.Configure<ApiBehaviorOptions>(options =>
             {

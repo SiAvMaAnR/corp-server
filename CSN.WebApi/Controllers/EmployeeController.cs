@@ -1,12 +1,7 @@
-﻿using CSN.Domain.Entities.Companies;
-using CSN.Domain.Entities.Employees;
-using CSN.Infrastructure.Interfaces.Services;
-using CSN.Infrastructure.Models.EmployeeDto;
-using CSN.Persistence.DBContext;
-using CSN.WebApi.Extensions.CustomExceptions;
+﻿using CSN.Application.Interfaces.Services;
+using CSN.Application.Models.EmployeeDto;
 using CSN.WebApi.Models.Employee;
 using Microsoft.AspNetCore.Authorization;
-using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 
 namespace CSN.WebApi.Controllers
@@ -58,6 +53,21 @@ namespace CSN.WebApi.Controllers
             });
         }
 
+        [HttpPut("Edit"), Authorize(Roles = "Employee")]
+        public async Task<IActionResult> Edit([FromBody] EmployeeEdit request)
+        {
+            var response = await this.employeeService.EditAsync(new EmployeeEditRequest()
+            {
+                Login = request.Login,
+                Image = request.Image,
+            });
+
+            return Ok(new
+            {
+                response.IsSuccess
+            });
+        }
+
         [HttpGet("Info"), Authorize(Roles = "Employee")]
         public async Task<IActionResult> Info()
         {
@@ -71,7 +81,9 @@ namespace CSN.WebApi.Controllers
                 response.Role,
                 response.CompanyId,
                 response.Company,
-                response.Image
+                response.Image,
+                response.CreatedAt,
+                response.UpdatedAt
             });
         }
 

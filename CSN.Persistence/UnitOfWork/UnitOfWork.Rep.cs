@@ -4,6 +4,7 @@ using CSN.Domain.Entities.Companies;
 using CSN.Domain.Entities.Employees;
 using CSN.Domain.Entities.Invitations;
 using CSN.Domain.Entities.Messages;
+using CSN.Domain.Entities.Users;
 using CSN.Domain.Interfaces;
 using CSN.Persistence.DBContext;
 using CSN.Persistence.Repositories;
@@ -19,6 +20,7 @@ namespace CSN.Persistence.UnitOfWork
     {
         private readonly EFContext eFContext;
 
+        public IUserRepository<User> User { get; }
         public ICompanyRepository Company { get; }
         public IEmployeeRepository Employee { get; }
         public IMessageRepository Message { get; }
@@ -29,6 +31,7 @@ namespace CSN.Persistence.UnitOfWork
         public UnitOfWork(EFContext eFContext)
         {
             this.eFContext = eFContext;
+            this.User = new UserRepository(eFContext);
             this.Company = new CompanyRepository(eFContext);
             this.Employee = new EmployeeRepository(eFContext);
             this.Message = new MessageRepository(eFContext);

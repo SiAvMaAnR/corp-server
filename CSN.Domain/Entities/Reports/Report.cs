@@ -12,5 +12,4 @@ public partial class Report : BaseEntity
     public int Progress { get; set; }
     public ProjectTask Task { get; set; } = null!;
     public int TaskId { get; set; }
-    public DateTime CreatedDate { get; set; } = DateTime.Now;
 }

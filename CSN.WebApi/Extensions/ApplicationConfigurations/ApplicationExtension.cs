@@ -29,11 +29,17 @@
                 .AllowAnyHeader()
                 .AllowAnyMethod());
 
+            webApplication.UseHttpsRedirection();
             webApplication.UseRouting();
             webApplication.UseAuthentication();
             webApplication.UseAuthorization();
             webApplication.UseHttpsRedirection();
             webApplication.MapControllers();
+        }
+
+        public static void AddConfiguration(this WebApplicationBuilder? webApplicationBuilder)
+        {
+            webApplicationBuilder?.WebHost.UseKestrel(options => options.Limits.KeepAliveTimeout = TimeSpan.FromMinutes(1));
         }
     }
 }

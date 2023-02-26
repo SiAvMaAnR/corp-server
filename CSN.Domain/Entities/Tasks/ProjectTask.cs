@@ -19,5 +19,4 @@ public partial class ProjectTask : BaseEntity
     public int ProjectId { get; set; }
     public User User { get; set; } = null!;
     public int UserId { get; set; }
-    public DateTime CreatedDate { get; set; } = DateTime.Now;
 }
