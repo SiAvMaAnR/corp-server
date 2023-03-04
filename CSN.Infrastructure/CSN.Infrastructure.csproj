@@ -4,11 +4,7 @@
     <ImplicitUsings>enable</ImplicitUsings>
     <Nullable>enable</Nullable>
   </PropertyGroup>
-  <ItemGroup>
-    <Compile Remove="Новая папка\**" />
-    <EmbeddedResource Remove="Новая папка\**" />
-    <None Remove="Новая папка\**" />
-  </ItemGroup>
+
   <ItemGroup>
     <PackageReference Include="Microsoft.AspNetCore.Authentication.JwtBearer" Version="6.0.10" />
     <PackageReference Include="Microsoft.IdentityModel.Tokens" Version="6.27.0" />
