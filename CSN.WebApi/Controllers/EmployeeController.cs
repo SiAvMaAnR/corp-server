@@ -1,4 +1,6 @@
-﻿using CSN.WebApi.Models.Employee;
+﻿using CSN.Application.Interfaces.Services;
+using CSN.Application.Models.EmployeeDto;
+using CSN.WebApi.Models.Employee;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 

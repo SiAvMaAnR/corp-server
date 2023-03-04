@@ -1,14 +1,15 @@
 ﻿<Project Sdk="Microsoft.NET.Sdk">
   <ItemGroup>
-    <ProjectReference Include="..\CSN.Domain\CSN.Domain.csproj" />
-    <ProjectReference Include="..\CSN.Infrastructure\CSN.Infrastructure.csproj" />
-    <ProjectReference Include="..\CSN.Persistence\CSN.Persistence.csproj" />
-    <ProjectReference Include="..\CSN.Email\CSN.Email.csproj" />
-  </ItemGroup>
-  <ItemGroup>
     <PackageReference Include="Microsoft.AspNetCore.DataProtection" Version="7.0.3" />
     <PackageReference Include="Microsoft.AspNetCore.Http" Version="2.2.2" />
     <PackageReference Include="Microsoft.AspNetCore.Http.Abstractions" Version="2.2.0" />
+  </ItemGroup>
+  <ItemGroup>
+    <ProjectReference Include="..\CSN.Domain\CSN.Domain.csproj" />
+    <ProjectReference Include="..\CSN.Email\CSN.Email.csproj" />
+    <ProjectReference Include="..\CSN.Infrastructure\CSN.Infrastructure.csproj" />
+    <ProjectReference Include="..\CSN.Notifications\CSN.Notifications.csproj" />
+    <ProjectReference Include="..\CSN.Persistence\CSN.Persistence.csproj" />
   </ItemGroup>
   <PropertyGroup>
     <TargetFramework>net7.0</TargetFramework>

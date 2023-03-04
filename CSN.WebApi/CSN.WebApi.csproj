@@ -1,11 +1,10 @@
-<Project Sdk="Microsoft.NET.Sdk.Web">
+﻿<Project Sdk="Microsoft.NET.Sdk.Web">
   <PropertyGroup>
     <TargetFramework>net7.0</TargetFramework>
     <Nullable>enable</Nullable>
     <ImplicitUsings>enable</ImplicitUsings>
   </PropertyGroup>
   <ItemGroup>
-    <PackageReference Include="Microsoft.AspNetCore.Authentication.JwtBearer" Version="6.0.10" />
     <PackageReference Include="Microsoft.EntityFrameworkCore.Design" Version="6.0.10">
       <IncludeAssets>runtime; build; native; contentfiles; analyzers; buildtransitive</IncludeAssets>
       <PrivateAssets>all</PrivateAssets>
@@ -14,9 +13,9 @@
     <PackageReference Include="Swashbuckle.AspNetCore.Filters" Version="7.0.6" />
   </ItemGroup>
   <ItemGroup>
+    <ProjectReference Include="..\CSN.Application\CSN.Application.csproj" />
     <ProjectReference Include="..\CSN.Infrastructure\CSN.Infrastructure.csproj" />
     <ProjectReference Include="..\CSN.Persistence\CSN.Persistence.csproj" />
     <ProjectReference Include="..\CSN.Email\CSN.Email.csproj" />
-    <ProjectReference Include="..\CSN.Application\CSN.Application.csproj" />
   </ItemGroup>
 </Project>

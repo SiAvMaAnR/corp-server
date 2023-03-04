@@ -1,4 +1,6 @@
-﻿using CSN.Domain.Entities.Attachments;
+﻿using CSN.Application.Interfaces.Services;
+using CSN.Application.Services;
+using CSN.Domain.Entities.Attachments;
 using CSN.Domain.Entities.Channels;
 using CSN.Domain.Entities.Companies;
 using CSN.Domain.Entities.Employees;
