@@ -53,7 +53,7 @@ namespace CSN.WebApi.Extensions.ServiceConfigurations
 
         public static IServiceCollection AddCommonDependencies(this IServiceCollection serviceCollection, ConfigurationManager config)
         {
-            string connection = config.GetConnectionString("LinuxConnection");
+            string connection = config?.GetConnectionString("DefaultConnection") ?? "";
             serviceCollection.AddDbContext<EFContext>(options => options.UseSqlServer(connection));
             serviceCollection.Configure<ApiBehaviorOptions>(options =>
             {
