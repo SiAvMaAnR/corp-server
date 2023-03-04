@@ -1,4 +1,4 @@
-using CSN.Domain.Entities.Common;
+using CSN.Domain.Common;
 using CSN.Domain.Entities.Attachments;
 using System.ComponentModel.DataAnnotations.Schema;
 

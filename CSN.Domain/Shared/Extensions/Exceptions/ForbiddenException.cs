@@ -1,4 +1,4 @@
-namespace CSN.Domain.Extensions.CustomExceptions
+namespace CSN.Domain.Shared.Extensions.Exceptions
 {
     public class ForbiddenException : Exception
     {

@@ -4,7 +4,7 @@ using MailKit.Net.Smtp;
 using MailKit.Security;
 using MimeKit;
 
-namespace CSN.Email;
+namespace CSN.Email.Handlers;
 
 public class MessageHandler : IHandler
 {
@@ -17,13 +17,11 @@ public class MessageHandler : IHandler
 
     public async Task SendAsync(MimeMessage message)
     {
-        using (var client = new SmtpClient())
-        {
-            await client.ConnectAsync(this.smtp.Host, this.smtp.Port, SecureSocketOptions.StartTls);
-            await client.AuthenticateAsync(this.smtp.Email, this.smtp.Password);
-            await client.SendAsync(message);
+        using var client = new SmtpClient();
+        await client.ConnectAsync(smtp.Host, smtp.Port, SecureSocketOptions.StartTls);
+        await client.AuthenticateAsync(smtp.Email, smtp.Password);
+        await client.SendAsync(message);
 
-            await client.DisconnectAsync(true);
-        }
+        await client.DisconnectAsync(true);
     }
 }

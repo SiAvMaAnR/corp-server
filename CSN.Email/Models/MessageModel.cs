@@ -1,5 +1,3 @@
-using MimeKit;
-
 namespace CSN.Email.Models;
 
 public class MessageModel

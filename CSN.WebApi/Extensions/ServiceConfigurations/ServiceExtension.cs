@@ -1,6 +1,4 @@
-﻿using CSN.Application.Interfaces.Services;
-using CSN.Application.Services;
-using CSN.Domain.Entities.Attachments;
+﻿using CSN.Domain.Entities.Attachments;
 using CSN.Domain.Entities.Channels;
 using CSN.Domain.Entities.Companies;
 using CSN.Domain.Entities.Employees;
@@ -11,6 +9,7 @@ using CSN.Infrastructure.Extensions;
 using CSN.Persistence.DBContext;
 using CSN.Persistence.Repositories;
 using CSN.Persistence.UnitOfWork;
+using CSN.WebApi.Extensions.SwaggerConfigurations;
 using CSN.WebApi.Filters;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.AspNetCore.Mvc;

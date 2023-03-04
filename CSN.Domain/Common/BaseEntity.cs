@@ -1,4 +1,4 @@
-﻿namespace CSN.Domain.Entities.Common
+﻿namespace CSN.Domain.Common
 {
     public abstract class BaseEntity
     {

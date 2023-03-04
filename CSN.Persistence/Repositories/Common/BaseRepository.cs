@@ -1,4 +1,4 @@
-﻿using CSN.Domain.Entities.Common;
+﻿using CSN.Domain.Common;
 using CSN.Domain.Interfaces.Repository;
 using CSN.Persistence.DBContext;
 using CSN.Persistence.Extensions;
@@ -13,7 +13,7 @@ namespace CSN.Persistence.Repositories.Common
 
         public BaseRepository(EFContext dbContext)
         {
-            this.dbSet = dbContext.Set<TEntity>();
+            dbSet = dbContext.Set<TEntity>();
         }
 
         public virtual async Task AddAsync(TEntity entity)

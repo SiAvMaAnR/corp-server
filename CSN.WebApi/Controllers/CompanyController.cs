@@ -1,6 +1,4 @@
-﻿using CSN.Application.Interfaces.Services;
-using CSN.Application.Models.CompanyDto;
-using CSN.WebApi.Models.Company;
+﻿using CSN.WebApi.Models.Company;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 
@@ -22,7 +20,7 @@ namespace CSN.WebApi.Controllers
         [HttpPost("Login")]
         public async Task<IActionResult> Login([FromBody] CompanyLogin request)
         {
-            var response = await this.companyService.LoginAsync(new CompanyLoginRequest()
+            var response = await companyService.LoginAsync(new CompanyLoginRequest()
             {
                 Email = request.Email,
                 Password = request.Password
@@ -39,7 +37,7 @@ namespace CSN.WebApi.Controllers
         [HttpPost("Register")]
         public async Task<IActionResult> Register([FromBody] CompanyRegister request)
         {
-            var response = await this.companyService.RegisterAsync(new CompanyRegisterRequest()
+            var response = await companyService.RegisterAsync(new CompanyRegisterRequest()
             {
                 Login = request.Login,
                 Email = request.Email,
@@ -56,7 +54,7 @@ namespace CSN.WebApi.Controllers
         [HttpPost("Edit"), Authorize(Roles = "Company")]
         public async Task<IActionResult> Edit([FromBody] CompanyEdit request)
         {
-            var response = await this.companyService.EditAsync(new CompanyEditRequest()
+            var response = await companyService.EditAsync(new CompanyEditRequest()
             {
                 Login = request.Login,
                 Image = request.Image,
@@ -72,7 +70,7 @@ namespace CSN.WebApi.Controllers
         [HttpPost("Confirm")]
         public async Task<IActionResult> Confirmation([FromBody] CompanyConfirm request)
         {
-            var response = await this.companyService.ConfirmAccountAsync(new CompanyConfirmationRequest()
+            var response = await companyService.ConfirmAccountAsync(new CompanyConfirmationRequest()
             {
                 Confirmation = request.Confirmation
             });
@@ -86,7 +84,7 @@ namespace CSN.WebApi.Controllers
         [HttpGet("Info"), Authorize(Roles = "Company")]
         public async Task<IActionResult> Info()
         {
-            var response = await this.companyService.GetInfoAsync(new CompanyInfoRequest());
+            var response = await companyService.GetInfoAsync(new CompanyInfoRequest());
 
             return Ok(new
             {

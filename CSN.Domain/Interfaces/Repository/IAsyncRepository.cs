@@ -1,10 +1,5 @@
-﻿using CSN.Domain.Entities.Common;
-using System;
-using System.Collections.Generic;
-using System.Linq;
+﻿using CSN.Domain.Common;
 using System.Linq.Expressions;
-using System.Text;
-using System.Threading.Tasks;
 
 namespace CSN.Domain.Interfaces.Repository
 {

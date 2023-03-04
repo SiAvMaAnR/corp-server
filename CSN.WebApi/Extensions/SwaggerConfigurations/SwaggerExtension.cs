@@ -2,7 +2,7 @@
 using Swashbuckle.AspNetCore.Filters;
 using Swashbuckle.AspNetCore.SwaggerGen;
 
-namespace CSN.WebApi.Extensions;
+namespace CSN.WebApi.Extensions.SwaggerConfigurations;
 
 public static class SwaggerExtension
 {

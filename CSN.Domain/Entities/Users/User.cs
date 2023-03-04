@@ -1,11 +1,11 @@
-using System.ComponentModel.DataAnnotations.Schema;
-using System.Text.Json.Serialization;
+using CSN.Domain.Common;
 using CSN.Domain.Entities.Channels;
-using CSN.Domain.Entities.Common;
 using CSN.Domain.Entities.Groups;
 using CSN.Domain.Entities.Notifications;
 using CSN.Domain.Entities.Projects;
 using CSN.Domain.Entities.Tasks;
+using System.ComponentModel.DataAnnotations.Schema;
+using System.Text.Json.Serialization;
 
 namespace CSN.Domain.Entities.Users;
 

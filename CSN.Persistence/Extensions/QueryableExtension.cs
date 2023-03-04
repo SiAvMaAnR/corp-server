@@ -1,6 +1,6 @@
-﻿using System.Linq.Expressions;
+﻿using CSN.Domain.Common;
 using Microsoft.EntityFrameworkCore;
-using CSN.Domain.Entities.Common;
+using System.Linq.Expressions;
 
 namespace CSN.Persistence.Extensions;
 

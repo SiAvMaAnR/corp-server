@@ -1,6 +1,6 @@
-namespace CSN.Domain.Extensions.CustomExceptions
+namespace CSN.Domain.Shared.Extensions.Exceptions
 {
-    public class UnauthorizedException: Exception
+    public class UnauthorizedException : Exception
     {
         public int Status { get; } = 401;
 

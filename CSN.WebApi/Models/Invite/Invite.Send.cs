@@ -1,5 +1,5 @@
-using System.ComponentModel.DataAnnotations;
 using CSN.Domain.Shared.Enums;
+using System.ComponentModel.DataAnnotations;
 
 namespace CSN.WebApi.Models.Invite;
 

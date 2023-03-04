@@ -1,6 +1,6 @@
-namespace CSN.Domain.Extensions.CustomExceptions
+namespace CSN.Domain.Shared.Extensions.Exceptions
 {
-    public class NotFoundException: Exception
+    public class NotFoundException : Exception
     {
         public int Status { get; } = 404;
 

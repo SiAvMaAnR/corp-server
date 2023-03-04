@@ -1,6 +1,4 @@
-﻿using CSN.Application.Interfaces.Services;
-using CSN.Application.Models.EmployeeDto;
-using CSN.WebApi.Models.Employee;
+﻿using CSN.WebApi.Models.Employee;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 
@@ -22,7 +20,7 @@ namespace CSN.WebApi.Controllers
         [HttpPost("Login")]
         public async Task<IActionResult> Login([FromBody] EmployeeLogin request)
         {
-            var response = await this.employeeService.LoginAsync(new EmployeeLoginRequest()
+            var response = await employeeService.LoginAsync(new EmployeeLoginRequest()
             {
                 Email = request.Email,
                 Password = request.Password
@@ -39,7 +37,7 @@ namespace CSN.WebApi.Controllers
         [HttpPost("Register")]
         public async Task<IActionResult> Register([FromBody] EmployeeRegister request)
         {
-            var response = await this.employeeService.RegisterAsync(new EmployeeRegisterRequest()
+            var response = await employeeService.RegisterAsync(new EmployeeRegisterRequest()
             {
                 Login = request.Login,
                 Invite = request.Invite,
@@ -56,7 +54,7 @@ namespace CSN.WebApi.Controllers
         [HttpPut("Edit"), Authorize(Roles = "Employee")]
         public async Task<IActionResult> Edit([FromBody] EmployeeEdit request)
         {
-            var response = await this.employeeService.EditAsync(new EmployeeEditRequest()
+            var response = await employeeService.EditAsync(new EmployeeEditRequest()
             {
                 Login = request.Login,
                 Image = request.Image,
@@ -71,7 +69,7 @@ namespace CSN.WebApi.Controllers
         [HttpGet("Info"), Authorize(Roles = "Employee")]
         public async Task<IActionResult> Info()
         {
-            var response = await this.employeeService.GetInfoAsync(new EmployeeInfoRequest());
+            var response = await employeeService.GetInfoAsync(new EmployeeInfoRequest());
 
             return Ok(new
             {
@@ -90,7 +88,7 @@ namespace CSN.WebApi.Controllers
         [HttpDelete("Remove"), Authorize(Roles = "Employee")]
         public async Task<IActionResult> Remove()
         {
-            var response = await this.employeeService.RemoveAsync(new EmployeeRemoveRequest());
+            var response = await employeeService.RemoveAsync(new EmployeeRemoveRequest());
 
             return Ok(new
             {

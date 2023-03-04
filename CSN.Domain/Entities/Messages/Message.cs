@@ -1,7 +1,5 @@
 ﻿using CSN.Domain.Entities.AttachableEntities;
-using CSN.Domain.Entities.Attachments;
 using CSN.Domain.Entities.Channels;
-using CSN.Domain.Entities.Common;
 using CSN.Domain.Entities.Users;
 using System.ComponentModel.DataAnnotations.Schema;
 

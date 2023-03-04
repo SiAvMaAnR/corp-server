@@ -1,8 +1,8 @@
-using System.ComponentModel.DataAnnotations.Schema;
-using CSN.Domain.Entities.Common;
+using CSN.Domain.Common;
+using CSN.Domain.Entities.Tasks;
 using CSN.Domain.Entities.Users;
 using CSN.Domain.Shared.Enums;
-using CSN.Domain.Entities.Tasks;
+using System.ComponentModel.DataAnnotations.Schema;
 
 namespace CSN.Domain.Entities.Projects;
 

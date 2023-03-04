@@ -1,7 +1,7 @@
-using System.Linq.Expressions;
 using CSN.Domain.Entities.Companies;
 using CSN.Domain.Entities.Employees;
 using CSN.Domain.Interfaces.UnitOfWork;
+using System.Linq.Expressions;
 using System.Security.Claims;
 
 namespace CSN.Infrastructure.Extensions

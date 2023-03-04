@@ -1,7 +1,7 @@
-using Microsoft.Extensions.Configuration;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
-using System.Text;
+using Microsoft.Extensions.Configuration;
 using Microsoft.IdentityModel.Tokens;
+using System.Text;
 
 namespace CSN.Infrastructure.Extensions;
 

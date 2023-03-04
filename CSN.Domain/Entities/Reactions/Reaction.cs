@@ -1,5 +1,5 @@
+using CSN.Domain.Common;
 using System.ComponentModel.DataAnnotations.Schema;
-using CSN.Domain.Entities.Common;
 
 namespace CSN.Domain.Entities.Reactions;
 

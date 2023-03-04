@@ -1,12 +1,12 @@
-﻿using CSN.Domain.Entities.Channels;
+﻿using CSN.Domain.Entities.Attachments;
+using CSN.Domain.Entities.Channels;
 using CSN.Domain.Entities.Companies;
 using CSN.Domain.Entities.Employees;
+using CSN.Domain.Entities.Invitations;
 using CSN.Domain.Entities.Messages;
+using CSN.Domain.Entities.Users;
 using CSN.Persistence.EntityConfigurations;
 using Microsoft.EntityFrameworkCore;
-using CSN.Domain.Entities.Invitations;
-using CSN.Domain.Entities.Attachments;
-using CSN.Domain.Entities.Users;
 
 namespace CSN.Persistence.DBContext
 {

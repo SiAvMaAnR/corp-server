@@ -4,5 +4,5 @@ namespace CSN.Domain.Entities.Invitations;
 
 public interface IInvitationRepository : IAsyncRepository<Invitation>
 {
-    
+
 }

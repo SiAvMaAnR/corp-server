@@ -1,6 +1,6 @@
-﻿using System.ComponentModel.DataAnnotations.Schema;
-using CSN.Domain.Entities.Companies;
+﻿using CSN.Domain.Entities.Companies;
 using CSN.Domain.Entities.Users;
+using System.ComponentModel.DataAnnotations.Schema;
 
 namespace CSN.Domain.Entities.Employees;
 

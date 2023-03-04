@@ -1,5 +1,3 @@
-using CSN.Application.Interfaces.Services;
-using CSN.Application.Models.InvitationDto;
 using CSN.WebApi.Models.Invite;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
@@ -23,7 +21,7 @@ public class InvitationController : ControllerBase
     [HttpPost("Send"), Authorize(Roles = "Company")]
     public async Task<IActionResult> SendInvite([FromBody] InviteSend request)
     {
-        var response = await this.invitationService.SendInviteAsync(new InvitationSendInviteRequest()
+        var response = await invitationService.SendInviteAsync(new InvitationSendInviteRequest()
         {
             EmployeeEmail = request.Email,
             EmployeeRole = request.EmployeeRole
@@ -38,7 +36,7 @@ public class InvitationController : ControllerBase
     [HttpGet("GetAll"), Authorize(Roles = "Company")]
     public async Task<IActionResult> GetInvites([FromQuery] InviteGetAll request)
     {
-        var response = await this.invitationService.GetInvitesAsync(new InvitationGetAllRequest()
+        var response = await invitationService.GetInvitesAsync(new InvitationGetAllRequest()
         {
             PageNumber = request.PageNumber,
             PageSize = request.PageSize
@@ -58,7 +56,7 @@ public class InvitationController : ControllerBase
     [HttpPut("State"), Authorize(Roles = "Company")]
     public async Task<IActionResult> SetState([FromBody] InviteSetState request)
     {
-        var response = await this.invitationService.SetStateAsync(new InvitationSetStateRequest()
+        var response = await invitationService.SetStateAsync(new InvitationSetStateRequest()
         {
             Id = request.Id,
             IsActive = request.IsActive
@@ -74,7 +72,7 @@ public class InvitationController : ControllerBase
     [HttpDelete("Remove"), Authorize(Roles = "Company")]
     public async Task<IActionResult> Remove([FromBody] InviteRemove request)
     {
-        var response = await this.invitationService.RemoveInviteAsync(new InvitationRemoveRequest()
+        var response = await invitationService.RemoveInviteAsync(new InvitationRemoveRequest()
         {
             Id = request.Id,
         });

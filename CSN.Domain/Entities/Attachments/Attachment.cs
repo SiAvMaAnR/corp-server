@@ -1,7 +1,5 @@
+using CSN.Domain.Common;
 using CSN.Domain.Entities.AttachableEntities;
-using CSN.Domain.Entities.Common;
-using CSN.Domain.Entities.Messages;
-using CSN.Domain.Entities.Posts;
 using System.ComponentModel.DataAnnotations.Schema;
 
 namespace CSN.Domain.Entities.Attachments;

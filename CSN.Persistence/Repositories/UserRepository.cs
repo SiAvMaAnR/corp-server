@@ -1,4 +1,3 @@
-using CSN.Domain.Entities.Companies;
 using CSN.Domain.Entities.Users;
 using CSN.Persistence.DBContext;
 using CSN.Persistence.Repositories.Common;
@@ -9,6 +8,6 @@ public class UserRepository : BaseRepository<User>, IUserRepository<User>
 {
     public UserRepository(EFContext dbContext) : base(dbContext)
     {
-        
+
     }
 }

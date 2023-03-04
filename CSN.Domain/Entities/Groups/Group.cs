@@ -1,7 +1,7 @@
-using System.ComponentModel.DataAnnotations.Schema;
-using CSN.Domain.Entities.Common;
+using CSN.Domain.Common;
 using CSN.Domain.Entities.Posts;
 using CSN.Domain.Entities.Users;
+using System.ComponentModel.DataAnnotations.Schema;
 
 namespace CSN.Domain.Entities.Groups;
 

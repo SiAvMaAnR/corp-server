@@ -1,5 +1,3 @@
-using CSN.Application.Interfaces.Services;
-using CSN.Application.Models.EmployeeControlDto;
 using CSN.WebApi.Models.Company;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
@@ -22,7 +20,7 @@ public class EmployeeControlController : ControllerBase
     [HttpPut("ChangeRole"), Authorize(Roles = "Company")]
     public async Task<IActionResult> ChangeRoleEmployee([FromBody] CompanyChangeRole request)
     {
-        var response = await this.employeeControlService.ChangeRoleAsync(new EmployeeControlChangeRoleRequest()
+        var response = await employeeControlService.ChangeRoleAsync(new EmployeeControlChangeRoleRequest()
         {
             EmployeeId = request.EmployeeId,
             EmployeeRole = request.EmployeeRole
@@ -38,7 +36,7 @@ public class EmployeeControlController : ControllerBase
     [HttpDelete("Remove"), Authorize(Roles = "Company")]
     public async Task<IActionResult> RemoveEmployee([FromBody] CompanyRemoveEmployee request)
     {
-        var response = await this.employeeControlService.RemoveEmployeeAsync(new EmployeeControlRemoveRequest(request.Id));
+        var response = await employeeControlService.RemoveEmployeeAsync(new EmployeeControlRemoveRequest(request.Id));
 
         return Ok(new
         {
@@ -49,7 +47,7 @@ public class EmployeeControlController : ControllerBase
     [HttpGet("GetAll"), Authorize(Roles = "Company")]
     public async Task<IActionResult> GetEmployees([FromQuery] CompanyGetEmployees request)
     {
-        var response = await this.employeeControlService.GetEmployeesAsync(new EmployeeControlEmployeesRequest()
+        var response = await employeeControlService.GetEmployeesAsync(new EmployeeControlEmployeesRequest()
         {
             PageNumber = request.PageNumber,
             PageSize = request.PageSize

@@ -5,14 +5,8 @@ using CSN.Domain.Entities.Employees;
 using CSN.Domain.Entities.Invitations;
 using CSN.Domain.Entities.Messages;
 using CSN.Domain.Entities.Users;
-using CSN.Domain.Interfaces;
 using CSN.Persistence.DBContext;
 using CSN.Persistence.Repositories;
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 
 namespace CSN.Persistence.UnitOfWork
 {
@@ -31,13 +25,13 @@ namespace CSN.Persistence.UnitOfWork
         public UnitOfWork(EFContext eFContext)
         {
             this.eFContext = eFContext;
-            this.User = new UserRepository(eFContext);
-            this.Company = new CompanyRepository(eFContext);
-            this.Employee = new EmployeeRepository(eFContext);
-            this.Message = new MessageRepository(eFContext);
-            this.Channel = new ChannelRepository(eFContext);
-            this.Invitation = new InvitationRepository(eFContext);
-            this.Attachment = new AttachmentRepository(eFContext);
+            User = new UserRepository(eFContext);
+            Company = new CompanyRepository(eFContext);
+            Employee = new EmployeeRepository(eFContext);
+            Message = new MessageRepository(eFContext);
+            Channel = new ChannelRepository(eFContext);
+            Invitation = new InvitationRepository(eFContext);
+            Attachment = new AttachmentRepository(eFContext);
         }
     }
 }
