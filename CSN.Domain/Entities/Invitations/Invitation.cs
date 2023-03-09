@@ -11,6 +11,7 @@ public partial class Invitation : BaseEntity
     public string Email { get; set; } = null!;
     public bool IsActive { get; set; } = true;
     public EmployeeRole Role { get; set; }
+    public bool IsAccepted { get; set; }
     public Company Company { get; set; } = null!;
     public int CompanyId { get; set; }
 }

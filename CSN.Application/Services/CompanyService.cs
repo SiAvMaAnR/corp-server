@@ -24,19 +24,21 @@ namespace CSN.Application.Services
         public readonly IDataProtectionProvider protection;
         private readonly EmailClient emailClient;
 
-        public CompanyService(IUnitOfWork unitOfWork, IHttpContextAccessor context, IConfiguration configuration,
-            IDataProtectionProvider protection) : base(unitOfWork, context)
+        public CompanyService(IUnitOfWork unitOfWork, IHttpContextAccessor context,
+            IConfiguration configuration, IDataProtectionProvider protection) : base(unitOfWork, context)
         {
             this.configuration = configuration;
             this.protection = protection;
 
-            this.emailClient = new EmailClient(new MessageHandler(new SmtpModel()
+            var smtpModel = new SmtpModel()
             {
-                Email = this.configuration["Smtp:Email"],
-                Password = this.configuration["Smtp:Password"],
-                Host = this.configuration["Smtp:Host"],
-                Port = int.Parse(this.configuration["Smtp:Port"]),
-            }));
+                Email = this.configuration["Smtp:Email"] ?? throw new BadRequestException("Missing smtp email"),
+                Password = this.configuration["Smtp:Password"] ?? throw new BadRequestException("Missing smtp password"),
+                Host = this.configuration["Smtp:Host"] ?? throw new BadRequestException("Missing smtp host"),
+                Port = int.Parse(this.configuration["Smtp:Port"] ?? throw new BadRequestException("Missing smtp port")),
+            };
+
+            this.emailClient = new EmailClient(new MessageHandler(smtpModel));
         }
 
         public async Task<CompanyLoginResponse> LoginAsync(CompanyLoginRequest request)
@@ -63,14 +65,20 @@ namespace CSN.Application.Services
                 new Claim(ClaimTypes.Role, company.Role)
             };
 
-            string token = AuthOptions.CreateToken(claims, new Dictionary<string, string>()
-            {
-                { "secretKey", this.configuration["Authorization:SecretKey"] },
-                { "audience", this.configuration["Authorization:Audience"] },
-                { "issuer" , this.configuration["Authorization:Issuer"] },
-                { "lifeTime" , this.configuration["Authorization:LifeTime"] },
-            });
-
+            string token = AuthOptions.CreateToken(
+                claims,
+                new Dictionary<string, string>()
+                {
+                    { "secretKey", this.configuration["Authorization:SecretKey"]
+                        ?? throw new BadRequestException("Missing authorization secretKey") },
+                    { "audience", this.configuration["Authorization:Audience"]
+                        ?? throw new BadRequestException("Missing authorization audience") },
+                    { "issuer", this.configuration["Authorization:Issuer"]
+                        ?? throw new BadRequestException("Missing authorization issuer") },
+                    { "lifeTime", this.configuration["Authorization:LifeTime"]
+                        ?? throw new BadRequestException("Missing authorization lifeTime") },
+                }
+            );
 
             return new CompanyLoginResponse()
             {
@@ -87,38 +95,40 @@ namespace CSN.Application.Services
                 throw new BadRequestException("Account already exists");
             }
 
-            string baseUrl = this.configuration["Client:BaseUrl"];
-            string path = this.configuration["Confirm:Path"];
+            string baseUrl = this.configuration["Client:BaseUrl"] ?? throw new BadRequestException("Missing client baseUrl");
+            string path = this.configuration["Confirm:Path"] ?? throw new BadRequestException("Missing confirm path");
+            string secretKey = this.configuration["Confirm:SecretKey"] ?? throw new BadRequestException("Missing confirm secretKey");
 
-            IDataProtector protector = this.protection.CreateProtector(this.configuration["Confirm:SecretKey"]);
+            IDataProtector protector = this.protection.CreateProtector(secretKey);
 
-
-            string confirmationJson = JsonSerializer.Serialize(new Confirmation()
-            {
-                Login = request.Login,
-                Email = request.Email,
-                Password = request.Password,
-                Description = request.Description
-            });
+            string confirmationJson = JsonSerializer.Serialize(
+                new Confirmation()
+                {
+                    Login = request.Login,
+                    Email = request.Email,
+                    Password = request.Password,
+                    Description = request.Description
+                }
+            );
 
             string confirmation = protector.Protect(confirmationJson);
 
             string message = $"{baseUrl}/{path}?code={confirmation}";
 
-            this.emailClient.SendAsync(new MessageModel()
+            string smtpEmail = this.configuration["Smtp:Email"] ?? throw new BadRequestException("Missing smtp email");
+
+            var messageModel = new MessageModel()
             {
-                From = new AddressModel(baseUrl, this.configuration["Smtp:Email"]),
+                From = new AddressModel(baseUrl, smtpEmail),
                 To = new AddressModel(request.Login, request.Email),
                 Subject = $"Welcome, verify your account. To do this, follow the link!",
                 Message = message
-            }).Ignore();
-
-            return new CompanyRegisterResponse()
-            {
-                IsSuccess = true
             };
-        }
 
+            this.emailClient.SendAsync(messageModel).Ignore();
+
+            return new CompanyRegisterResponse() { IsSuccess = true };
+        }
 
         public async Task<CompanyEditResponse> EditAsync(CompanyEditRequest request)
         {
@@ -136,10 +146,7 @@ namespace CSN.Application.Services
             await this.unitOfWork.Company.UpdateAsync(company);
             await this.unitOfWork.SaveChangesAsync();
 
-            return new CompanyEditResponse()
-            {
-                IsSuccess = true
-            };
+            return new CompanyEditResponse() { IsSuccess = true };
         }
 
         public async Task<CompanyInfoResponse> GetInfoAsync(CompanyInfoRequest request)
@@ -164,7 +171,7 @@ namespace CSN.Application.Services
 
         public async Task<CompanyConfirmationResponse> ConfirmAccountAsync(CompanyConfirmationRequest request)
         {
-            var secretKey = this.configuration["Invite:SecretKey"];
+            var secretKey = this.configuration["Invite:SecretKey"] ?? throw new BadRequestException("Missing invite secretKey");
 
             IDataProtector protector = this.protection.CreateProtector(secretKey);
             string confirmationJson = protector.Unprotect(request.Confirmation);
@@ -205,10 +212,7 @@ namespace CSN.Application.Services
 
             await this.unitOfWork.SaveChangesAsync();
 
-            return new CompanyConfirmationResponse()
-            {
-                IsSuccess = true
-            };
+            return new CompanyConfirmationResponse() { IsSuccess = true };
         }
     }
 }

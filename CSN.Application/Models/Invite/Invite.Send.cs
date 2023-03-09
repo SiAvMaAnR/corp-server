@@ -8,5 +8,5 @@ public class InviteSend
     [MaxLength(35), EmailAddress]
     public string Email { get; set; } = null!;
 
-    public EmployeeRole EmployeeRole { get; set; } = EmployeeRole.Employee;
+    public EmployeeRole EmployeeRole { get; set; } = EmployeeRole.Guest;
 }

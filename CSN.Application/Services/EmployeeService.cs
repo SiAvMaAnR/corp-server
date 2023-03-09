@@ -54,10 +54,10 @@ namespace CSN.Application.Services
 
             string token = AuthOptions.CreateToken(claims, new Dictionary<string, string>()
             {
-                { "secretKey", this.configuration["Authorization:SecretKey"] },
-                { "audience", this.configuration["Authorization:Audience"] },
-                { "issuer" , this.configuration["Authorization:Issuer"] },
-                { "lifeTime" , this.configuration["Authorization:LifeTime"] },
+                { "secretKey", this.configuration["Authorization:SecretKey"] ?? throw new BadRequestException("Missing authorization secretKey") },
+                { "audience", this.configuration["Authorization:Audience"] ?? throw new BadRequestException("Missing authorization audience") },
+                { "issuer" , this.configuration["Authorization:Issuer"] ?? throw new BadRequestException("Missing authorization issuer") },
+                { "lifeTime" , this.configuration["Authorization:LifeTime"] ?? throw new BadRequestException("Missing authorization lifeTime") },
             });
 
             return new EmployeeLoginResponse()
@@ -70,7 +70,7 @@ namespace CSN.Application.Services
 
         public async Task<EmployeeRegisterResponse> RegisterAsync(EmployeeRegisterRequest request)
         {
-            var secretKey = this.configuration["Invite:SecretKey"];
+            var secretKey = this.configuration["Invite:SecretKey"] ?? throw new BadRequestException("Missing invite secretKey");
 
             IDataProtector protector = this.protection.CreateProtector(secretKey);
             string inviteJson = protector.Unprotect(request.Invite);
@@ -119,9 +119,12 @@ namespace CSN.Application.Services
                 CompanyId = invite.CompanyId,
             };
 
+            invitation.IsAccepted = true;
+
             await Task.WhenAll(
-                this.unitOfWork.Employee.AddAsync(employee),
-                this.unitOfWork.Invitation.DeleteAsync(invitation)
+                this.unitOfWork.Invitation.UpdateAsync(invitation),
+                this.unitOfWork.Employee.AddAsync(employee)
+                //this.unitOfWork.Invitation.DeleteAsync(invitation)
             );
 
             await this.unitOfWork.SaveChangesAsync();

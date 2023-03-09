@@ -32,10 +32,10 @@ public class InvitationService : BaseService<Company>, IInvitationService
 
         this.emailClient = new EmailClient(new MessageHandler(new SmtpModel()
         {
-            Email = this.configuration["Smtp:Email"],
-            Password = this.configuration["Smtp:Password"],
-            Host = this.configuration["Smtp:Host"],
-            Port = int.Parse(this.configuration["Smtp:Port"]),
+            Email = this.configuration["Smtp:Email"] ?? throw new BadRequestException("Missing smtp email"),
+            Password = this.configuration["Smtp:Password"] ?? throw new BadRequestException("Missing smtp password"),
+            Host = this.configuration["Smtp:Host"] ?? throw new BadRequestException("Missing smtp host"),
+            Port = int.Parse(this.configuration["Smtp:Port"] ?? throw new BadRequestException("Missing smtp port"))
         }));
     }
 
@@ -55,10 +55,11 @@ public class InvitationService : BaseService<Company>, IInvitationService
             throw new BadRequestException("The user is already in the company");
         }
 
-        IDataProtector protector = this.protection.CreateProtector(this.configuration["Invite:SecretKey"]);
+        string secretKey = this.configuration["Invite:SecretKey"] ?? throw new BadRequestException("Missing invite secretKey");
+        string baseUrl = this.configuration["Client:BaseUrl"] ?? throw new BadRequestException("Missing client baseUrl");
+        string path = this.configuration["Invite:Path"] ?? throw new BadRequestException("Missing invite path");
 
-        string baseUrl = this.configuration["Client:BaseUrl"];
-        string path = this.configuration["Invite:Path"];
+        IDataProtector protector = this.protection.CreateProtector(secretKey);
 
         var invitation = new Invitation()
         {
@@ -83,9 +84,11 @@ public class InvitationService : BaseService<Company>, IInvitationService
 
         string message = $"{baseUrl}/{path}?invite={invite}";
 
+        string companyEmail = this.configuration["Smtp:Email"] ?? throw new BadRequestException("Missing smtp email");
+
         await this.emailClient.SendAsync(new MessageModel()
         {
-            From = new AddressModel(company.Login, this.configuration["Smtp:Email"]),
+            From = new AddressModel(company.Login, companyEmail),
             To = new AddressModel("Employee", request.EmployeeEmail),
             Subject = $"Welcome to {company.Login}",
             Message = message
@@ -137,7 +140,7 @@ public class InvitationService : BaseService<Company>, IInvitationService
         }
 
         var invitation = await this.unitOfWork.Invitation.GetAsync(invitation =>
-            invitation.Id == request.Id && company.Id == invitation.CompanyId);
+                         invitation.Id == request.Id && company.Id == invitation.CompanyId);
 
         if (invitation == null)
         {
