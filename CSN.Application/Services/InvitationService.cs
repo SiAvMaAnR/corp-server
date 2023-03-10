@@ -6,6 +6,7 @@ using CSN.Application.Services.Common;
 using CSN.Domain.Entities.Companies;
 using CSN.Domain.Entities.Employees;
 using CSN.Domain.Entities.Invitations;
+using CSN.Domain.Entities.Users;
 using CSN.Domain.Interfaces.UnitOfWork;
 using CSN.Domain.Shared.Extensions.Exceptions;
 using CSN.Email;
@@ -48,11 +49,11 @@ public class InvitationService : BaseService<Company>, IInvitationService
             throw new NotFoundException("Account is not found");
         }
 
-        Employee? employee = await this.unitOfWork.Employee.GetAsync(employee => employee.Email == request.EmployeeEmail);
+        User? user = await this.unitOfWork.User.GetAsync(user => user.Email == request.EmployeeEmail);
 
-        if (employee != null)
+        if (user != null)
         {
-            throw new BadRequestException("The user is already in the company");
+            throw new BadRequestException("The user is already exists");
         }
 
         string secretKey = this.configuration["Invite:SecretKey"] ?? throw new BadRequestException("Missing invite secretKey");

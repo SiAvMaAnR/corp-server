@@ -8,6 +8,6 @@ internal class InvitationConfiguration : IEntityTypeConfiguration<Invitation>
 {
     public void Configure(EntityTypeBuilder<Invitation> builder)
     {
-        builder.HasIndex(invitation => invitation.Email).IsUnique();
+        builder.HasIndex(invitation => invitation.Email);
     }
 }
