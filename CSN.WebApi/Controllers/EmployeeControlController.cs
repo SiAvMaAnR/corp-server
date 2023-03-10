@@ -19,7 +19,7 @@ public class EmployeeControlController : ControllerBase
         this.logger = logger;
     }
 
-    [HttpPut("ChangeRole"), Authorize(Roles = "Company")]
+    [HttpPut("ChangeRole"), Authorize(Policy = "OnlyCompany")]
     public async Task<IActionResult> ChangeRoleEmployee([FromBody] CompanyChangeRole request)
     {
         var response = await employeeControlService.ChangeRoleAsync(new EmployeeControlChangeRoleRequest()
@@ -35,7 +35,7 @@ public class EmployeeControlController : ControllerBase
         });
     }
 
-    [HttpDelete("Remove"), Authorize(Roles = "Company")]
+    [HttpDelete("Remove"), Authorize(Policy = "OnlyCompany")]
     public async Task<IActionResult> RemoveEmployee([FromBody] CompanyRemoveEmployee request)
     {
         var response = await employeeControlService.RemoveEmployeeAsync(new EmployeeControlRemoveRequest(request.Id));
@@ -46,7 +46,7 @@ public class EmployeeControlController : ControllerBase
         });
     }
 
-    [HttpGet("GetAll"), Authorize(Roles = "Company")]
+    [HttpGet("GetAll"), Authorize(Policy = "OnlyCompany")]
     public async Task<IActionResult> GetEmployees([FromQuery] CompanyGetEmployees request)
     {
         var response = await employeeControlService.GetEmployeesAsync(new EmployeeControlEmployeesRequest()

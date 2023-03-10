@@ -53,7 +53,7 @@ namespace CSN.WebApi.Controllers
             });
         }
 
-        [HttpPost("Edit"), Authorize(Roles = "Company")]
+        [HttpPost("Edit"), Authorize(Policy = "OnlyCompany")]
         public async Task<IActionResult> Edit([FromBody] CompanyEdit request)
         {
             var response = await companyService.EditAsync(new CompanyEditRequest()
@@ -83,7 +83,7 @@ namespace CSN.WebApi.Controllers
             });
         }
 
-        [HttpGet("Info"), Authorize(Roles = "Company")]
+        [HttpGet("Info"), Authorize(Policy = "OnlyCompany")]
         public async Task<IActionResult> Info()
         {
             var response = await companyService.GetInfoAsync(new CompanyInfoRequest());

@@ -20,7 +20,7 @@ public class InvitationController : ControllerBase
         this.invitationService = invitationService;
     }
 
-    [HttpPost("Send"), Authorize(Roles = "Company")]
+    [HttpPost("Send"), Authorize(Policy = "OnlyCompany")]
     public async Task<IActionResult> SendInvite([FromBody] InviteSend request)
     {
         var response = await invitationService.SendInviteAsync(new InvitationSendInviteRequest()
@@ -35,7 +35,7 @@ public class InvitationController : ControllerBase
         });
     }
 
-    [HttpGet("GetAll"), Authorize(Roles = "Company")]
+    [HttpGet("GetAll"), Authorize(Policy = "OnlyCompany")]
     public async Task<IActionResult> GetInvites([FromQuery] InviteGetAll request)
     {
         var response = await invitationService.GetInvitesAsync(new InvitationGetAllRequest()
@@ -55,7 +55,7 @@ public class InvitationController : ControllerBase
     }
 
 
-    [HttpPut("State"), Authorize(Roles = "Company")]
+    [HttpPut("State"), Authorize(Policy = "OnlyCompany")]
     public async Task<IActionResult> SetState([FromBody] InviteSetState request)
     {
         var response = await invitationService.SetStateAsync(new InvitationSetStateRequest()
@@ -71,7 +71,7 @@ public class InvitationController : ControllerBase
         });
     }
 
-    [HttpDelete("Remove"), Authorize(Roles = "Company")]
+    [HttpDelete("Remove"), Authorize(Policy = "OnlyCompany")]
     public async Task<IActionResult> Remove([FromBody] InviteRemove request)
     {
         var response = await invitationService.RemoveInviteAsync(new InvitationRemoveRequest()

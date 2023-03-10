@@ -11,11 +11,11 @@ using CSN.Infrastructure.Extensions;
 using CSN.Persistence.DBContext;
 using CSN.Persistence.Repositories;
 using CSN.Persistence.UnitOfWork;
+using CSN.WebApi.Extensions.PolicyConfigurations;
 using CSN.WebApi.Extensions.SwaggerConfigurations;
 using CSN.WebApi.Filters;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.AspNetCore.Mvc;
-using Microsoft.AspNetCore.SignalR;
 using Microsoft.EntityFrameworkCore;
 using System.Text.Json.Serialization;
 
@@ -73,7 +73,7 @@ namespace CSN.WebApi.Extensions.ServiceConfigurations
             serviceCollection.AddHttpContextAccessor();
             serviceCollection.AddLogging();
             serviceCollection.AddCors();
-            serviceCollection.AddAuthorization();
+            serviceCollection.AddAuthorization(options => options.Config());
             serviceCollection.AddSwaggerGen(options => options.Config());
             serviceCollection.AddAuthentication(JwtBearerDefaults.AuthenticationScheme).AddJwtBearer(options => options.Config(config));
             serviceCollection.AddDataProtection();

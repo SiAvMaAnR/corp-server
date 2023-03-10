@@ -53,7 +53,7 @@ namespace CSN.WebApi.Controllers
             });
         }
 
-        [HttpPut("Edit"), Authorize(Roles = "Employee")]
+        [HttpPut("Edit"), Authorize(Policy = "OnlyEmployee")]
         public async Task<IActionResult> Edit([FromBody] EmployeeEdit request)
         {
             var response = await employeeService.EditAsync(new EmployeeEditRequest()
@@ -68,7 +68,7 @@ namespace CSN.WebApi.Controllers
             });
         }
 
-        [HttpGet("Info"), Authorize(Roles = "Employee")]
+        [HttpGet("Info"), Authorize(Policy = "OnlyEmployee")]
         public async Task<IActionResult> Info()
         {
             var response = await employeeService.GetInfoAsync(new EmployeeInfoRequest());
@@ -87,7 +87,7 @@ namespace CSN.WebApi.Controllers
             });
         }
 
-        [HttpDelete("Remove"), Authorize(Roles = "Employee")]
+        [HttpDelete("Remove"), Authorize(Policy = "OnlyEmployee")]
         public async Task<IActionResult> Remove()
         {
             var response = await employeeService.RemoveAsync(new EmployeeRemoveRequest());
