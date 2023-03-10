@@ -6,7 +6,6 @@ namespace CSN.WebApi.Extensions.SwaggerConfigurations;
 
 public static class SwaggerExtension
 {
-
     public static SwaggerGenOptions Config(this SwaggerGenOptions options)
     {
         options.AddSecurityDefinition("oauth2", new OpenApiSecurityScheme

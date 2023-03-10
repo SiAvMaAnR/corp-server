@@ -15,6 +15,7 @@ using CSN.WebApi.Extensions.SwaggerConfigurations;
 using CSN.WebApi.Filters;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.AspNetCore.SignalR;
 using Microsoft.EntityFrameworkCore;
 using System.Text.Json.Serialization;
 
@@ -55,7 +56,6 @@ namespace CSN.WebApi.Extensions.ServiceConfigurations
         public static IServiceCollection AddCommonDependencies(this IServiceCollection serviceCollection, ConfigurationManager config)
         {
             string connection = config?.GetConnectionString("DefaultConnection") ?? "";
-            serviceCollection.AddSignalR();
             serviceCollection.AddDbContext<EFContext>(options => options.UseSqlServer(connection));
             serviceCollection.Configure<ApiBehaviorOptions>(options =>
             {
@@ -65,6 +65,10 @@ namespace CSN.WebApi.Extensions.ServiceConfigurations
             {
                 config.Filters.Add(new ValidationFilterAttribute());
             }).AddJsonOptions(x => x.JsonSerializerOptions.ReferenceHandler = ReferenceHandler.IgnoreCycles);
+            serviceCollection.AddSignalR(options =>
+            {
+                // options.AddFilter<ValidationFilterAttribute>();
+            });
             serviceCollection.AddEndpointsApiExplorer();
             serviceCollection.AddHttpContextAccessor();
             serviceCollection.AddLogging();

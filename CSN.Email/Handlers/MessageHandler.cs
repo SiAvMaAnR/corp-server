@@ -21,7 +21,6 @@ public class MessageHandler : IHandler
         await client.ConnectAsync(smtp.Host, smtp.Port, SecureSocketOptions.StartTls);
         await client.AuthenticateAsync(smtp.Email, smtp.Password);
         await client.SendAsync(message);
-
         await client.DisconnectAsync(true);
     }
 }

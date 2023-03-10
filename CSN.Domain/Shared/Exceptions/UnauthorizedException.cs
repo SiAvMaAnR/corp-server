@@ -1,4 +1,4 @@
-namespace CSN.Domain.Shared.Extensions.Exceptions
+namespace CSN.Domain.Shared.Exceptions
 {
     public class UnauthorizedException : Exception
     {

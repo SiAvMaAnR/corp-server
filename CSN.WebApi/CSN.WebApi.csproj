@@ -17,5 +17,6 @@
     <ProjectReference Include="..\CSN.Infrastructure\CSN.Infrastructure.csproj" />
     <ProjectReference Include="..\CSN.Persistence\CSN.Persistence.csproj" />
     <ProjectReference Include="..\CSN.Email\CSN.Email.csproj" />
+    <ProjectReference Include="..\CSN.SignalR\CSN.SignalR.csproj" />
   </ItemGroup>
 </Project>

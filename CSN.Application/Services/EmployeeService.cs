@@ -5,7 +5,7 @@ using CSN.Application.Services.Common;
 using CSN.Domain.Entities.Companies;
 using CSN.Domain.Entities.Employees;
 using CSN.Domain.Interfaces.UnitOfWork;
-using CSN.Domain.Shared.Extensions.Exceptions;
+using CSN.Domain.Shared.Exceptions;
 using CSN.Infrastructure.AuthOptions;
 using CSN.Infrastructure.Extensions;
 using Microsoft.AspNetCore.DataProtection;

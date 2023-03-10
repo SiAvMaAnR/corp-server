@@ -1,4 +1,6 @@
-﻿namespace CSN.WebApi.Extensions.ApplicationConfigurations
+﻿using CSN.SignalR.Hubs;
+
+namespace CSN.WebApi.Extensions.ApplicationConfigurations
 {
     public static class ApplicationExtension
     {
@@ -35,6 +37,13 @@
             webApplication.UseAuthorization();
             webApplication.UseHttpsRedirection();
             webApplication.MapControllers();
+        }
+
+
+        public static void HubsConfiguration(this WebApplication webApplication)
+        {
+            webApplication.MapHub<ChatHub>("/chat");
+            webApplication.MapHub<ChatHub>("/notifications");
         }
 
         public static void AddConfiguration(this WebApplicationBuilder? webApplicationBuilder)

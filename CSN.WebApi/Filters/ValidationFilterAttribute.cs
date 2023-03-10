@@ -1,4 +1,4 @@
-using CSN.Domain.Shared.Extensions.Exceptions;
+using CSN.Domain.Shared.Exceptions;
 using Microsoft.AspNetCore.Mvc.Filters;
 
 namespace CSN.WebApi.Filters;

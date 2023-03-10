@@ -18,4 +18,5 @@ else
     app.ProductionConfiguration();
 
 app.CommonConfiguration();
+app.HubsConfiguration();
 app.Run();
