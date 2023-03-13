@@ -1,6 +1,6 @@
 ﻿namespace CSN.Domain.Shared.Enums;
 
-public enum EmployeeState
+public enum UserState
 {
     Online,
     Offline,

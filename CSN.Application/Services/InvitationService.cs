@@ -1,8 +1,7 @@
 using System.Text.Json;
-using CSN.Application.Interfaces.Services;
-using CSN.Application.Models.Common;
-using CSN.Application.Models.InvitationDto;
 using CSN.Application.Services.Common;
+using CSN.Application.Services.Interfaces;
+using CSN.Application.Services.Models.InvitationDto;
 using CSN.Domain.Entities.Companies;
 using CSN.Domain.Entities.Invitations;
 using CSN.Domain.Entities.Users;
@@ -65,7 +64,7 @@ public class InvitationService : BaseService<Company>, IInvitationService
         {
             Email = request.EmployeeEmail,
             CompanyId = company.Id,
-            Role = request.EmployeeRole
+            Post = request.EmployeePost
         };
 
         await this.unitOfWork.Invitation.AddAsync(invitation);
@@ -76,7 +75,7 @@ public class InvitationService : BaseService<Company>, IInvitationService
         {
             Id = invitation.Id,
             Email = invitation.Email,
-            Role = invitation.Role,
+            Post = invitation.Post,
             CompanyId = company.Id
         });
 
@@ -102,14 +101,16 @@ public class InvitationService : BaseService<Company>, IInvitationService
 
     public async Task<InvitationGetAllResponse> GetInvitesAsync(InvitationGetAllRequest request)
     {
-        Company? company = await this.claimsPrincipal!.GetCompanyAsync(this.unitOfWork);
+        Company? company = await this.claimsPrincipal!.GetCompanyAsync(
+            this.unitOfWork,
+            company => company.Invitations);
 
         if (company == null)
         {
             throw new NotFoundException("Account is not found");
         }
 
-        var invitationsAll = await this.unitOfWork.Invitation.GetAllAsync(invitation => invitation.CompanyId == company.Id);
+        var invitationsAll = company.Invitations;
 
         var invitationsCount = invitationsAll?.ToList().Count ?? 0;
 
@@ -140,7 +141,7 @@ public class InvitationService : BaseService<Company>, IInvitationService
         }
 
         var invitation = await this.unitOfWork.Invitation.GetAsync(invitation =>
-                         invitation.Id == request.Id && company.Id == invitation.CompanyId);
+            invitation.Id == request.Id && company.Id == invitation.CompanyId);
 
         if (invitation == null)
         {

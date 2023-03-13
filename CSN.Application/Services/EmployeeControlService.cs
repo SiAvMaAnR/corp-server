@@ -1,6 +1,6 @@
-using CSN.Application.Interfaces.Services;
-using CSN.Application.Models.EmployeeControlDto;
 using CSN.Application.Services.Common;
+using CSN.Application.Services.Interfaces;
+using CSN.Application.Services.Models.EmployeeControlDto;
 using CSN.Domain.Entities.Companies;
 using CSN.Domain.Entities.Employees;
 using CSN.Domain.Interfaces.UnitOfWork;
@@ -95,7 +95,7 @@ public class EmployeeControlService : BaseService<Company>, IEmployeeControlServ
             throw new NotFoundException("Employee is not found");
         }
 
-        employee.Role = request.EmployeeRole.ToString();
+        employee.Role = request.EmployeePost.ToString();
 
         await this.unitOfWork.Employee.UpdateAsync(employee);
 
@@ -104,7 +104,7 @@ public class EmployeeControlService : BaseService<Company>, IEmployeeControlServ
         return new EmployeeControlChangeRoleResponse()
         {
             EmployeeId = request.EmployeeId,
-            EmployeeRole = request.EmployeeRole.ToString()
+            EmployeePost = request.EmployeePost.ToString()
         };
     }
 }

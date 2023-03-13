@@ -1,7 +1,6 @@
-using CSN.Application.Interfaces.Services;
-using CSN.Application.Models.Common;
-using CSN.Application.Models.EmployeeDto;
 using CSN.Application.Services.Common;
+using CSN.Application.Services.Interfaces;
+using CSN.Application.Services.Models.EmployeeDto;
 using CSN.Domain.Entities.Companies;
 using CSN.Domain.Entities.Employees;
 using CSN.Domain.Interfaces.UnitOfWork;
@@ -115,7 +114,8 @@ namespace CSN.Application.Services
                 Image = image,
                 PasswordHash = passwordHash,
                 PasswordSalt = passwordSalt,
-                Role = invite.Role.ToString(),
+                Role = "Employee",
+                Post = invite.Post,
                 CompanyId = invite.CompanyId,
             };
 
@@ -124,7 +124,6 @@ namespace CSN.Application.Services
             await Task.WhenAll(
                 this.unitOfWork.Invitation.UpdateAsync(invitation),
                 this.unitOfWork.Employee.AddAsync(employee)
-                //this.unitOfWork.Invitation.DeleteAsync(invitation)
             );
 
             await this.unitOfWork.SaveChangesAsync();

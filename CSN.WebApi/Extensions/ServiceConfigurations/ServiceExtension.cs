@@ -1,5 +1,7 @@
-﻿using CSN.Application.Interfaces.Services;
+﻿using CSN.Application.ConnectionManager;
+using CSN.Application.ConnectionManager.Interfaces;
 using CSN.Application.Services;
+using CSN.Application.Services.Interfaces;
 using CSN.Domain.Entities.Attachments;
 using CSN.Domain.Entities.Channels;
 using CSN.Domain.Entities.Companies;
@@ -49,6 +51,7 @@ namespace CSN.WebApi.Extensions.ServiceConfigurations
 
         public static IServiceCollection AddSingletonDependencies(this IServiceCollection serviceCollection)
         {
+            serviceCollection.AddSingleton<IConnectionManager, ConnectionManager>();
             return serviceCollection;
         }
 

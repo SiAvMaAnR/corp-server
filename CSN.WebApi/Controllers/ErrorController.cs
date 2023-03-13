@@ -21,7 +21,9 @@ namespace CSN.WebApi.Controllers
                 ? Unauthorized(exception.Message)
                 : exception is NotFoundException
                 ? NotFound(exception.Message)
-                : exception is ForbiddenException ? Forbid() : BadRequest(exception.Message);
+                : exception is ForbiddenException 
+                ? Forbid() 
+                : BadRequest(exception.Message);
         }
 
 
@@ -47,7 +49,11 @@ namespace CSN.WebApi.Controllers
                 ? BadRequest(errorInfo)
                 : exception is UnauthorizedException
                 ? Unauthorized(errorInfo)
-                : exception is NotFoundException ? NotFound(errorInfo) : exception is ForbiddenException ? Forbid() : BadRequest(errorInfo);
+                : exception is NotFoundException 
+                ? NotFound(errorInfo) 
+                : exception is ForbiddenException 
+                ? Forbid() 
+                : BadRequest(errorInfo);
         }
     }
 }

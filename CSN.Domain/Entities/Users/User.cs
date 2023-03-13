@@ -4,13 +4,14 @@ using CSN.Domain.Entities.Groups;
 using CSN.Domain.Entities.Notifications;
 using CSN.Domain.Entities.Projects;
 using CSN.Domain.Entities.Tasks;
+using CSN.Domain.Shared.Enums;
 using System.ComponentModel.DataAnnotations.Schema;
 using System.Text.Json.Serialization;
 
 namespace CSN.Domain.Entities.Users;
 
 [Table("Users")]
-public class User : BaseEntity
+public partial class User : BaseEntity
 {
     public string Login { get; set; } = null!;
     public string Email { get; set; } = null!;
@@ -20,6 +21,8 @@ public class User : BaseEntity
     public byte[] PasswordSalt { get; set; } = null!;
     public string Role { get; set; } = null!;
     public byte[]? Image { get; set; }
+    [NotMapped]
+    public UserState State { get; set; } = UserState.Offline;
     public ICollection<Channel> Channels { get; set; } = new List<Channel>();
     [InverseProperty("Admins")]
     public ICollection<Group> AdminGroups { get; set; } = new List<Group>();

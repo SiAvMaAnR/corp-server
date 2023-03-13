@@ -1,5 +1,5 @@
-using CSN.Application.Interfaces.Services;
-using CSN.Application.Models.EmployeeControlDto;
+using CSN.Application.Services.Interfaces;
+using CSN.Application.Services.Models.EmployeeControlDto;
 using CSN.WebApi.Models.Company;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
@@ -25,13 +25,13 @@ public class EmployeeControlController : ControllerBase
         var response = await employeeControlService.ChangeRoleAsync(new EmployeeControlChangeRoleRequest()
         {
             EmployeeId = request.EmployeeId,
-            EmployeeRole = request.EmployeeRole
+            EmployeePost = request.EmployeePost
         });
 
         return Ok(new
         {
             response.EmployeeId,
-            response.EmployeeRole
+            response.EmployeePost
         });
     }
 

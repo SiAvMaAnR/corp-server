@@ -1,7 +1,7 @@
-using CSN.Application.Interfaces.Services;
-using CSN.Application.Models.Common;
-using CSN.Application.Models.CompanyDto;
 using CSN.Application.Services.Common;
+using CSN.Application.Services.Interfaces;
+using CSN.Application.Services.Models.Common;
+using CSN.Application.Services.Models.CompanyDto;
 using CSN.Domain.Entities.Companies;
 using CSN.Domain.Interfaces.UnitOfWork;
 using CSN.Domain.Shared.Exceptions;

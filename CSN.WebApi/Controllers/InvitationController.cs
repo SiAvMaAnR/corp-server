@@ -1,5 +1,5 @@
-using CSN.Application.Interfaces.Services;
-using CSN.Application.Models.InvitationDto;
+using CSN.Application.Services.Interfaces;
+using CSN.Application.Services.Models.InvitationDto;
 using CSN.WebApi.Models.Invite;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
@@ -26,7 +26,7 @@ public class InvitationController : ControllerBase
         var response = await invitationService.SendInviteAsync(new InvitationSendInviteRequest()
         {
             EmployeeEmail = request.Email,
-            EmployeeRole = request.EmployeeRole
+            EmployeePost = request.EmployeePost
         });
 
         return Ok(new

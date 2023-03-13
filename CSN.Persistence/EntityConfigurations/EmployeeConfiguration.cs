@@ -8,6 +8,11 @@ namespace CSN.Persistence.EntityConfigurations
     {
         public void Configure(EntityTypeBuilder<Employee> builder)
         {
+            // builder.HasOne(e => e.Company)
+            //     .WithMany()
+            //     .HasForeignKey(e => e.CompanyId)
+            //     .OnDelete(DeleteBehavior.Cascade);
+
             builder.Property(employee => employee.Login).HasMaxLength(25).IsRequired();
 
             builder.HasIndex(employee => employee.Email).IsUnique();

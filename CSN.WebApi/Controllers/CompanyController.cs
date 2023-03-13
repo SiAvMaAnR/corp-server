@@ -1,5 +1,5 @@
-﻿using CSN.Application.Interfaces.Services;
-using CSN.Application.Models.CompanyDto;
+﻿using CSN.Application.Services.Interfaces;
+using CSN.Application.Services.Models.CompanyDto;
 using CSN.WebApi.Models.Company;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
