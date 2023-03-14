@@ -26,11 +26,7 @@ namespace CSN.WebApi.Extensions.ApplicationConfigurations
 
         public static void CommonConfiguration(this WebApplication webApplication)
         {
-            webApplication.UseCors(builder => builder
-                .AllowAnyOrigin()
-                .AllowAnyHeader()
-                .AllowAnyMethod());
-
+            webApplication.UseCors("CorsPolicy");
             webApplication.UseHttpsRedirection();
             webApplication.UseRouting();
             webApplication.UseAuthentication();
@@ -43,7 +39,8 @@ namespace CSN.WebApi.Extensions.ApplicationConfigurations
         public static void HubsConfiguration(this WebApplication webApplication)
         {
             webApplication.MapHub<ChatHub>("/chat");
-            webApplication.MapHub<ChatHub>("/notifications");
+            webApplication.MapHub<StateHub>("/state");
+            webApplication.MapHub<NotificationHub>("/notifications");
         }
 
         public static void AddConfiguration(this WebApplicationBuilder? webApplicationBuilder)

@@ -1,4 +1,4 @@
-using CSN.Domain.Shared.Exceptions;
+using CSN.Infrastructure.Exceptions;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.Extensions.Configuration;
 using Microsoft.IdentityModel.Tokens;
@@ -12,7 +12,7 @@ public static class TokenExtension
     {
         if (config == null) throw new BadRequestException("Incorrect config");
 
-        string secretKey = config.GetSection("Authorization:SecretKey").Value 
+        string secretKey = config.GetSection("Authorization:SecretKey").Value
             ?? throw new BadRequestException("Incorrect secretKey");
 
         options.RequireHttpsMetadata = true;
@@ -29,6 +29,21 @@ public static class TokenExtension
             IssuerSigningKey = new SymmetricSecurityKey(Encoding.UTF8.GetBytes(secretKey)),
             LifetimeValidator = (DateTime? notBefore, DateTime? expires, SecurityToken securityToken, TokenValidationParameters validationParameters) =>
                  (expires != null) ? DateTime.UtcNow < expires : false
+        };
+
+        options.Events = new JwtBearerEvents
+        {
+            OnMessageReceived = context =>
+            {
+                var accessToken = context.Request.Query["access_token"];
+
+                var path = context.HttpContext.Request.Path;
+                if (!string.IsNullOrEmpty(accessToken))
+                {
+                    context.Token = accessToken;
+                }
+                return Task.CompletedTask;
+            }
         };
     }
 }

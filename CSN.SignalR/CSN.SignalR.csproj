@@ -10,5 +10,7 @@
   </ItemGroup>
   <ItemGroup>
     <ProjectReference Include="..\CSN.Persistence\CSN.Persistence.csproj" />
+    <ProjectReference Include="..\CSN.Domain\CSN.Domain.csproj" />
+    <ProjectReference Include="..\CSN.Application\CSN.Application.csproj" />
   </ItemGroup>
 </Project>

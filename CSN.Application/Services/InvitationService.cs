@@ -6,7 +6,8 @@ using CSN.Domain.Entities.Companies;
 using CSN.Domain.Entities.Invitations;
 using CSN.Domain.Entities.Users;
 using CSN.Domain.Interfaces.UnitOfWork;
-using CSN.Domain.Shared.Exceptions;
+using CSN.Infrastructure.Exceptions;
+
 using CSN.Email;
 using CSN.Email.Handlers;
 using CSN.Email.Models;

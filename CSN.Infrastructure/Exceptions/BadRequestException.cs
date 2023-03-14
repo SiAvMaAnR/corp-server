@@ -1,4 +1,4 @@
-namespace CSN.Domain.Shared.Exceptions
+namespace CSN.Infrastructure.Exceptions
 {
     public class BadRequestException : Exception
     {

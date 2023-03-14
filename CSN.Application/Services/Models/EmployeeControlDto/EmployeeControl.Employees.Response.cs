@@ -1,3 +1,5 @@
+using CSN.Domain.Shared.Enums;
+
 namespace CSN.Application.Services.Models.EmployeeControlDto;
 
 public class EmployeeControlEmployeesResponse
@@ -17,6 +19,7 @@ public class CompanyEmployee
     public string Email { get; set; } = null!;
     public string Role { get; set; } = null!;
     public byte[]? Image { get; set; } = null!;
+    public UserState State { get; set; }
     public DateTime? CreatedAt { get; set; }
     public DateTime? UpdatedAt { get; set; }
 }

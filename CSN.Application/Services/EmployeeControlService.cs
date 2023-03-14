@@ -4,7 +4,8 @@ using CSN.Application.Services.Models.EmployeeControlDto;
 using CSN.Domain.Entities.Companies;
 using CSN.Domain.Entities.Employees;
 using CSN.Domain.Interfaces.UnitOfWork;
-using CSN.Domain.Shared.Exceptions;
+using CSN.Infrastructure.Exceptions;
+
 using CSN.Infrastructure.Extensions;
 using Microsoft.AspNetCore.Http;
 using Microsoft.Extensions.Configuration;
@@ -36,6 +37,7 @@ public class EmployeeControlService : BaseService<Company>, IEmployeeControlServ
             Login = employee.Login,
             Email = employee.Email,
             Role = employee.Role,
+            State = employee.State,
             Image = employee.Image,
             CreatedAt = employee.CreatedAt,
             UpdatedAt = employee.UpdatedAt,

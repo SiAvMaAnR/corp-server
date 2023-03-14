@@ -1,6 +1,4 @@
-﻿using CSN.Application.ConnectionManager;
-using CSN.Application.ConnectionManager.Interfaces;
-using CSN.Application.Services;
+﻿using CSN.Application.Services;
 using CSN.Application.Services.Interfaces;
 using CSN.Domain.Entities.Attachments;
 using CSN.Domain.Entities.Channels;
@@ -20,6 +18,8 @@ using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 using System.Text.Json.Serialization;
+using CSN.Application.AppData;
+using CSN.Application.AppData.Interfaces;
 
 namespace CSN.WebApi.Extensions.ServiceConfigurations
 {
@@ -34,13 +34,7 @@ namespace CSN.WebApi.Extensions.ServiceConfigurations
         {
             serviceCollection.AddScoped<IUnitOfWork, UnitOfWork>();
 
-            serviceCollection.AddScoped<ICompanyRepository, CompanyRepository>();
-            serviceCollection.AddScoped<IEmployeeRepository, EmployeeRepository>();
-            serviceCollection.AddScoped<IChannelRepository, ChannelRepository>();
-            serviceCollection.AddScoped<IMessageRepository, MessageRepository>();
-            serviceCollection.AddScoped<IAttachmentRepository, AttachmentRepository>();
-            serviceCollection.AddScoped<IInvitationRepository, InvitationRepository>();
-
+            serviceCollection.AddScoped<IUserService, UserService>();
             serviceCollection.AddScoped<ICompanyService, CompanyService>();
             serviceCollection.AddScoped<IEmployeeService, EmployeeService>();
             serviceCollection.AddScoped<IEmployeeControlService, EmployeeControlService>();
@@ -51,7 +45,7 @@ namespace CSN.WebApi.Extensions.ServiceConfigurations
 
         public static IServiceCollection AddSingletonDependencies(this IServiceCollection serviceCollection)
         {
-            serviceCollection.AddSingleton<IConnectionManager, ConnectionManager>();
+            serviceCollection.AddSingleton<IAppData, AppData>();
             return serviceCollection;
         }
 
@@ -68,18 +62,15 @@ namespace CSN.WebApi.Extensions.ServiceConfigurations
             {
                 config.Filters.Add(new ValidationFilterAttribute());
             }).AddJsonOptions(x => x.JsonSerializerOptions.ReferenceHandler = ReferenceHandler.IgnoreCycles);
-            serviceCollection.AddSignalR(options =>
-            {
-                // options.AddFilter<ValidationFilterAttribute>();
-            });
             serviceCollection.AddEndpointsApiExplorer();
             serviceCollection.AddHttpContextAccessor();
             serviceCollection.AddLogging();
-            serviceCollection.AddCors();
-            serviceCollection.AddAuthorization(options => options.Config());
+            serviceCollection.AddCors(options => options.CorsConfig());
+            serviceCollection.AddAuthorization(options => options.AuthConfig());
             serviceCollection.AddSwaggerGen(options => options.Config());
             serviceCollection.AddAuthentication(JwtBearerDefaults.AuthenticationScheme).AddJwtBearer(options => options.Config(config));
             serviceCollection.AddDataProtection();
+            serviceCollection.AddSignalR();
             return serviceCollection;
         }
     }

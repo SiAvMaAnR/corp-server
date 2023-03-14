@@ -1,4 +1,4 @@
-﻿using CSN.Domain.Shared.Exceptions;
+﻿using CSN.Infrastructure.Exceptions;
 using Microsoft.AspNetCore.Diagnostics;
 using Microsoft.AspNetCore.Mvc;
 
