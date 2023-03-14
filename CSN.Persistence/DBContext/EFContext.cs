@@ -1,12 +1,12 @@
-﻿using CSN.Domain.Entities.Channels;
+﻿using CSN.Domain.Entities.Attachments;
+using CSN.Domain.Entities.Channels;
 using CSN.Domain.Entities.Companies;
 using CSN.Domain.Entities.Employees;
+using CSN.Domain.Entities.Invitations;
 using CSN.Domain.Entities.Messages;
+using CSN.Domain.Entities.Users;
 using CSN.Persistence.EntityConfigurations;
 using Microsoft.EntityFrameworkCore;
-using CSN.Domain.Entities.Invitations;
-using CSN.Domain.Entities.Attachments;
-using CSN.Domain.Entities.Users;
 
 namespace CSN.Persistence.DBContext
 {
@@ -29,9 +29,10 @@ namespace CSN.Persistence.DBContext
 
         protected override void OnModelCreating(ModelBuilder modelBuilder)
         {
+            modelBuilder.ApplyConfiguration(new UserConfiguration());
             modelBuilder.ApplyConfiguration(new MessageConfiguration());
             modelBuilder.ApplyConfiguration(new EmployeeConfiguration());
-            modelBuilder.ApplyConfiguration(new CompanyConfiguraton());
+            modelBuilder.ApplyConfiguration(new CompanyConfiguration());
             modelBuilder.ApplyConfiguration(new ChannelConfiguration());
             modelBuilder.ApplyConfiguration(new AttachmentConfiguration());
             modelBuilder.ApplyConfiguration(new InvitationConfiguration());

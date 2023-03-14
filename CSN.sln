@@ -1,4 +1,3 @@
-﻿
 Microsoft Visual Studio Solution File, Format Version 12.00
 # Visual Studio Version 17
 VisualStudioVersion = 17.3.32825.248
@@ -11,9 +10,13 @@ Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "CSN.Domain", "CSN.Domain\CS
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "CSN.Persistence", "CSN.Persistence\CSN.Persistence.csproj", "{E4EBBDBB-980A-4EEB-AC78-B957270C802F}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "CSN.Email", "CSN.Email\CSN.Email.csproj", "{33A9F147-13CC-4ACF-9AE2-C398062B5EA2}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "CSN.Email", "CSN.Email\CSN.Email.csproj", "{33A9F147-13CC-4ACF-9AE2-C398062B5EA2}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "CSN.Chat", "CSN.Chat\CSN.Chat.csproj", "{FAEBAFD7-D15C-4A0B-8818-73D808642B96}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "CSN.Notifications", "CSN.Notifications\CSN.Notifications.csproj", "{2024E75B-4102-4E32-A1E9-BB7320DE4F2C}"
+EndProject
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "CSN.Application", "CSN.Application\CSN.Application.csproj", "{2C83EAE7-BB4F-4C16-893E-226B86193D0B}"
+EndProject
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "CSN.SignalR", "CSN.SignalR\CSN.SignalR.csproj", "{A9E6D462-E609-4BA9-A4F7-A43CEA82EEE3}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -41,10 +44,18 @@ Global
 		{33A9F147-13CC-4ACF-9AE2-C398062B5EA2}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{33A9F147-13CC-4ACF-9AE2-C398062B5EA2}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{33A9F147-13CC-4ACF-9AE2-C398062B5EA2}.Release|Any CPU.Build.0 = Release|Any CPU
-		{FAEBAFD7-D15C-4A0B-8818-73D808642B96}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
-		{FAEBAFD7-D15C-4A0B-8818-73D808642B96}.Debug|Any CPU.Build.0 = Debug|Any CPU
-		{FAEBAFD7-D15C-4A0B-8818-73D808642B96}.Release|Any CPU.ActiveCfg = Release|Any CPU
-		{FAEBAFD7-D15C-4A0B-8818-73D808642B96}.Release|Any CPU.Build.0 = Release|Any CPU
+		{2024E75B-4102-4E32-A1E9-BB7320DE4F2C}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{2024E75B-4102-4E32-A1E9-BB7320DE4F2C}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{2024E75B-4102-4E32-A1E9-BB7320DE4F2C}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{2024E75B-4102-4E32-A1E9-BB7320DE4F2C}.Release|Any CPU.Build.0 = Release|Any CPU
+		{2C83EAE7-BB4F-4C16-893E-226B86193D0B}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{2C83EAE7-BB4F-4C16-893E-226B86193D0B}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{2C83EAE7-BB4F-4C16-893E-226B86193D0B}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{2C83EAE7-BB4F-4C16-893E-226B86193D0B}.Release|Any CPU.Build.0 = Release|Any CPU
+		{A9E6D462-E609-4BA9-A4F7-A43CEA82EEE3}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{A9E6D462-E609-4BA9-A4F7-A43CEA82EEE3}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{A9E6D462-E609-4BA9-A4F7-A43CEA82EEE3}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{A9E6D462-E609-4BA9-A4F7-A43CEA82EEE3}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE

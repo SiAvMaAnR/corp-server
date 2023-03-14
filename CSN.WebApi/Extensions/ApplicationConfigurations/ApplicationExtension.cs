@@ -1,4 +1,6 @@
-﻿namespace CSN.WebApi.Extensions.ApplicationConfigurations
+﻿using CSN.SignalR.Hubs;
+
+namespace CSN.WebApi.Extensions.ApplicationConfigurations
 {
     public static class ApplicationExtension
     {
@@ -24,16 +26,26 @@
 
         public static void CommonConfiguration(this WebApplication webApplication)
         {
-            webApplication.UseCors(builder => builder
-                .AllowAnyOrigin()
-                .AllowAnyHeader()
-                .AllowAnyMethod());
-
+            webApplication.UseCors("CorsPolicy");
+            webApplication.UseHttpsRedirection();
             webApplication.UseRouting();
             webApplication.UseAuthentication();
             webApplication.UseAuthorization();
             webApplication.UseHttpsRedirection();
             webApplication.MapControllers();
+        }
+
+
+        public static void HubsConfiguration(this WebApplication webApplication)
+        {
+            webApplication.MapHub<ChatHub>("/chat");
+            webApplication.MapHub<StateHub>("/state");
+            webApplication.MapHub<NotificationHub>("/notifications");
+        }
+
+        public static void AddConfiguration(this WebApplicationBuilder? webApplicationBuilder)
+        {
+            webApplicationBuilder?.WebHost.UseKestrel(options => options.Limits.KeepAliveTimeout = TimeSpan.FromMinutes(1));
         }
     }
 }

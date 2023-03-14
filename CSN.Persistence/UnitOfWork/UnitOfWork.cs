@@ -1,16 +1,4 @@
-﻿using CSN.Domain.Entities.Channels;
-using CSN.Domain.Entities.Companies;
-using CSN.Domain.Entities.Employees;
-using CSN.Domain.Entities.Messages;
-using CSN.Domain.Interfaces.UnitOfWork;
-using CSN.Persistence.DBContext;
-using CSN.Persistence.Repositories;
-using Microsoft.EntityFrameworkCore;
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
+﻿using CSN.Domain.Interfaces.UnitOfWork;
 
 namespace CSN.Persistence.UnitOfWork
 {
@@ -18,12 +6,12 @@ namespace CSN.Persistence.UnitOfWork
     {
         public async Task SaveChangesAsync()
         {
-            await this.eFContext.SaveChangesAsync();
+            await eFContext.SaveChangesAsync();
         }
 
         public void SaveChanges()
         {
-            this.eFContext.SaveChanges();
+            eFContext.SaveChanges();
         }
 
         public void Dispose()
@@ -31,11 +19,12 @@ namespace CSN.Persistence.UnitOfWork
             Dispose(true);
             GC.SuppressFinalize(this);
         }
+
         protected virtual void Dispose(bool disposing)
         {
             if (disposing)
             {
-                this.eFContext.Dispose();
+                eFContext.Dispose();
             }
         }
     }

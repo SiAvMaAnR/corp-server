@@ -11,7 +11,7 @@ public class EmailClient
 
     public EmailClient(IHandler handler)
     {
-        this.messageHandler = handler;
+        messageHandler = handler;
     }
 
     public async Task SendAsync(MessageModel messageModel)
@@ -26,6 +26,6 @@ public class EmailClient
             Text = messageModel.Message
         };
 
-        await this.messageHandler.SendAsync(emailMessage);
+        await messageHandler.SendAsync(emailMessage);
     }
 }

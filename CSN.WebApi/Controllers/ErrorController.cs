@@ -1,6 +1,5 @@
-﻿using CSN.WebApi.Extensions.CustomExceptions;
+﻿using CSN.Infrastructure.Exceptions;
 using Microsoft.AspNetCore.Diagnostics;
-using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 
 namespace CSN.WebApi.Controllers
@@ -16,11 +15,15 @@ namespace CSN.WebApi.Controllers
 
             Exception exception = exceptionHandlerFeature.Error;
 
-            if (exception is BadRequestException) return BadRequest(exception.Message);
-            if (exception is UnauthorizedException) return Unauthorized(exception.Message);
-            if (exception is NotFoundException) return NotFound(exception.Message);
-            if (exception is ForbiddenException) return Forbid();
-            return BadRequest(exception.Message);
+            return exception is BadRequestException
+                ? BadRequest(exception.Message)
+                : exception is UnauthorizedException
+                ? Unauthorized(exception.Message)
+                : exception is NotFoundException
+                ? NotFound(exception.Message)
+                : exception is ForbiddenException 
+                ? Forbid() 
+                : BadRequest(exception.Message);
         }
 
 
@@ -42,11 +45,15 @@ namespace CSN.WebApi.Controllers
                 exception.HResult
             };
 
-            if (exception is BadRequestException) return BadRequest(errorInfo);
-            if (exception is UnauthorizedException) return Unauthorized(errorInfo);
-            if (exception is NotFoundException) return NotFound(errorInfo);
-            if (exception is ForbiddenException) return Forbid();
-            return BadRequest(errorInfo);
+            return exception is BadRequestException
+                ? BadRequest(errorInfo)
+                : exception is UnauthorizedException
+                ? Unauthorized(errorInfo)
+                : exception is NotFoundException 
+                ? NotFound(errorInfo) 
+                : exception is ForbiddenException 
+                ? Forbid() 
+                : BadRequest(errorInfo);
         }
     }
 }

@@ -1,6 +1,5 @@
-using CSN.Domain.Entities.Invitations;
-using CSN.Infrastructure.Interfaces.Services;
-using CSN.Infrastructure.Models.InvitationDto;
+using CSN.Application.Services.Interfaces;
+using CSN.Application.Services.Models.InvitationDto;
 using CSN.WebApi.Models.Invite;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
@@ -19,16 +18,15 @@ public class InvitationController : ControllerBase
     {
         this.logger = logger;
         this.invitationService = invitationService;
-
     }
 
-    [HttpPost("Send"), Authorize(Roles = "Company")]
+    [HttpPost("Send"), Authorize(Policy = "OnlyCompany")]
     public async Task<IActionResult> SendInvite([FromBody] InviteSend request)
     {
-        var response = await this.invitationService.SendInviteAsync(new InvitationSendInviteRequest()
+        var response = await invitationService.SendInviteAsync(new InvitationSendInviteRequest()
         {
             EmployeeEmail = request.Email,
-            EmployeeRole = request.EmployeeRole
+            EmployeePost = request.EmployeePost
         });
 
         return Ok(new
@@ -37,22 +35,30 @@ public class InvitationController : ControllerBase
         });
     }
 
-    [HttpGet("Get"), Authorize(Roles = "Company")]
-    public async Task<IActionResult> GetInvites()
+    [HttpGet("GetAll"), Authorize(Policy = "OnlyCompany")]
+    public async Task<IActionResult> GetInvites([FromQuery] InviteGetAll request)
     {
-        var response = await this.invitationService.GetInvitesAsync(new InvitationGetAllRequest());
+        var response = await invitationService.GetInvitesAsync(new InvitationGetAllRequest()
+        {
+            PageNumber = request.PageNumber,
+            PageSize = request.PageSize
+        });
 
         return Ok(new
         {
+            response.PageSize,
+            response.PagesCount,
+            response.PageNumber,
+            response.InvitationsCount,
             response.Invitations
         });
     }
 
 
-    [HttpPost("State"), Authorize(Roles = "Company")]
+    [HttpPut("State"), Authorize(Policy = "OnlyCompany")]
     public async Task<IActionResult> SetState([FromBody] InviteSetState request)
     {
-        var response = await this.invitationService.SetStateAsync(new InvitationSetStateRequest()
+        var response = await invitationService.SetStateAsync(new InvitationSetStateRequest()
         {
             Id = request.Id,
             IsActive = request.IsActive
@@ -65,10 +71,10 @@ public class InvitationController : ControllerBase
         });
     }
 
-    [HttpPost("Remove"), Authorize(Roles = "Company")]
+    [HttpDelete("Remove"), Authorize(Policy = "OnlyCompany")]
     public async Task<IActionResult> Remove([FromBody] InviteRemove request)
     {
-        var response = await this.invitationService.RemoveInviteAsync(new InvitationRemoveRequest()
+        var response = await invitationService.RemoveInviteAsync(new InvitationRemoveRequest()
         {
             Id = request.Id,
         });

@@ -1,4 +1,3 @@
-using System.Net.Mail;
 using MimeKit;
 
 namespace CSN.Email.Interfaces;

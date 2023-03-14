@@ -1,12 +1,7 @@
-﻿using CSN.Domain.Entities.Companies;
-using CSN.Domain.Entities.Employees;
-using CSN.Infrastructure.Interfaces.Services;
-using CSN.Infrastructure.Models.EmployeeDto;
-using CSN.Persistence.DBContext;
-using CSN.WebApi.Extensions.CustomExceptions;
+﻿using CSN.Application.Services.Interfaces;
+using CSN.Application.Services.Models.EmployeeDto;
 using CSN.WebApi.Models.Employee;
 using Microsoft.AspNetCore.Authorization;
-using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 
 namespace CSN.WebApi.Controllers
@@ -27,7 +22,7 @@ namespace CSN.WebApi.Controllers
         [HttpPost("Login")]
         public async Task<IActionResult> Login([FromBody] EmployeeLogin request)
         {
-            var response = await this.employeeService.LoginAsync(new EmployeeLoginRequest()
+            var response = await employeeService.LoginAsync(new EmployeeLoginRequest()
             {
                 Email = request.Email,
                 Password = request.Password
@@ -44,7 +39,7 @@ namespace CSN.WebApi.Controllers
         [HttpPost("Register")]
         public async Task<IActionResult> Register([FromBody] EmployeeRegister request)
         {
-            var response = await this.employeeService.RegisterAsync(new EmployeeRegisterRequest()
+            var response = await employeeService.RegisterAsync(new EmployeeRegisterRequest()
             {
                 Login = request.Login,
                 Invite = request.Invite,
@@ -58,10 +53,25 @@ namespace CSN.WebApi.Controllers
             });
         }
 
-        [HttpGet("Info"), Authorize(Roles = "Employee")]
+        [HttpPut("Edit"), Authorize(Policy = "OnlyEmployee")]
+        public async Task<IActionResult> Edit([FromBody] EmployeeEdit request)
+        {
+            var response = await employeeService.EditAsync(new EmployeeEditRequest()
+            {
+                Login = request.Login,
+                Image = request.Image,
+            });
+
+            return Ok(new
+            {
+                response.IsSuccess
+            });
+        }
+
+        [HttpGet("Info"), Authorize(Policy = "OnlyEmployee")]
         public async Task<IActionResult> Info()
         {
-            var response = await this.employeeService.GetInfoAsync(new EmployeeInfoRequest());
+            var response = await employeeService.GetInfoAsync(new EmployeeInfoRequest());
 
             return Ok(new
             {
@@ -71,14 +81,16 @@ namespace CSN.WebApi.Controllers
                 response.Role,
                 response.CompanyId,
                 response.Company,
-                response.Image
+                response.Image,
+                response.CreatedAt,
+                response.UpdatedAt
             });
         }
 
-        [HttpDelete("Remove"), Authorize(Roles = "Employee")]
+        [HttpDelete("Remove"), Authorize(Policy = "OnlyEmployee")]
         public async Task<IActionResult> Remove()
         {
-            var response = await this.employeeService.RemoveAsync(new EmployeeRemoveRequest());
+            var response = await employeeService.RemoveAsync(new EmployeeRemoveRequest());
 
             return Ok(new
             {

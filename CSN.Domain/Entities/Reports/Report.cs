@@ -1,6 +1,6 @@
-using System.ComponentModel.DataAnnotations.Schema;
-using CSN.Domain.Entities.Common;
+using CSN.Domain.Common;
 using CSN.Domain.Entities.Tasks;
+using System.ComponentModel.DataAnnotations.Schema;
 
 namespace CSN.Domain.Entities.Reports;
 
@@ -12,5 +12,4 @@ public partial class Report : BaseEntity
     public int Progress { get; set; }
     public ProjectTask Task { get; set; } = null!;
     public int TaskId { get; set; }
-    public DateTime CreatedDate { get; set; } = DateTime.Now;
 }

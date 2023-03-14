@@ -4,6 +4,7 @@ using CSN.WebApi.Extensions.ServiceConfigurations;
 var builder = WebApplication.CreateBuilder(args);
 var config = builder.Configuration;
 
+builder.AddConfiguration();
 builder.Services.AddCommonDependencies(config);
 builder.Services.AddTransientDependencies();
 builder.Services.AddScopedDependencies();
@@ -17,4 +18,5 @@ else
     app.ProductionConfiguration();
 
 app.CommonConfiguration();
+app.HubsConfiguration();
 app.Run();

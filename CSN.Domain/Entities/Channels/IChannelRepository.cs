@@ -2,7 +2,7 @@
 
 namespace CSN.Domain.Entities.Channels
 {
-    public interface IChannelRepository: IAsyncRepository<Channel>
+    public interface IChannelRepository : IAsyncRepository<Channel>
     {
     }
 }

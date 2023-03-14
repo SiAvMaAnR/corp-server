@@ -1,14 +1,9 @@
-﻿using CSN.Domain.Entities.Common;
+﻿using CSN.Domain.Common;
 using CSN.Domain.Interfaces.Repository;
-using CSN.Infrastructure.Extensions;
 using CSN.Persistence.DBContext;
+using CSN.Persistence.Extensions;
 using Microsoft.EntityFrameworkCore;
-using System;
-using System.Collections.Generic;
-using System.Linq;
 using System.Linq.Expressions;
-using System.Text;
-using System.Threading.Tasks;
 
 namespace CSN.Persistence.Repositories.Common
 {
@@ -18,7 +13,7 @@ namespace CSN.Persistence.Repositories.Common
 
         public BaseRepository(EFContext dbContext)
         {
-            this.dbSet = dbContext.Set<TEntity>();
+            dbSet = dbContext.Set<TEntity>();
         }
 
         public virtual async Task AddAsync(TEntity entity)
@@ -28,6 +23,7 @@ namespace CSN.Persistence.Repositories.Common
 
         public virtual async Task UpdateAsync(TEntity entity)
         {
+            entity.UpdatedAt = DateTime.Now;
             await Task.FromResult(dbSet.Update(entity));
         }
 
