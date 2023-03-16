@@ -6,7 +6,7 @@ using Microsoft.AspNetCore.Http;
 
 namespace CSN.Application.Services
 {
-    public class ChannelService : BaseService<Channel>, IChannelService
+    public class ChannelService : BaseService, IChannelService
     {
         public ChannelService(IUnitOfWork unitOfWork, IHttpContextAccessor context)
             : base(unitOfWork, context)

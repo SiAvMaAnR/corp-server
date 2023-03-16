@@ -1,5 +1,7 @@
+using CSN.Application.Services.Common;
+
 namespace CSN.Application.Services.Interfaces;
 
-public interface IChannelService
+public interface IChannelService : IBaseService
 {
 }

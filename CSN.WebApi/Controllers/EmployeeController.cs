@@ -82,6 +82,7 @@ namespace CSN.WebApi.Controllers
                 response.CompanyId,
                 response.Company,
                 response.Image,
+                response.State,
                 response.CreatedAt,
                 response.UpdatedAt
             });

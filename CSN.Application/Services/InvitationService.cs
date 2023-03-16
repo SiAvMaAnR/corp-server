@@ -18,7 +18,7 @@ using Microsoft.Extensions.Configuration;
 
 namespace CSN.Application.Services;
 
-public class InvitationService : BaseService<Company>, IInvitationService
+public class InvitationService : BaseService, IInvitationService
 {
     private readonly EmailClient emailClient;
     private readonly IConfiguration configuration;
@@ -115,6 +115,9 @@ public class InvitationService : BaseService<Company>, IInvitationService
 
         var invitationsCount = invitationsAll?.ToList().Count ?? 0;
 
+        var invitationsActiveCount = invitationsAll?.Count(invitation => invitation.IsActive) ?? 0;
+        var invitationsAcceptedCount = invitationsAll?.Count(invitation => invitation.IsAccepted) ?? 0;
+
         var invitations = invitationsAll?
             .Skip(request.PageNumber * request.PageSize)
             .Take(request.PageSize)
@@ -128,6 +131,8 @@ public class InvitationService : BaseService<Company>, IInvitationService
             PageSize = request.PageSize,
             PageNumber = request.PageNumber,
             InvitationsCount = invitationsCount,
+            ActiveCount = invitationsActiveCount,
+            AcceptedCount = invitationsAcceptedCount,
             PagesCount = pagesCount,
         };
     }

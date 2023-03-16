@@ -41,7 +41,7 @@ public class InvitationController : ControllerBase
         var response = await invitationService.GetInvitesAsync(new InvitationGetAllRequest()
         {
             PageNumber = request.PageNumber,
-            PageSize = request.PageSize
+            PageSize = request.PageSize,
         });
 
         return Ok(new
@@ -50,6 +50,8 @@ public class InvitationController : ControllerBase
             response.PagesCount,
             response.PageNumber,
             response.InvitationsCount,
+            response.AcceptedCount,
+            response.ActiveCount,
             response.Invitations
         });
     }

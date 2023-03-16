@@ -4,16 +4,17 @@ using System.Linq;
 using System.Threading.Tasks;
 using CSN.Domain.Shared.Enums;
 
-namespace CSN.Application.Services.Models.UserDto
+namespace CSN.Application.Services.Models.AppDataDto
 {
     public class UserStateRequest
     {
-        public UserStateRequest() { }
+        public UserState State { get; set; }
+
         public UserStateRequest(UserState state)
         {
             this.State = state;
         }
 
-        public UserState State { get; set; } = UserState.Offline;
+        public UserStateRequest() { }
     }
 }

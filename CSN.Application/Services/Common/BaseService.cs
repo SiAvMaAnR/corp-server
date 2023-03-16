@@ -6,10 +6,21 @@ using System.Security.Claims;
 
 namespace CSN.Application.Services.Common
 {
-    public abstract class BaseService<TEntity> where TEntity : BaseEntity
+
+    public interface IBaseService
+    {
+        void SetClaimsPrincipal(ClaimsPrincipal? claimsPrincipal);
+    }
+
+    public abstract class BaseService
     {
         protected readonly IUnitOfWork unitOfWork;
-        protected readonly ClaimsPrincipal? claimsPrincipal;
+        protected ClaimsPrincipal? claimsPrincipal;
+
+        public void SetClaimsPrincipal(ClaimsPrincipal? claimsPrincipal)
+        {
+            this.claimsPrincipal = claimsPrincipal;
+        }
 
         public BaseService(IUnitOfWork unitOfWork, IHttpContextAccessor context)
         {

@@ -1,15 +1,9 @@
 ﻿using CSN.Application.Services;
 using CSN.Application.Services.Interfaces;
-using CSN.Domain.Entities.Attachments;
-using CSN.Domain.Entities.Channels;
-using CSN.Domain.Entities.Companies;
-using CSN.Domain.Entities.Employees;
-using CSN.Domain.Entities.Invitations;
-using CSN.Domain.Entities.Messages;
+
 using CSN.Domain.Interfaces.UnitOfWork;
 using CSN.Infrastructure.Extensions;
 using CSN.Persistence.DBContext;
-using CSN.Persistence.Repositories;
 using CSN.Persistence.UnitOfWork;
 using CSN.WebApi.Extensions.PolicyConfigurations;
 using CSN.WebApi.Extensions.SwaggerConfigurations;
@@ -20,6 +14,8 @@ using Microsoft.EntityFrameworkCore;
 using System.Text.Json.Serialization;
 using CSN.Application.AppData;
 using CSN.Application.AppData.Interfaces;
+using Microsoft.AspNetCore.SignalR;
+using CSN.WebApi.Helpers;
 
 namespace CSN.WebApi.Extensions.ServiceConfigurations
 {
@@ -45,6 +41,9 @@ namespace CSN.WebApi.Extensions.ServiceConfigurations
 
         public static IServiceCollection AddSingletonDependencies(this IServiceCollection serviceCollection)
         {
+            serviceCollection.AddScoped<IAppDataService, AppDataService>();
+            
+            serviceCollection.AddSingleton<IUserIdProvider, CustomUserIdProvider>();
             serviceCollection.AddSingleton<IAppData, AppData>();
             return serviceCollection;
         }

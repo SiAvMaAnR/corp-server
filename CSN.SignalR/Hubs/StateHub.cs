@@ -1,34 +1,39 @@
 using CSN.Application.Services.Interfaces;
-using CSN.Application.Services.Models.UserDto;
+using CSN.Application.Services.Models.AppDataDto;
 using CSN.Domain.Shared.Enums;
+using CSN.SignalR.Hubs.Common;
+using CSN.SignalR.Hubs.Interfaces;
 using Microsoft.AspNetCore.SignalR;
 
 namespace CSN.SignalR.Hubs;
 
-public class StateHub : Hub
+public class StateHub : BaseHub, IHub
 {
-    private readonly IUserService userService;
-
-    public StateHub(IUserService userService)
+    private readonly IAppDataService appDataService;
+    public StateHub(IAppDataService appDataService)
     {
-        this.userService = userService;
+        this.appDataService = appDataService;
     }
 
     public async Task SetState(UserState state)
     {
-        await this.userService.SetState(new UserStateRequest(state));
+        await this.appDataService.SetState(new UserStateRequest(state));
         await this.Clients.Caller.SendAsync("State", true);
     }
 
     public override async Task OnConnectedAsync()
     {
-        await this.userService.SetState(new UserStateRequest(UserState.Online));
+        this.appDataService.SetClaimsPrincipal(Context?.User);
+
+        await this.appDataService.AddUser(new UserAddRequest());
+        await this.appDataService.SetState(new UserStateRequest(UserState.Online));
         await base.OnConnectedAsync();
     }
 
     public override async Task OnDisconnectedAsync(Exception? exception)
     {
-        await this.userService.SetState(new UserStateRequest(UserState.Offline));
+        await this.appDataService.RemoveUser(new UserRemoveRequest());
+        await this.appDataService.SetState(new UserStateRequest(UserState.Offline));
         await base.OnDisconnectedAsync(exception);
     }
 }

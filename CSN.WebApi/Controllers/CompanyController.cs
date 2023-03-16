@@ -95,6 +95,7 @@ namespace CSN.WebApi.Controllers
                 response.Email,
                 response.Role,
                 response.Description,
+                response.State,
                 response.Image
             });
         }

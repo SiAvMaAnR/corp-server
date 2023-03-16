@@ -18,7 +18,7 @@ using System.Text.Json;
 
 namespace CSN.Application.Services;
 
-public class CompanyService : BaseService<Company>, ICompanyService
+public class CompanyService : BaseService, ICompanyService
 {
     private readonly IConfiguration configuration;
     public readonly IDataProtectionProvider protection;

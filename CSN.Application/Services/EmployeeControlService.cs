@@ -4,6 +4,7 @@ using CSN.Application.Services.Models.EmployeeControlDto;
 using CSN.Domain.Entities.Companies;
 using CSN.Domain.Entities.Employees;
 using CSN.Domain.Interfaces.UnitOfWork;
+using CSN.Domain.Shared.Enums;
 using CSN.Infrastructure.Exceptions;
 
 using CSN.Infrastructure.Extensions;
@@ -12,7 +13,7 @@ using Microsoft.Extensions.Configuration;
 
 namespace CSN.Application.Services;
 
-public class EmployeeControlService : BaseService<Company>, IEmployeeControlService
+public class EmployeeControlService : BaseService, IEmployeeControlService
 {
     private readonly IConfiguration configuration;
 
@@ -44,6 +45,7 @@ public class EmployeeControlService : BaseService<Company>, IEmployeeControlServ
         });
 
         var employeesCount = employeesAll?.ToList().Count ?? 0;
+        var employeesOnlineCount = employeesAll?.Count(employee => employee.State == UserState.Online) ?? 0;
 
         var employees = employeesAll?
             .Skip(request.PageNumber * request.PageSize)
@@ -58,6 +60,7 @@ public class EmployeeControlService : BaseService<Company>, IEmployeeControlServ
             PageSize = request.PageSize,
             PageNumber = request.PageNumber,
             EmployeesCount = employeesCount,
+            OnlineCount = employeesOnlineCount,
             PagesCount = pagesCount,
         };
     }

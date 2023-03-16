@@ -16,7 +16,7 @@ using System.Text.Json;
 
 namespace CSN.Application.Services;
 
-public class EmployeeService : BaseService<Employee>, IEmployeeService
+public class EmployeeService : BaseService, IEmployeeService
 {
     public readonly IConfiguration configuration;
     public readonly IDataProtectionProvider protection;
@@ -121,6 +121,7 @@ public class EmployeeService : BaseService<Employee>, IEmployeeService
         };
 
         invitation.IsAccepted = true;
+        invitation.IsActive = false;
 
         await Task.WhenAll(
             this.unitOfWork.Invitation.UpdateAsync(invitation),

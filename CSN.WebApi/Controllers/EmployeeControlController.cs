@@ -61,6 +61,7 @@ public class EmployeeControlController : ControllerBase
             response.PagesCount,
             response.PageNumber,
             response.EmployeesCount,
+            response.OnlineCount,
             response.Employees
         });
     }

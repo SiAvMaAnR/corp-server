@@ -8,6 +8,7 @@ public class EmployeeControlEmployeesResponse
     public int PageSize { get; set; }
     public int PageNumber { get; set; }
     public int EmployeesCount { get; set; }
+    public int OnlineCount { get; set; }
     public int PagesCount { get; set; }
 }
 

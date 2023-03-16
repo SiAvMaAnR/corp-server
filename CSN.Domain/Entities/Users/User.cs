@@ -21,7 +21,6 @@ public partial class User : BaseEntity
     public byte[] PasswordSalt { get; set; } = null!;
     public string Role { get; set; } = null!;
     public byte[]? Image { get; set; }
-    [NotMapped]
     public UserState State { get; set; } = UserState.Offline;
     public ICollection<Channel> Channels { get; set; } = new List<Channel>();
     [InverseProperty("Admins")]

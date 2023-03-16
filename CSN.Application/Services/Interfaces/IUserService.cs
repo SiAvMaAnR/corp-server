@@ -1,8 +1,7 @@
-using CSN.Application.Services.Models.UserDto;
+using CSN.Application.Services.Common;
 
 namespace CSN.Application.Services.Interfaces;
 
-public interface IUserService
+public interface IUserService : IBaseService
 {
-    Task<UserStateResponse> SetState(UserStateRequest request);
 }
