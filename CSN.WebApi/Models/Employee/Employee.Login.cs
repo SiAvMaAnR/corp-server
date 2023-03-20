@@ -4,7 +4,7 @@ namespace CSN.WebApi.Models.Employee;
 
 public class EmployeeLogin
 {
-    [MaxLength(35), EmailAddress]
+    [MaxLength(80), EmailAddress]
     public string Email { get; set; } = null!;
     public string Password { get; set; } = null!;
 }

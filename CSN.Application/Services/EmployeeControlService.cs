@@ -1,13 +1,13 @@
+using CSN.Application.Extensions;
 using CSN.Application.Services.Common;
 using CSN.Application.Services.Interfaces;
 using CSN.Application.Services.Models.EmployeeControlDto;
 using CSN.Domain.Entities.Companies;
 using CSN.Domain.Entities.Employees;
+using CSN.Domain.Exceptions;
 using CSN.Domain.Interfaces.UnitOfWork;
 using CSN.Domain.Shared.Enums;
-using CSN.Infrastructure.Exceptions;
-
-using CSN.Infrastructure.Extensions;
+using CSN.Persistence.Extensions;
 using Microsoft.AspNetCore.Http;
 using Microsoft.Extensions.Configuration;
 
@@ -32,6 +32,7 @@ public class EmployeeControlService : BaseService, IEmployeeControlService
             throw new NotFoundException("Account is not found");
         }
 
+
         var employeesAll = company.Employees.Select(employee => new CompanyEmployee()
         {
             Id = employee.Id,
@@ -39,7 +40,7 @@ public class EmployeeControlService : BaseService, IEmployeeControlService
             Email = employee.Email,
             Role = employee.Role,
             State = employee.State,
-            Image = employee.Image,
+            Image = employee.Image.ReadToBytes(),
             CreatedAt = employee.CreatedAt,
             UpdatedAt = employee.UpdatedAt,
         });

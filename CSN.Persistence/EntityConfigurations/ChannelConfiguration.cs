@@ -8,6 +8,7 @@ namespace CSN.Persistence.EntityConfigurations
     {
         public void Configure(EntityTypeBuilder<Channel> builder)
         {
+            builder.UseTpcMappingStrategy();
         }
     }
 }

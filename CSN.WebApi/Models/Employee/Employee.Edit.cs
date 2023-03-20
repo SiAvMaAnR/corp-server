@@ -4,8 +4,7 @@ namespace CSN.WebApi.Models.Employee;
 
 public class EmployeeEdit
 {
-    [MaxLength(25)]
+    [MaxLength(40)]
     public string Login { get; set; } = null!;
-    [MaxLength(400)]
     public string? Image { get; set; }
 }

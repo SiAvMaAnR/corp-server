@@ -5,7 +5,7 @@ using CSN.Domain.Interfaces.UnitOfWork;
 using System.Linq.Expressions;
 using System.Security.Claims;
 
-namespace CSN.Infrastructure.Extensions
+namespace CSN.Application.Extensions
 {
     public static class UserExtension
     {
@@ -28,6 +28,17 @@ namespace CSN.Infrastructure.Extensions
         {
             string? email = claimsPrincipal?.FindFirst(ClaimTypes.Email)?.Value;
             return await unitOfWork.Company.GetAsync(user => user.Email == email, includeProperties);
+        }
+
+        public static async Task<Company?> GetUserCompanyAsync(this ClaimsPrincipal claimsPrincipal, IUnitOfWork unitOfWork,
+            params Expression<Func<User, object>>[] includeProperties)
+        {
+            string? email = claimsPrincipal?.FindFirst(ClaimTypes.Email)?.Value;
+            User? user = await unitOfWork.User.GetAsync(user => user.Email == email, includeProperties);
+
+            return (user is Employee)
+                ? (user as Employee)?.Company
+                : (user as Company);
         }
     }
 }

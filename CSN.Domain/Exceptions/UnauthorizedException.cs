@@ -1,4 +1,4 @@
-namespace CSN.Infrastructure.Exceptions
+namespace CSN.Domain.Exceptions
 {
     public class UnauthorizedException : Exception
     {

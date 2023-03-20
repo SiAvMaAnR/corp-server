@@ -1,4 +1,4 @@
-namespace CSN.Infrastructure.Extensions;
+namespace CSN.Application.Extensions;
 
 public static class TaskExtension
 {

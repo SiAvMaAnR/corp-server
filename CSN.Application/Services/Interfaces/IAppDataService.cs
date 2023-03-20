@@ -5,10 +5,8 @@ namespace CSN.Application.Services.Interfaces
 {
     public interface IAppDataService : IBaseService
     {
-        Task<UserStateResponse> SetState(UserStateRequest request);
-
-        Task<UserAddResponse> AddUser(UserAddRequest request);
-
-        Task<UserRemoveResponse> RemoveUser(UserRemoveRequest request);
+        Task<UserStateResponse> SetStateAsync(UserStateRequest request);
+        Task<UserAddResponse> AddUserAsync(UserAddRequest request);
+        Task<UserRemoveResponse> RemoveUserAsync(UserRemoveRequest request);
     }
 }

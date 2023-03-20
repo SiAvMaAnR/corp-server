@@ -4,7 +4,7 @@ namespace CSN.WebApi.Models.Company;
 
 public class CompanyEdit
 {
-    [MaxLength(25)]
+    [MaxLength(40)]
     public string Login { get; set; } = null!;
     [MaxLength(400)]
     public string? Description { get; set; }

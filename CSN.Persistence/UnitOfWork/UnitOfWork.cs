@@ -1,4 +1,7 @@
-﻿using CSN.Domain.Interfaces.UnitOfWork;
+﻿using CSN.Domain.Entities.Channels.DialogChannel;
+using CSN.Domain.Entities.Channels.PrivateChannel;
+using CSN.Domain.Entities.Channels.PublicChannel;
+using CSN.Domain.Interfaces.UnitOfWork;
 
 namespace CSN.Persistence.UnitOfWork
 {

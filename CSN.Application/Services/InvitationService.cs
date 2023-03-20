@@ -1,17 +1,16 @@
 using System.Text.Json;
+using CSN.Application.Extensions;
 using CSN.Application.Services.Common;
 using CSN.Application.Services.Interfaces;
 using CSN.Application.Services.Models.InvitationDto;
 using CSN.Domain.Entities.Companies;
 using CSN.Domain.Entities.Invitations;
 using CSN.Domain.Entities.Users;
+using CSN.Domain.Exceptions;
 using CSN.Domain.Interfaces.UnitOfWork;
-using CSN.Infrastructure.Exceptions;
-
 using CSN.Email;
 using CSN.Email.Handlers;
 using CSN.Email.Models;
-using CSN.Infrastructure.Extensions;
 using Microsoft.AspNetCore.DataProtection;
 using Microsoft.AspNetCore.Http;
 using Microsoft.Extensions.Configuration;

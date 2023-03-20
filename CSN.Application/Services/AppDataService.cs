@@ -2,11 +2,11 @@ using CSN.Application.Services.Common;
 using CSN.Application.Services.Interfaces;
 using CSN.Domain.Interfaces.UnitOfWork;
 using Microsoft.AspNetCore.Http;
-using CSN.Infrastructure.Extensions;
 using CSN.Application.AppData.Interfaces;
 using CSN.Domain.Entities.Users;
-using CSN.Infrastructure.Exceptions;
 using CSN.Application.Services.Models.AppDataDto;
+using CSN.Domain.Exceptions;
+using CSN.Application.Extensions;
 
 namespace CSN.Application.Services
 {
@@ -23,7 +23,7 @@ namespace CSN.Application.Services
             this.appData = appData;
         }
 
-        public async Task<UserStateResponse> SetState(UserStateRequest request)
+        public async Task<UserStateResponse> SetStateAsync(UserStateRequest request)
         {
             User? user = await this.claimsPrincipal!.GetUserAsync(unitOfWork);
 
@@ -41,11 +41,11 @@ namespace CSN.Application.Services
             return new UserStateResponse() { IsSuccess = true };
         }
 
-        public async Task<UserAddResponse> AddUser(UserAddRequest request)
+        public async Task<UserAddResponse> AddUserAsync(UserAddRequest request)
         {
             if (this.claimsPrincipal == null)
             {
-                throw new BadRequestException("Account is not found");
+                 throw new ForbiddenException("Forbidden");
             }
             var user = await this.claimsPrincipal.GetUserAsync(this.unitOfWork);
             if (user != null) this.appData.Create(user);
@@ -53,11 +53,11 @@ namespace CSN.Application.Services
             return new UserAddResponse(true);
         }
 
-        public async Task<UserRemoveResponse> RemoveUser(UserRemoveRequest request)
+        public async Task<UserRemoveResponse> RemoveUserAsync(UserRemoveRequest request)
         {
             if (this.claimsPrincipal == null)
             {
-                throw new BadRequestException("Account is not found");
+                throw new ForbiddenException("Forbidden");
             }
 
             User? user = await this.claimsPrincipal.GetUserAsync(this.unitOfWork);

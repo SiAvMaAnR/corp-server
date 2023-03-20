@@ -19,5 +19,6 @@ namespace CSN.Domain.Interfaces.Repository
 
         Task<bool> AnyAsync(Expression<Func<TEntity, bool>> predicate);
         Task<bool> AllAsync(Expression<Func<TEntity, bool>> predicate);
+        Task<IQueryable<TEntity>> CustomAsync();
     }
 }

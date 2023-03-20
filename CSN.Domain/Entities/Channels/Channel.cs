@@ -8,10 +8,7 @@ namespace CSN.Domain.Entities.Channels;
 [Table("Channels")]
 public partial class Channel : BaseEntity
 {
-    public string Name { get; set; } = null!;
-    public bool IsPrivate { get; set; }
-    public bool IsDialog { get; set; }
-    public bool IsDeleted { get; set; }
-    public ICollection<Message> Messages { get; set; } = new List<Message>();
+    public bool IsDeleted { get; set; } = false;
     public ICollection<User> Users { get; set; } = new List<User>();
+    public ICollection<Message> Messages { get; set; } = new List<Message>();
 }

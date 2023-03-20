@@ -13,8 +13,8 @@ public partial class Message : AttachableEntity
     public bool IsRead { get; set; }
     public User Author { get; set; } = null!;
     public int AuthorId { get; set; }
-    public Message? Answer { get; set; }
-    public int? AnswerId { get; set; }
+    public Message? TargetMessage { get; set; }
+    public int? TargetMessageId { get; set; }
     public Channel Channel { get; set; } = null!;
     public int ChannelId { get; set; }
 }

@@ -1,15 +1,16 @@
+using CSN.Application.Extensions;
 using CSN.Application.Services.Common;
 using CSN.Application.Services.Interfaces;
 using CSN.Application.Services.Models.Common;
 using CSN.Application.Services.Models.CompanyDto;
 using CSN.Domain.Entities.Companies;
+using CSN.Domain.Exceptions;
 using CSN.Domain.Interfaces.UnitOfWork;
-using CSN.Infrastructure.Exceptions;
 using CSN.Email;
 using CSN.Email.Handlers;
 using CSN.Email.Models;
 using CSN.Infrastructure.AuthOptions;
-using CSN.Infrastructure.Extensions;
+using CSN.Persistence.Extensions;
 using Microsoft.AspNetCore.DataProtection;
 using Microsoft.AspNetCore.Http;
 using Microsoft.Extensions.Configuration;
@@ -139,8 +140,11 @@ public class CompanyService : BaseService, ICompanyService
             throw new NotFoundException("Account is not found");
         }
 
+        byte[] imageBytes = Convert.FromBase64String(request.Image ?? "");
+        string? imagePath = await imageBytes.WriteToFileAsync(company.Email);
+
         company.Login = request.Login;
-        company.Image = Convert.FromBase64String(request.Image ?? "");
+        company.Image = imagePath;
         company.Description = request.Description;
 
         await this.unitOfWork.Company.UpdateAsync(company);
@@ -158,12 +162,14 @@ public class CompanyService : BaseService, ICompanyService
             throw new NotFoundException("Account is not found");
         }
 
+        byte[]? image = await company.Image.ReadToBytesAsync();
+
         return new CompanyInfoResponse()
         {
             Id = company.Id,
             Login = company.Login,
             Email = company.Email,
-            Image = company.Image,
+            Image = image,
             Role = company.Role,
             State = company.State,
             Description = company.Description,
@@ -194,25 +200,33 @@ public class CompanyService : BaseService, ICompanyService
             throw new BadRequestException("Incorrect password");
         }
 
+        string? imagePath = await confirmation.Image.WriteToFileAsync(confirmation.Email);
+
+        if (await this.unitOfWork.User.AnyAsync(user => user.Email == confirmation.Email))
+        {
+            throw new BadRequestException("Account already exists");
+        }
+        
         Company company = new Company()
         {
             Login = confirmation.Login,
             Email = confirmation.Email,
-            Image = confirmation.Image,
+            Image = imagePath,
             PasswordHash = passwordHash,
             PasswordSalt = passwordSalt,
             Description = confirmation.Description,
             Role = "Company",
         };
 
-        if (await this.unitOfWork.Company.AnyAsync(company => company.Email == confirmation.Email))
-        {
-            throw new BadRequestException("Account already exists");
-        }
         await this.unitOfWork.Company.AddAsync(company);
 
         await this.unitOfWork.SaveChangesAsync();
 
-        return new CompanyConfirmationResponse() { IsSuccess = true };
+        return new CompanyConfirmationResponse()
+        {
+            IsSuccess = true,
+            Email = confirmation.Email,
+            Password = confirmation.Password
+        };
     }
 }

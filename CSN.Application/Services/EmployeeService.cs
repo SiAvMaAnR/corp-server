@@ -4,15 +4,16 @@ using CSN.Application.Services.Models.EmployeeDto;
 using CSN.Domain.Entities.Companies;
 using CSN.Domain.Entities.Employees;
 using CSN.Domain.Interfaces.UnitOfWork;
-using CSN.Infrastructure.Exceptions;
-
 using CSN.Infrastructure.AuthOptions;
-using CSN.Infrastructure.Extensions;
 using Microsoft.AspNetCore.DataProtection;
 using Microsoft.AspNetCore.Http;
 using Microsoft.Extensions.Configuration;
 using System.Security.Claims;
 using System.Text.Json;
+using CSN.Domain.Exceptions;
+using CSN.Application.Extensions;
+using CSN.Persistence.Extensions;
+using CSN.Domain.Entities.Invitations;
 
 namespace CSN.Application.Services;
 
@@ -45,20 +46,21 @@ public class EmployeeService : BaseService, IEmployeeService
         }
 
         var claims = new List<Claim>()
-            {
-                new Claim(ClaimTypes.NameIdentifier, employee.Id.ToString()),
-                new Claim(ClaimTypes.Name, employee.Login),
-                new Claim(ClaimTypes.Email, employee.Email),
-                new Claim(ClaimTypes.Role, employee.Role)
-            };
+        {
+            new Claim(ClaimTypes.NameIdentifier, employee.Id.ToString()),
+            new Claim(ClaimTypes.Name, employee.Login),
+            new Claim("Post", employee.Post.ToString()),
+            new Claim(ClaimTypes.Email, employee.Email),
+            new Claim(ClaimTypes.Role, employee.Role)
+        };
 
         string token = AuthOptions.CreateToken(claims, new Dictionary<string, string>()
-            {
-                { "secretKey", this.configuration["Authorization:SecretKey"] ?? throw new BadRequestException("Missing authorization secretKey") },
-                { "audience", this.configuration["Authorization:Audience"] ?? throw new BadRequestException("Missing authorization audience") },
-                { "issuer" , this.configuration["Authorization:Issuer"] ?? throw new BadRequestException("Missing authorization issuer") },
-                { "lifeTime" , this.configuration["Authorization:LifeTime"] ?? throw new BadRequestException("Missing authorization lifeTime") },
-            });
+        {
+            { "secretKey", this.configuration["Authorization:SecretKey"] ?? throw new BadRequestException("Missing authorization secretKey") },
+            { "audience", this.configuration["Authorization:Audience"] ?? throw new BadRequestException("Missing authorization audience") },
+            { "issuer" , this.configuration["Authorization:Issuer"] ?? throw new BadRequestException("Missing authorization issuer") },
+            { "lifeTime" , this.configuration["Authorization:LifeTime"] ?? throw new BadRequestException("Missing authorization lifeTime") },
+        });
 
         return new EmployeeLoginResponse()
         {
@@ -87,7 +89,7 @@ public class EmployeeService : BaseService, IEmployeeService
             throw new BadRequestException("Account already exists");
         }
 
-        var invitation = await this.unitOfWork.Invitation.GetAsync(invitation => invitation.Id == invite.Id);
+        Invitation? invitation = await this.unitOfWork.Invitation.GetAsync(invitation => invitation.Id == invite.Id);
 
         if (invitation == null || !invitation.IsActive)
         {
@@ -99,8 +101,8 @@ public class EmployeeService : BaseService, IEmployeeService
             throw new BadRequestException("Incorrect password");
         }
 
-        byte[] image = Convert.FromBase64String(request.Image ?? "");
-
+        byte[] imageBytes = Convert.FromBase64String(request.Image ?? "");
+        string? imagePath = await imageBytes.WriteToFileAsync(invite.Email);
         Company? company = await this.unitOfWork.Company.GetAsync(company => company.Id == invite.CompanyId);
 
         if (company == null)
@@ -112,7 +114,7 @@ public class EmployeeService : BaseService, IEmployeeService
         {
             Login = request.Login,
             Email = invite.Email,
-            Image = image,
+            Image = imagePath,
             PasswordHash = passwordHash,
             PasswordSalt = passwordSalt,
             Role = "Employee",
@@ -132,7 +134,9 @@ public class EmployeeService : BaseService, IEmployeeService
 
         return new EmployeeRegisterResponse()
         {
-            IsSuccess = true
+            IsSuccess = true,
+            Email = invitation.Email,
+            Password = request.Password,
         };
     }
 
@@ -145,8 +149,11 @@ public class EmployeeService : BaseService, IEmployeeService
             throw new NotFoundException("Account is not found");
         }
 
+
+        var imageBytes = Convert.FromBase64String(request.Image ?? "");
+        var imagePath = await imageBytes.WriteToFileAsync(employee.Email);
         employee.Login = request.Login;
-        employee.Image = Convert.FromBase64String(request.Image ?? "");
+        employee.Image = imagePath;
 
         await this.unitOfWork.Employee.UpdateAsync(employee);
         await this.unitOfWork.SaveChangesAsync();
@@ -171,7 +178,7 @@ public class EmployeeService : BaseService, IEmployeeService
             Id = employee.Id,
             Login = employee.Login,
             Email = employee.Email,
-            Image = employee.Image,
+            Image = employee.Image.ReadToBytes(),
             Role = employee.Role,
             State = employee.State,
             CreatedAt = employee.CreatedAt,
@@ -183,7 +190,7 @@ public class EmployeeService : BaseService, IEmployeeService
                 Login = employee.Company.Login,
                 Email = employee.Company.Email,
                 Role = employee.Company.Role,
-                Image = employee.Company.Image,
+                Image = employee.Company.Image.ReadToBytes(),
                 State = employee.Company.State,
                 Description = employee.Company.Description
             }

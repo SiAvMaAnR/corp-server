@@ -22,13 +22,8 @@ namespace CSN.WebApi.Extensions.PolicyConfigurations
                 .AllowAnyMethod()
                 .AllowAnyHeader()
                 .AllowCredentials()
-                .WithOrigins("https://localhost:3000"));
-
-            corsOptions.AddPolicy("Test", policy => policy
-                .AllowAnyMethod()
-                .AllowAnyHeader()
-                .AllowCredentials()
-                .WithOrigins());
+                .WithOrigins("http://localhost:3000", "https://localhost:3000"));
+                // .AllowAnyOrigin());
 
         }
     }

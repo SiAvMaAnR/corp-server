@@ -31,7 +31,6 @@ namespace CSN.WebApi.Extensions.ApplicationConfigurations
             webApplication.UseRouting();
             webApplication.UseAuthentication();
             webApplication.UseAuthorization();
-            webApplication.UseHttpsRedirection();
             webApplication.MapControllers();
         }
 

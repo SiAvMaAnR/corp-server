@@ -6,5 +6,6 @@ namespace CSN.WebApi.Controllers
     [ApiController]
     public class ChannelController : ControllerBase
     {
+        
     }
 }
