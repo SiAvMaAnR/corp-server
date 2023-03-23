@@ -11,7 +11,7 @@ namespace CSN.Persistence.EntityConfigurations
             builder.Property(employee => employee.Login).HasMaxLength(40).IsRequired();
 
             builder.HasIndex(employee => employee.Email).IsUnique();
-            builder.Property(employee => employee.Email).HasMaxLength(80).IsRequired();
+            builder.Property(employee => employee.Email).IsRequired();
 
             builder.Property(employee => employee.PasswordHash).IsRequired();
 

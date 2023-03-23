@@ -6,9 +6,9 @@ public class CompanyRegister
 {
     [MaxLength(40)]
     public string Login { get; set; } = null!;
-    [MaxLength(80), EmailAddress]
+    [EmailAddress]
     public string Email { get; set; } = null!;
-    [MaxLength(80), EmailAddress]
+    [MaxLength(80)]
     public string Password { get; set; } = null!;
     [MaxLength(400)]
     public string? Description { get; set; }

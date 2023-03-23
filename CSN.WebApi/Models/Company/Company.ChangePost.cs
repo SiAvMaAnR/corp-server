@@ -2,7 +2,7 @@ using CSN.Domain.Shared.Enums;
 
 namespace CSN.WebApi.Models.Company;
 
-public class CompanyChangeRole
+public class CompanyChangePost
 {
     public EmployeePost EmployeePost { get; set; }
 

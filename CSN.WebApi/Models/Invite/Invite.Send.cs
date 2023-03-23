@@ -5,7 +5,7 @@ namespace CSN.WebApi.Models.Invite;
 
 public class InviteSend
 {
-    [MaxLength(80), EmailAddress]
+    [EmailAddress]
     public string Email { get; set; } = null!;
 
     public EmployeePost EmployeePost { get; set; } = EmployeePost.Guest;

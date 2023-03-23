@@ -19,10 +19,10 @@ public class EmployeeControlController : ControllerBase
         this.logger = logger;
     }
 
-    [HttpPut("ChangeRole"), Authorize(Policy = "OnlyCompany")]
-    public async Task<IActionResult> ChangeRoleEmployee([FromBody] CompanyChangeRole request)
+    [HttpPut("ChangePost"), Authorize(Policy = "OnlyCompany")]
+    public async Task<IActionResult> ChangePostEmployee([FromBody] CompanyChangePost request)
     {
-        var response = await employeeControlService.ChangeRoleAsync(new EmployeeControlChangeRoleRequest()
+        var response = await employeeControlService.ChangePostAsync(new EmployeeControlChangePostRequest()
         {
             EmployeeId = request.EmployeeId,
             EmployeePost = request.EmployeePost

@@ -39,6 +39,7 @@ public class EmployeeControlService : BaseService, IEmployeeControlService
             Login = employee.Login,
             Email = employee.Email,
             Role = employee.Role,
+            Post = employee.Post,
             State = employee.State,
             Image = employee.Image.ReadToBytes(),
             CreatedAt = employee.CreatedAt,
@@ -92,7 +93,7 @@ public class EmployeeControlService : BaseService, IEmployeeControlService
         };
     }
 
-    public async Task<EmployeeControlChangeRoleResponse> ChangeRoleAsync(EmployeeControlChangeRoleRequest request)
+    public async Task<EmployeeControlChangePostResponse> ChangePostAsync(EmployeeControlChangePostRequest request)
     {
         var employee = await this.unitOfWork.Employee.GetAsync(employee => employee.Id == request.EmployeeId);
 
@@ -101,16 +102,16 @@ public class EmployeeControlService : BaseService, IEmployeeControlService
             throw new NotFoundException("Employee is not found");
         }
 
-        employee.Role = request.EmployeePost.ToString();
+        employee.Post = request.EmployeePost;
 
         await this.unitOfWork.Employee.UpdateAsync(employee);
 
         await this.unitOfWork.SaveChangesAsync();
 
-        return new EmployeeControlChangeRoleResponse()
+        return new EmployeeControlChangePostResponse()
         {
             EmployeeId = request.EmployeeId,
-            EmployeePost = request.EmployeePost.ToString()
+            EmployeePost = request.EmployeePost
         };
     }
 }

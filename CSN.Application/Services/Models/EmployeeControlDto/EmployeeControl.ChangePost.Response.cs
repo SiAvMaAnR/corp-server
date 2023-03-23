@@ -2,7 +2,7 @@ using CSN.Domain.Shared.Enums;
 
 namespace CSN.Application.Services.Models.EmployeeControlDto;
 
-public class EmployeeControlChangeRoleRequest
+public class EmployeeControlChangePostResponse
 {
     public int EmployeeId { get; set; }
 

@@ -19,6 +19,7 @@ public class CompanyEmployee
     public string Login { get; set; } = null!;
     public string Email { get; set; } = null!;
     public string Role { get; set; } = null!;
+    public EmployeePost Post { get; set; }
     public byte[]? Image { get; set; }
     public UserState State { get; set; }
     public DateTime? CreatedAt { get; set; }
