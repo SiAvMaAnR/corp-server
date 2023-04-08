@@ -45,10 +45,14 @@ namespace CSN.Application.Services
         {
             if (this.claimsPrincipal == null)
             {
-                 throw new ForbiddenException("Forbidden");
+                throw new ForbiddenException("Forbidden");
             }
             var user = await this.claimsPrincipal.GetUserAsync(this.unitOfWork);
-            if (user != null) this.appData.Create(user);
+            if (user != null)
+            {
+                user.ConnectionId = request.ConnectionId;
+                this.appData.Create(user);
+            }
 
             return new UserAddResponse(true);
         }

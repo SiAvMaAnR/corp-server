@@ -32,7 +32,6 @@ public class EmployeeControlService : BaseService, IEmployeeControlService
             throw new NotFoundException("Account is not found");
         }
 
-
         var employeesAll = company.Employees.Select(employee => new CompanyEmployee()
         {
             Id = employee.Id,
@@ -50,6 +49,7 @@ public class EmployeeControlService : BaseService, IEmployeeControlService
         var employeesOnlineCount = employeesAll?.Count(employee => employee.State == UserState.Online) ?? 0;
 
         var employees = employeesAll?
+            .OrderByDescending(employee => employee.UpdatedAt)
             .Skip(request.PageNumber * request.PageSize)
             .Take(request.PageSize)
             .ToList();

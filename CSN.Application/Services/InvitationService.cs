@@ -67,9 +67,13 @@ public class InvitationService : BaseService, IInvitationService
             Post = request.EmployeePost
         };
 
-        await this.unitOfWork.Invitation.AddAsync(invitation);
+        var isExistsInvitation = await this.unitOfWork.Invitation.AnyAsync(invite => invite.Email == invitation.Email);
 
-        await this.unitOfWork.SaveChangesAsync();
+        if (!isExistsInvitation)
+        {
+            await this.unitOfWork.Invitation.AddAsync(invitation);
+            await this.unitOfWork.SaveChangesAsync();
+        }
 
         string inviteJson = JsonSerializer.Serialize(new Invite()
         {

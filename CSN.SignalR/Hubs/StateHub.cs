@@ -23,17 +23,15 @@ public class StateHub : BaseHub, IHub
         await this.Clients.Caller.SendAsync("State", true);
     }
 
-    [Authorize]
     public override async Task OnConnectedAsync()
     {
         this.appDataService.SetClaimsPrincipal(Context?.User);
 
-        await this.appDataService.AddUserAsync(new UserAddRequest());
+        await this.appDataService.AddUserAsync(new UserAddRequest(Context?.ConnectionId));
         await this.appDataService.SetStateAsync(new UserStateRequest(UserState.Online));
         await base.OnConnectedAsync();
     }
 
-    [Authorize]
     public override async Task OnDisconnectedAsync(Exception? exception)
     {
         await this.appDataService.RemoveUserAsync(new UserRemoveRequest());

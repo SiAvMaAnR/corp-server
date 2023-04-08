@@ -10,6 +10,7 @@ using CSN.Domain.Entities.Users;
 using CSN.Domain.Exceptions;
 using CSN.Domain.Interfaces.UnitOfWork;
 using Microsoft.AspNetCore.Http;
+using static CSN.Application.Services.Filters.ChannelFilters;
 
 namespace CSN.Application.Services
 {
@@ -28,21 +29,53 @@ namespace CSN.Application.Services
                 throw new ForbiddenException("Forbidden");
             }
 
-            User? user = await this.claimsPrincipal.GetUserAsync(this.unitOfWork, (user) => user.Channels);
+            User? user = await this.claimsPrincipal.GetUserAsync(this.unitOfWork);
 
             if (user == null)
             {
                 throw new BadRequestException("Account is not found");
             }
 
-            IEnumerable<Channel>? channels = await this.unitOfWork.Channel.GetAllAsync(
-                (channel) =>
-                    channel.IsDeleted == false &&
-                    channel.Users.Any(u => user.Id == u.Id),
-                (channel) => channel.Messages,
+            IEnumerable<Channel>? channelsAll = await this.unitOfWork.Channel.GetAllAsync(
+                (channel) => channel.IsDeleted == false &&
+                    channel.Users.Contains(user),
+                (channel) => channel.Messages.OrderByDescending(message => message.CreatedAt),
                 (channel) => channel.Users);
 
-            return new ChannelGetAllResponse(channels?.ToList());
+            var channelsCount = channelsAll?.ToList().Count ?? 0;
+
+            var unreadChannelsCount = channelsAll?.Count(channel =>
+                channel.Messages.Any((message) => message.ReadUsers.Contains(user))) ?? 0;
+
+            IEnumerable<Channel>? filterChannels = null;
+
+            if (request.Filter == GetAllFilter.OnlyDialog)
+                filterChannels = channelsAll?.OfType<DialogChannel>();
+            else if (request.Filter == GetAllFilter.OnlyPrivate)
+                filterChannels = channelsAll?.OfType<PrivateChannel>();
+            else if (request.Filter == GetAllFilter.OnlyPublic)
+                filterChannels = channelsAll?.OfType<PublicChannel>();
+            else filterChannels = channelsAll;
+
+            var channels = filterChannels?
+                .OrderByDescending(channel => channel.LastActivity)
+                .Skip(request.PageNumber * request.PageSize)
+                .Take(request.PageSize)
+                .ToList();
+
+            channels?.ForEach(channel => channel.UpdateUnreadMessagesCount(user));
+
+            var pagesCount = (int)Math.Ceiling(((decimal)channelsCount / request.PageSize));
+
+            return new ChannelGetAllResponse()
+            {
+                Channels = channels,
+                ChannelsCount = channelsCount,
+                UnreadChannelsCount = unreadChannelsCount,
+                PagesCount = pagesCount,
+                PageSize = request.PageSize,
+                PageNumber = request.PageNumber,
+            };
         }
 
         public async Task<ChannelGetResponse> GetAsync(ChannelGetRequest request)
@@ -52,7 +85,7 @@ namespace CSN.Application.Services
                 throw new ForbiddenException("Forbidden");
             }
 
-            User? user = await this.claimsPrincipal.GetUserAsync(this.unitOfWork, (user) => user.Channels);
+            User? user = await this.claimsPrincipal.GetUserAsync(this.unitOfWork);
 
             if (user == null)
             {
@@ -62,7 +95,7 @@ namespace CSN.Application.Services
             Channel? channel = await this.unitOfWork.Channel.GetAsync(
                 (channel) =>
                     channel.IsDeleted == false &&
-                    channel.Users.Any(u => user.Id == u.Id) &&
+                    channel.Users.Contains(user) &&
                     channel.Id == request.Id,
                 (channel) => channel.Messages,
                 (channel) => channel.Users);
@@ -70,7 +103,6 @@ namespace CSN.Application.Services
 
             return new ChannelGetResponse(channel);
         }
-
 
         public async Task<PublicChannelCreateResponse> CreateAsync(PublicChannelCreateRequest request)
         {
@@ -86,9 +118,10 @@ namespace CSN.Application.Services
                 throw new BadRequestException("Account is not found");
             }
 
-            bool isExistsChannel = await this.unitOfWork.PublicChannel.AnyAsync(channel => channel.Name == request.Name);
+            bool isExistsPublicChannel = await this.unitOfWork.PublicChannel.AnyAsync(channel => channel.Name == request.Name);
+            bool isExistsPrivateChannel = await this.unitOfWork.PrivateChannel.AnyAsync(channel => channel.Name == request.Name);
 
-            if (isExistsChannel)
+            if (isExistsPublicChannel || isExistsPrivateChannel)
             {
                 throw new BadRequestException("Channel already exists");
             }
@@ -96,10 +129,11 @@ namespace CSN.Application.Services
             var publicChannel = new PublicChannel()
             {
                 Name = request.Name,
-                Admin = user
+                AdminId = user.Id,
+                Users = { user },
+                IsPublic = true
             };
 
-            publicChannel.Users.Add(user);
             await this.unitOfWork.PublicChannel.AddAsync(publicChannel);
             await this.unitOfWork.SaveChangesAsync();
 
@@ -120,9 +154,10 @@ namespace CSN.Application.Services
                 throw new BadRequestException("Account is not found");
             }
 
-            bool isExistsChannel = await this.unitOfWork.PrivateChannel.AnyAsync(channel => channel.Name == request.Name);
+            bool isExistsPublicChannel = await this.unitOfWork.PublicChannel.AnyAsync(channel => channel.Name == request.Name);
+            bool isExistsPrivateChannel = await this.unitOfWork.PrivateChannel.AnyAsync(channel => channel.Name == request.Name);
 
-            if (isExistsChannel)
+            if (isExistsPublicChannel || isExistsPrivateChannel)
             {
                 throw new BadRequestException("Channel already exists");
             }
@@ -130,10 +165,11 @@ namespace CSN.Application.Services
             var privateChannel = new PrivateChannel()
             {
                 Name = request.Name,
-                Admin = user
+                AdminId = user.Id,
+                Users = { user },
+                IsPrivate = true
             };
 
-            privateChannel.Users.Add(user);
             await this.unitOfWork.PrivateChannel.AddAsync(privateChannel);
             await this.unitOfWork.SaveChangesAsync();
 
@@ -147,18 +183,18 @@ namespace CSN.Application.Services
                 throw new ForbiddenException("Forbidden");
             }
 
-            User? user = await this.claimsPrincipal.GetUserAsync(this.unitOfWork);
+            User? currentUser = await this.claimsPrincipal.GetUserAsync(this.unitOfWork);
 
             User? targetUser = await this.unitOfWork.User.GetAsync(user => user.Id == request.TargetUserId);
 
-            if (user == null || targetUser == null)
+            if (currentUser == null || targetUser == null)
             {
                 throw new BadRequestException("Account is not found");
             }
 
             bool isExistsChannel = await this.unitOfWork.DialogChannel.AnyAsync(channel =>
-                (channel.User1.Id == user.Id && channel.User2.Id == targetUser.Id) ||
-                (channel.User1.Id == targetUser.Id && channel.User2.Id == user.Id));
+                channel.Users.Contains(currentUser) &&
+                channel.Users.Contains(targetUser));
 
             if (isExistsChannel)
             {
@@ -167,15 +203,16 @@ namespace CSN.Application.Services
 
             var dialogChannel = new DialogChannel()
             {
-                User1 = user,
-                User2 = targetUser
+                IsDialog = true
             };
 
-            dialogChannel.Users.Add(user);
+            currentUser.Channels.Add(dialogChannel);
+            targetUser.Channels.Add(dialogChannel);
+
             await this.unitOfWork.DialogChannel.AddAsync(dialogChannel);
             await this.unitOfWork.SaveChangesAsync();
 
-            return new DialogChannelCreateResponse(true);
+            return new DialogChannelCreateResponse(true, dialogChannel.Users);
         }
 
         public async Task<ChannelAddUserResponse> AddUserAsync(ChannelAddUserRequest request)
@@ -185,21 +222,31 @@ namespace CSN.Application.Services
                 throw new ForbiddenException("Forbidden");
             }
 
-            User? user = await this.claimsPrincipal.GetUserAsync(this.unitOfWork);
+            User? currentUser = await this.claimsPrincipal.GetUserAsync(this.unitOfWork);
 
             User? targetUser = await this.unitOfWork.User.GetAsync(
-                user => user.Id == request.ChannelId, 
+                user => user.Id == request.TargetUserId,
                 user => user.Channels);
 
-            if (user == null || targetUser == null)
+            if (currentUser == null || targetUser == null)
             {
                 throw new BadRequestException("Account is not found");
             }
 
-            Channel? channel = user.Channels.FirstOrDefault(channel => channel.Id == request.ChannelId);
+            Channel? channel = currentUser.Channels.FirstOrDefault(channel => channel.Id == request.ChannelId);
+
+            if (channel is PrivateChannel && currentUser.Id == targetUser.Id)
+            {
+                throw new ForbiddenException("No access to this channel");
+            }
+
+            if (channel is DialogChannel && channel.Users.Count >= 1)
+            {
+                throw new BadRequestException("The maximum number of users in the dialog");
+            }
 
             bool isExistsUser = channel?.Users.Contains(targetUser) ?? true;
-            
+
             if (isExistsUser)
             {
                 throw new BadRequestException("User already exists");

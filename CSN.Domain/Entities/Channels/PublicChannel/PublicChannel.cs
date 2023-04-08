@@ -9,7 +9,10 @@ namespace CSN.Domain.Entities.Channels.PublicChannel;
 [Table("PublicChannels")]
 public partial class PublicChannel : Channel
 {
-    public string Name { get; set; } = null!;
     public User Admin { get; set; } = null!;
     public int AdminId { get; set; }
+    public PublicChannel()
+    {
+        this.LastActivity = DateTime.Now;
+    }
 }

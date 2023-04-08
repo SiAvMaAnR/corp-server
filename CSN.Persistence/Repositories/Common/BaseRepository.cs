@@ -23,7 +23,6 @@ namespace CSN.Persistence.Repositories.Common
 
         public virtual async Task UpdateAsync(TEntity entity)
         {
-            entity.UpdatedAt = DateTime.Now;
             await Task.FromResult(this.dbSet.Update(entity));
         }
 
@@ -41,27 +40,24 @@ namespace CSN.Persistence.Repositories.Common
             params Expression<Func<TEntity, object>>[] includeProperties)
         {
             return await this.dbSet.MultipleInclude(includeProperties)
-                .AsNoTracking()
                 .FirstOrDefaultAsync(predicate);
         }
 
         public virtual async Task<IEnumerable<TEntity>?> GetAllAsync(Expression<Func<TEntity, bool>> predicate)
         {
             return await Task.FromResult(this.dbSet
-                .AsNoTracking()
                 .Where(predicate));
         }
 
         public virtual async Task<IEnumerable<TEntity>?> GetAllAsync()
         {
-            return await Task.FromResult(this.dbSet.AsNoTracking());
+            return await Task.FromResult(this.dbSet);
         }
 
         public virtual async Task<IEnumerable<TEntity>?> GetAllAsync(params Expression<Func<TEntity, object>>[] includeProperties)
         {
             return await Task.FromResult(this.dbSet
-                .MultipleInclude(includeProperties)
-                .AsNoTracking());
+                .MultipleInclude(includeProperties));
         }
 
         public virtual async Task<IEnumerable<TEntity>?> GetAllAsync(Expression<Func<TEntity, bool>> predicate,
@@ -69,7 +65,6 @@ namespace CSN.Persistence.Repositories.Common
         {
             return await Task.FromResult(this.dbSet
                 .MultipleInclude(includeProperties)
-                .AsNoTracking()
                 .Where(predicate));
 
         }
@@ -86,7 +81,7 @@ namespace CSN.Persistence.Repositories.Common
 
         public virtual async Task<IQueryable<TEntity>> CustomAsync()
         {
-            return await Task.FromResult(this.dbSet.AsNoTracking());
+            return await Task.FromResult(this.dbSet);
         }
     }
 }

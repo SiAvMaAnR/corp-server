@@ -42,7 +42,7 @@ namespace CSN.WebApi.Extensions.ServiceConfigurations
         public static IServiceCollection AddSingletonDependencies(this IServiceCollection serviceCollection)
         {
             serviceCollection.AddScoped<IAppDataService, AppDataService>();
-            
+
             serviceCollection.AddSingleton<IUserIdProvider, CustomUserIdProvider>();
             serviceCollection.AddSingleton<IAppData, AppData>();
             return serviceCollection;
@@ -60,7 +60,10 @@ namespace CSN.WebApi.Extensions.ServiceConfigurations
             serviceCollection.AddControllers(config =>
             {
                 config.Filters.Add(new ValidationFilterAttribute());
-            }).AddJsonOptions(x => x.JsonSerializerOptions.ReferenceHandler = ReferenceHandler.IgnoreCycles);
+            }).AddJsonOptions(options =>
+            {
+                options.JsonSerializerOptions.ReferenceHandler = ReferenceHandler.IgnoreCycles;
+            });
             serviceCollection.AddEndpointsApiExplorer();
             serviceCollection.AddHttpContextAccessor();
             serviceCollection.AddLogging();
@@ -69,7 +72,10 @@ namespace CSN.WebApi.Extensions.ServiceConfigurations
             serviceCollection.AddSwaggerGen(options => options.Config());
             serviceCollection.AddAuthentication(JwtBearerDefaults.AuthenticationScheme).AddJwtBearer(options => options.Config(config));
             serviceCollection.AddDataProtection();
-            serviceCollection.AddSignalR();
+            serviceCollection.AddSignalR().AddJsonProtocol(options =>
+            {
+                options.PayloadSerializerOptions.ReferenceHandler = ReferenceHandler.IgnoreCycles;
+            });
             return serviceCollection;
         }
     }

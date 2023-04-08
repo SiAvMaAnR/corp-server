@@ -1,12 +1,11 @@
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Threading.Tasks;
+using static CSN.Application.Services.Filters.ChannelFilters;
 
 namespace CSN.Application.Services.Models.ChannelDto
 {
     public class ChannelGetAllRequest
     {
-        
+        public int PageNumber { get; set; }
+        public int PageSize { get; set; }
+        public GetAllFilter? Filter { get; set; }
     }
 }

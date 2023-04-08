@@ -5,12 +5,10 @@ namespace CSN.Application.Services.Models.ChannelDto
     public class ChannelGetAllResponse
     {
         public IList<Channel>? Channels { get; set; }
-
-        public ChannelGetAllResponse(IList<Channel>? channels)
-        {
-            this.Channels = channels;
-        }
-
-        public ChannelGetAllResponse() { }
+        public int PageSize { get; set; }
+        public int PageNumber { get; set; }
+        public int UnreadChannelsCount { get; set; }
+        public int ChannelsCount { get; set; }
+        public int PagesCount { get; set; }
     }
 }

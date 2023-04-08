@@ -89,7 +89,7 @@ public class EmployeeService : BaseService, IEmployeeService
             throw new BadRequestException("Account already exists");
         }
 
-        Invitation? invitation = await this.unitOfWork.Invitation.GetAsync(invitation => invitation.Id == invite.Id);
+        Invitation? invitation = await this.unitOfWork.Invitation.GetAsync(invitation => invitation.Email == invite.Email);
 
         if (invitation == null || !invitation.IsActive)
         {
