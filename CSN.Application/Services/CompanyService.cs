@@ -44,19 +44,12 @@ public class CompanyService : BaseService, ICompanyService
 
     public async Task<CompanyLoginResponse> LoginAsync(CompanyLoginRequest request)
     {
-        Company? company = await this.unitOfWork.Company.GetAsync(company => company.Email == request.Email);
-
-        if (company == null)
-        {
+        Company company = await this.unitOfWork.Company.GetAsync(company => company.Email == request.Email) ??
             throw new NotFoundException("Account not found");
-        }
 
         bool isVerify = AuthOptions.VerifyPasswordHash(request.Password, company.PasswordHash, company.PasswordSalt);
 
-        if (!isVerify)
-        {
-            throw new BadRequestException("Incorrect email or password");
-        }
+        if (!isVerify) throw new BadRequestException("Incorrect email or password");
 
         var claims = new List<Claim>()
             {
@@ -92,9 +85,7 @@ public class CompanyService : BaseService, ICompanyService
     public async Task<CompanyRegisterResponse> RegisterAsync(CompanyRegisterRequest request)
     {
         if (await this.unitOfWork.User.AnyAsync(user => user.Email == request.Email))
-        {
             throw new BadRequestException("Account already exists");
-        }
 
         string baseUrl = this.configuration["Client:BaseUrl"] ?? throw new BadRequestException("Missing client baseUrl");
         string path = this.configuration["Confirm:Path"] ?? throw new BadRequestException("Missing confirm path");
@@ -133,12 +124,8 @@ public class CompanyService : BaseService, ICompanyService
 
     public async Task<CompanyEditResponse> EditAsync(CompanyEditRequest request)
     {
-        Company? company = await this.claimsPrincipal!.GetCompanyAsync(unitOfWork);
-
-        if (company == null)
-        {
+        Company company = await this.claimsPrincipal!.GetCompanyAsync(unitOfWork) ??
             throw new NotFoundException("Account is not found");
-        }
 
         byte[] imageBytes = Convert.FromBase64String(request.Image ?? "");
         string? imagePath = await imageBytes.WriteToFileAsync(company.Email);
@@ -155,12 +142,8 @@ public class CompanyService : BaseService, ICompanyService
 
     public async Task<CompanyInfoResponse> GetInfoAsync(CompanyInfoRequest request)
     {
-        Company? company = await this.claimsPrincipal!.GetCompanyAsync(unitOfWork);
-
-        if (company == null)
-        {
+        Company company = await this.claimsPrincipal!.GetCompanyAsync(unitOfWork) ??
             throw new NotFoundException("Account is not found");
-        }
 
         byte[]? image = await company.Image.ReadToBytesAsync();
 
@@ -183,30 +166,20 @@ public class CompanyService : BaseService, ICompanyService
         IDataProtector protector = this.protection.CreateProtector(secretKey);
         string confirmationJson = protector.Unprotect(request.Confirmation);
 
-        Confirmation? confirmation = JsonSerializer.Deserialize<Confirmation>(confirmationJson);
-
-        if (confirmation == null)
-        {
+        Confirmation confirmation = JsonSerializer.Deserialize<Confirmation>(confirmationJson) ??
             throw new BadRequestException("Incorrect confirmation");
-        }
 
         if (await this.unitOfWork.Company.AnyAsync(company => company.Email == confirmation.Email))
-        {
             throw new BadRequestException("Account already exists");
-        }
 
         if (!AuthOptions.CreatePasswordHash(confirmation.Password, out byte[] passwordHash, out byte[] passwordSalt))
-        {
             throw new BadRequestException("Incorrect password");
-        }
 
         string? imagePath = await confirmation.Image.WriteToFileAsync(confirmation.Email);
 
         if (await this.unitOfWork.User.AnyAsync(user => user.Email == confirmation.Email))
-        {
             throw new BadRequestException("Account already exists");
-        }
-        
+
         Company company = new Company()
         {
             Login = confirmation.Login,

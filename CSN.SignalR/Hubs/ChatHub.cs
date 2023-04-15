@@ -1,6 +1,7 @@
 using System.Security.Claims;
 using CSN.Application.Services.Interfaces;
 using CSN.Application.Services.Models.ChannelDto;
+using CSN.Application.Services.Models.MessageDto;
 using CSN.Domain.Entities.Channels;
 using CSN.SignalR.Hubs.Common;
 using CSN.SignalR.Hubs.Interfaces;
@@ -13,13 +14,13 @@ namespace CSN.SignalR.Hubs;
 public class ChatHub : BaseHub, IHub
 {
     private readonly IChannelService channelService;
+    private readonly IMessageService messageService;
 
-
-    public ChatHub(IChannelService channelService)
+    public ChatHub(IChannelService channelService, IMessageService messageService)
     {
         this.channelService = channelService;
+        this.messageService = messageService;
     }
-
 
     [Authorize]
     public override async Task OnConnectedAsync()
@@ -34,9 +35,48 @@ public class ChatHub : BaseHub, IHub
         await base.OnDisconnectedAsync(exception);
     }
 
+    [Authorize]
+    public async Task SendAsync(int channelId, string message, int? targetMessageId)
+    {
+        try
+        {
+            var result = await this.messageService.SendAsync(new MessageSendRequest()
+            {
+                ChannelId = channelId,
+                Message = message,
+                TargetMessageId = targetMessageId
+            });
+
+            await Clients.Clients(result.ConnectionIds).SendAsync("SendMessage", new
+            {
+                message = result.Message
+            });
+        }
+        catch (Exception exception)
+        {
+            await Clients.Caller.SendAsync("SendMessage", null, exception.Message);
+        }
+    }
 
     [Authorize]
-    public async Task GetAllChannelsAsync(int pageNumber, int pageSize, GetAllFilter filter)
+    public async Task GetChannelAsync(int id)
+    {
+        try
+        {
+            var result = await this.channelService.GetAsync(new ChannelGetRequest(id));
+            await Clients.Caller.SendAsync("GetChannel", new
+            {
+                channel = result.Channel
+            });
+        }
+        catch (Exception exception)
+        {
+            await Clients.Caller.SendAsync("GetChannel", null, exception.Message);
+        }
+    }
+
+    [Authorize]
+    public async Task GetAllChannelsAsync(int pageNumber, int pageSize, GetAllFilter typeFilter, string searchFilter)
     {
         try
         {
@@ -44,7 +84,8 @@ public class ChatHub : BaseHub, IHub
             {
                 PageNumber = pageNumber,
                 PageSize = pageSize,
-                Filter = filter
+                TypeFilter = typeFilter,
+                SearchFilter = searchFilter
             });
 
             await Clients.Caller.SendAsync("GetAllChannels", new
@@ -74,11 +115,7 @@ public class ChatHub : BaseHub, IHub
                 TargetUserId = targetUserId
             });
 
-            IEnumerable<string> clients = result.Users
-                .Where(user => user.ConnectionId != null)
-                .Select(user => user.ConnectionId!);
-
-            await Clients.Clients(clients).SendAsync("CreateDialogChannel", result.IsSuccess);
+            await Clients.Caller.SendAsync("CreateDialogChannel", result.IsSuccess);
         }
         catch (Exception exception)
         {
@@ -115,6 +152,26 @@ public class ChatHub : BaseHub, IHub
             });
 
             await Clients.Caller.SendAsync("CreatePrivateChannel", result.IsSuccess);
+        }
+        catch (Exception exception)
+        {
+            await Clients.Caller.SendAsync("CreatePrivateChannel", false, exception.Message);
+        }
+    }
+
+
+    [Authorize]
+    public async Task AddUserAsync()
+    {
+        try
+        {
+            var result = await this.channelService.AddUserAsync(new ChannelAddUserRequest()
+            {
+                TargetUserId = 1,
+                ChannelId = 1
+            });
+
+            await Clients.Caller.SendAsync("AddUser", result.IsSuccess);
         }
         catch (Exception exception)
         {

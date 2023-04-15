@@ -36,13 +36,13 @@ namespace CSN.WebApi.Extensions.ServiceConfigurations
             serviceCollection.AddScoped<IEmployeeControlService, EmployeeControlService>();
             serviceCollection.AddScoped<IChannelService, ChannelService>();
             serviceCollection.AddScoped<IInvitationService, InvitationService>();
+            serviceCollection.AddScoped<IMessageService, MessageService>();
+            serviceCollection.AddScoped<IAppDataService, AppDataService>();
             return serviceCollection;
         }
 
         public static IServiceCollection AddSingletonDependencies(this IServiceCollection serviceCollection)
         {
-            serviceCollection.AddScoped<IAppDataService, AppDataService>();
-
             serviceCollection.AddSingleton<IUserIdProvider, CustomUserIdProvider>();
             serviceCollection.AddSingleton<IAppData, AppData>();
             return serviceCollection;

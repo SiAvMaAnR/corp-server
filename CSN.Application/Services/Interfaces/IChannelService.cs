@@ -10,4 +10,6 @@ public interface IChannelService : IBaseService
     Task<PublicChannelCreateResponse> CreateAsync(PublicChannelCreateRequest request);
     Task<PrivateChannelCreateResponse> CreateAsync(PrivateChannelCreateRequest request);
     Task<DialogChannelCreateResponse> CreateAsync(DialogChannelCreateRequest request);
+    Task<ChannelAddUserResponse> AddUserAsync(ChannelAddUserRequest request);
+    Task<ChannelGetAllOfCompanyResponse> GetAllOfCompanyAsync(ChannelGetAllOfCompanyRequest request);
 }

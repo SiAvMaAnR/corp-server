@@ -3,22 +3,22 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
 using CSN.Domain.Entities.Channels;
+using CSN.Domain.Entities.Users;
 
 namespace CSN.Application.Services.Models.ChannelDto
 {
     public class ChannelCreateResponse
     {
         public bool IsSuccess { get; set; } = false;
+        public ICollection<User> Users { get; set; }
+        public IEnumerable<string> ConnectionIds => this.Users
+            .Where(user => user.ConnectionId != null)
+            .Select(user => user.ConnectionId!);
 
-
-        public ChannelCreateResponse(bool isSuccess)
+        public ChannelCreateResponse(bool isSuccess, ICollection<User> users)
         {
             this.IsSuccess = isSuccess;
-        }
-
-        public ChannelCreateResponse()
-        {
-
+            this.Users = users;
         }
     }
 }

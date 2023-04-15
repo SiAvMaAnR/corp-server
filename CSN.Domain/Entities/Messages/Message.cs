@@ -10,7 +10,7 @@ public partial class Message : AttachableEntity
 {
     public string? Text { get; set; }
     public DateTime? ModifiedDate { get; set; }
-    public bool IsRead { get; set; }
+    public bool IsRead { get; set; } = false;
     public ICollection<User> ReadUsers { get; set; } = new List<User>();
     public ICollection<Message> ChildMessages { get; set; } = new List<Message>();
     public User Author { get; set; } = null!;
