@@ -21,7 +21,7 @@ namespace CSN.WebApi.Controllers
         }
 
 
-        [HttpPost("GetAll"), Authorize]
+        [HttpGet("GetAll"), Authorize]
         public async Task<IActionResult> GetAll([FromQuery] ChannelGetAll request)
         {
             var response = await channelService.GetAllOfCompanyAsync(new ChannelGetAllOfCompanyRequest()

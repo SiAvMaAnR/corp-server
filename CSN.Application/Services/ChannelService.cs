@@ -40,8 +40,6 @@ namespace CSN.Application.Services
                 channel.CompanyId == companyId
             );
 
-            int channelsCount = channelsAll?.ToList().Count ?? 0;
-
             string searchFilter = request.SearchFilter?.ToLower() ?? "";
 
             IEnumerable<Channel>? filterChannels = channelsAll?.Where(channel =>
@@ -54,6 +52,8 @@ namespace CSN.Application.Services
                 GetAllFilter.OnlyPublic => filterChannels?.OfType<PublicChannel>(),
                 _ => throw new BadRequestException("Unknown filter")
             };
+
+            int channelsCount = filterChannels?.ToList().Count ?? 0;
 
             List<Channel>? channels = filterChannels?
                 .OrderByDescending(channel => channel.CreatedAt)
@@ -82,7 +82,6 @@ namespace CSN.Application.Services
                     .OrderByDescending(message => message.CreatedAt)
                     .Take(1));
 
-            int channelsCount = channelsAll?.ToList().Count ?? 0;
 
             int unreadChannelsCount = channelsAll?.Count(channel =>
                 channel.Messages.Any((message) => message.ReadUsers.Contains(user))) ?? 0;
@@ -100,6 +99,8 @@ namespace CSN.Application.Services
                 GetAllFilter.OnlyPublic => filterChannels?.OfType<PublicChannel>(),
                 _ => filterChannels
             };
+
+            int channelsCount = filterChannels?.ToList()?.Count ?? 0;
 
             List<Channel>? channels = filterChannels?
                 .OrderByDescending(channel => channel.LastActivity)
