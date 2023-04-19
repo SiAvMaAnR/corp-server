@@ -1,8 +1,10 @@
-﻿using CSN.Application.Services.Interfaces;
+﻿using System.Reflection;
+using CSN.Application.Services.Interfaces;
 using CSN.Application.Services.Models.ChannelDto;
 using CSN.WebApi.Models.Channel;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
+using static CSN.Application.Services.Filters.ChannelFilters;
 
 namespace CSN.WebApi.Controllers
 {
@@ -10,7 +12,6 @@ namespace CSN.WebApi.Controllers
     [ApiController]
     public class ChannelController : ControllerBase
     {
-
         private readonly IChannelService channelService;
         private readonly ILogger<ChannelController> logger;
 
@@ -20,14 +21,13 @@ namespace CSN.WebApi.Controllers
             this.logger = logger;
         }
 
-
-        [HttpGet("GetAll"), Authorize]
-        public async Task<IActionResult> GetAll([FromQuery] ChannelGetAll request)
+        [HttpGet("GetPublicChannelsOfCompany"), Authorize]
+        public async Task<IActionResult> GetAllPublicChannelsOfCompany([FromQuery] ChannelGetAll request)
         {
             var response = await channelService.GetAllOfCompanyAsync(new ChannelGetAllOfCompanyRequest()
             {
                 SearchFilter = request.SearchFilter,
-                TypeFilter = request.TypeFilter
+                TypeFilter = GetAllFilter.OnlyPublic
             });
 
             return Ok(new

@@ -32,7 +32,7 @@ namespace CSN.Application.Services
             User user = await this.claimsPrincipal.GetUserAsync(this.unitOfWork) ??
                 throw new BadRequestException("Account is not found");
 
-            int companyId = user.CompanyId ??
+            int companyId = user.GetCompanyId() ??
                 throw new BadRequestException("Account is not found");
 
             IEnumerable<Channel>? channelsAll = await this.unitOfWork.Channel.GetAllAsync((channel) =>
@@ -43,13 +43,14 @@ namespace CSN.Application.Services
             string searchFilter = request.SearchFilter?.ToLower() ?? "";
 
             IEnumerable<Channel>? filterChannels = channelsAll?.Where(channel =>
-                ((channel as PublicChannel)?.Name?.ToLower().Contains(searchFilter) ?? false) ||
+                channel?.Name?.ToLower().Contains(searchFilter) ?? false ||
                 ((channel as DialogChannel)?.GetInterlocutor(user)?.Login?.ToLower()?.Contains(searchFilter) ?? false));
 
             filterChannels = request.TypeFilter switch
             {
-                GetAllFilter.OnlyDialog => filterChannels?.OfType<DialogChannel>(),
                 GetAllFilter.OnlyPublic => filterChannels?.OfType<PublicChannel>(),
+                GetAllFilter.OnlyPrivate => filterChannels?.OfType<PrivateChannel>(),
+                GetAllFilter.OnlyDialog => filterChannels?.OfType<DialogChannel>(),
                 _ => throw new BadRequestException("Unknown filter")
             };
 
@@ -156,7 +157,7 @@ namespace CSN.Application.Services
             if (isExistsPublicChannel || isExistsPrivateChannel)
                 throw new BadRequestException("Channel already exists");
 
-            int companyId = user.CompanyId ??
+            int companyId = user.GetCompanyId() ??
                 throw new BadRequestException("Company not found");
 
             PublicChannel publicChannel = new PublicChannel()
@@ -188,7 +189,7 @@ namespace CSN.Application.Services
             if (isExistsPublicChannel || isExistsPrivateChannel)
                 throw new BadRequestException("Channel already exists");
 
-            int companyId = user.CompanyId ??
+            int companyId = user.GetCompanyId() ??
                 throw new BadRequestException("Company not found");
 
             PrivateChannel privateChannel = new PrivateChannel()
@@ -225,7 +226,7 @@ namespace CSN.Application.Services
             if (isExistsChannel)
                 throw new BadRequestException("Channel already exists");
 
-            int companyId = currentUser.CompanyId ??
+            int companyId = currentUser.GetCompanyId() ??
                 throw new BadRequestException("Company not found");
 
             DialogChannel dialogChannel = new DialogChannel()
