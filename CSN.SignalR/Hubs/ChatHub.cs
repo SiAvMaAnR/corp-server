@@ -115,11 +115,16 @@ public class ChatHub : BaseHub, IHub
                 TargetUserId = targetUserId
             });
 
-            await Clients.Caller.SendAsync("CreateDialogChannel", result.IsSuccess);
+            await Clients.Caller.SendAsync("CreateDialogChannel", new
+            {
+                channel = result.Channel,
+                isSuccess = result.IsSuccess,
+                users = result.Users
+            });
         }
         catch (Exception exception)
         {
-            await Clients.Caller.SendAsync("CreateDialogChannel", false, exception.Message);
+            await Clients.Caller.SendAsync("CreateDialogChannel", null, exception.Message);
         }
     }
 
@@ -133,11 +138,16 @@ public class ChatHub : BaseHub, IHub
                 Name = name
             });
 
-            await Clients.Caller.SendAsync("CreatePublicChannel", result.IsSuccess);
+            await Clients.Caller.SendAsync("CreatePublicChannel", new
+            {
+                channel = result.Channel,
+                isSuccess = result.IsSuccess,
+                users = result.Users
+            });
         }
         catch (Exception exception)
         {
-            await Clients.Caller.SendAsync("CreatePublicChannel", false, exception.Message);
+            await Clients.Caller.SendAsync("CreatePublicChannel", null, exception.Message);
         }
     }
 
@@ -151,31 +161,38 @@ public class ChatHub : BaseHub, IHub
                 Name = name
             });
 
-            await Clients.Caller.SendAsync("CreatePrivateChannel", result.IsSuccess);
+            await Clients.Caller.SendAsync("CreatePrivateChannel", new
+            {
+                channel = result.Channel,
+                isSuccess = result.IsSuccess,
+                users = result.Users
+            });
         }
         catch (Exception exception)
         {
-            await Clients.Caller.SendAsync("CreatePrivateChannel", false, exception.Message);
+            await Clients.Caller.SendAsync("CreatePrivateChannel", null, exception.Message);
         }
     }
 
-
     [Authorize]
-    public async Task AddUserAsync()
+    public async Task AddUserAsync(int channelId, int? targetUserId)
     {
         try
         {
             var result = await this.channelService.AddUserAsync(new ChannelAddUserRequest()
             {
-                TargetUserId = 1,
-                ChannelId = 1
+                TargetUserId = targetUserId,
+                ChannelId = channelId
             });
 
-            await Clients.Caller.SendAsync("AddUser", result.IsSuccess);
+            await Clients.Caller.SendAsync("AddUser", new
+            {
+                isSuccess = result.IsSuccess,
+            });
         }
         catch (Exception exception)
         {
-            await Clients.Caller.SendAsync("CreatePrivateChannel", false, exception.Message);
+            await Clients.Caller.SendAsync("AddUser", null, exception.Message);
         }
     }
 }

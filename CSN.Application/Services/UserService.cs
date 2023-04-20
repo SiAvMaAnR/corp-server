@@ -27,7 +27,7 @@ public class UserService : BaseService, IUserService
         int companyId = user.GetCompanyId() ??
             throw new BadRequestException("Account is not found");
 
-        var usersAll = (await this.unitOfWork.User.GetAllAsync())?
+        var usersAll = (await this.unitOfWork.User.GetAllAsync(curUser => curUser.Id != user.Id))?
             .AsEnumerable()
             .Where(user => user.GetCompanyId() == companyId);
 

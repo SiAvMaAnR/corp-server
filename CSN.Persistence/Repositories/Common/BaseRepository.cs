@@ -33,7 +33,7 @@ namespace CSN.Persistence.Repositories.Common
 
         public virtual async Task<TEntity?> GetAsync(Expression<Func<TEntity, bool>> predicate)
         {
-            return await this.dbSet.AsNoTracking().FirstOrDefaultAsync(predicate);
+            return await this.dbSet.FirstOrDefaultAsync(predicate);
         }
 
         public virtual async Task<TEntity?> GetAsync(Expression<Func<TEntity, bool>> predicate,

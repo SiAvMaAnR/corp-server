@@ -4,6 +4,7 @@ namespace CSN.Application.Services.Models.ChannelDto
 {
     public class ChannelGetAllResponse
     {
+        public int CallerId { get; set; }
         public IList<Channel>? Channels { get; set; }
         public int PageSize { get; set; }
         public int PageNumber { get; set; }

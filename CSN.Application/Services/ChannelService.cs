@@ -6,8 +6,6 @@ using CSN.Domain.Entities.Channels;
 using CSN.Domain.Entities.Channels.DialogChannel;
 using CSN.Domain.Entities.Channels.PrivateChannel;
 using CSN.Domain.Entities.Channels.PublicChannel;
-using CSN.Domain.Entities.Companies;
-using CSN.Domain.Entities.Employees;
 using CSN.Domain.Entities.Users;
 using CSN.Domain.Exceptions;
 using CSN.Domain.Interfaces.UnitOfWork;
@@ -82,7 +80,6 @@ namespace CSN.Application.Services
                 (channel) => channel.Messages
                     .OrderByDescending(message => message.CreatedAt)
                     .Take(1));
-
 
             int unreadChannelsCount = channelsAll?.Count(channel =>
                 channel.Messages.Any((message) => message.ReadUsers.Contains(user))) ?? 0;
@@ -219,27 +216,35 @@ namespace CSN.Application.Services
             if (currentUser == null || targetUser == null)
                 throw new BadRequestException("Account is not found");
 
-            bool isExistsChannel = await this.unitOfWork.DialogChannel.AnyAsync(channel =>
-                channel.Users.Contains(currentUser) &&
-                channel.Users.Contains(targetUser));
-
-            if (isExistsChannel)
-                throw new BadRequestException("Channel already exists");
+            DialogChannel? existsChannel = await this.unitOfWork.DialogChannel.GetAsync(
+                channel =>
+                    channel.Users.Contains(currentUser) &&
+                    channel.Users.Contains(targetUser),
+                channel => channel.Users);
 
             int companyId = currentUser.GetCompanyId() ??
                 throw new BadRequestException("Company not found");
 
-            DialogChannel dialogChannel = new DialogChannel()
+            DialogChannel? dialogChannel;
+
+            if (existsChannel != null)
             {
-                IsDialog = true,
-                CompanyId = companyId
-            };
+                dialogChannel = existsChannel;
+            }
+            else
+            {
+                DialogChannel newDialogChannel = new DialogChannel()
+                {
+                    IsDialog = true,
+                    CompanyId = companyId,
+                    Users = { currentUser, targetUser }
+                };
 
-            currentUser.Channels.Add(dialogChannel);
-            targetUser.Channels.Add(dialogChannel);
+                await this.unitOfWork.DialogChannel.AddAsync(newDialogChannel);
+                await this.unitOfWork.SaveChangesAsync();
 
-            await this.unitOfWork.DialogChannel.AddAsync(dialogChannel);
-            await this.unitOfWork.SaveChangesAsync();
+                dialogChannel = newDialogChannel;
+            }
 
             return new DialogChannelCreateResponse(true, dialogChannel.Users, dialogChannel);
         }
@@ -251,9 +256,11 @@ namespace CSN.Application.Services
 
             User? currentUser = await this.claimsPrincipal.GetUserAsync(this.unitOfWork);
 
-            User? targetUser = await this.unitOfWork.User.GetAsync(
-                user => user.Id == request.TargetUserId,
-                user => user.Channels);
+            User? targetUser = (request.TargetUserId != null)
+                ? await this.unitOfWork.User.GetAsync(
+                    user => user.Id == request.TargetUserId,
+                    user => user.Channels)
+                : currentUser;
 
             if (currentUser == null || targetUser == null)
                 throw new BadRequestException("Account is not found");

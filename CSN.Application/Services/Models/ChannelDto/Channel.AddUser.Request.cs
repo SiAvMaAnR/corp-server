@@ -7,7 +7,7 @@ namespace CSN.Application.Services.Models.ChannelDto
 {
     public class ChannelAddUserRequest
     {
-        public int TargetUserId { get; set; }
+        public int? TargetUserId { get; set; }
         public int ChannelId { get; set;}
     }
 }
