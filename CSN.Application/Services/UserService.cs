@@ -2,11 +2,13 @@ using CSN.Application.Extensions;
 using CSN.Application.Services.Common;
 using CSN.Application.Services.Interfaces;
 using CSN.Application.Services.Models.UserDto;
+using CSN.Domain.Entities.Channels.DialogChannel;
 using CSN.Domain.Entities.Users;
 using CSN.Domain.Exceptions;
 using CSN.Domain.Interfaces.UnitOfWork;
 using CSN.Persistence.Extensions;
 using Microsoft.AspNetCore.Http;
+using Microsoft.EntityFrameworkCore;
 
 namespace CSN.Application.Services;
 
@@ -27,10 +29,16 @@ public class UserService : BaseService, IUserService
         int companyId = user.GetCompanyId() ??
             throw new BadRequestException("Account is not found");
 
-        var usersAll = (await this.unitOfWork.User.GetAllAsync(curUser => curUser.Id != user.Id))?
+        var usersAll = (await this.unitOfWork.User.CustomAsync())
+            .Include((user) => user.Channels)
+                .ThenInclude(channel => channel.Users)
+            .Where((curUser) => curUser.Id != user.Id)
+            .Where((curUser) => !curUser.Channels
+                .Where((channel) => (channel is DialogChannel))
+                .Any((channel) => channel.Users
+                    .Any(userI => userI.Id == user.Id)))
             .AsEnumerable()
             .Where(user => user.GetCompanyId() == companyId);
-
 
         string searchFilter = request.SearchFilter?.ToLower() ?? "";
 
