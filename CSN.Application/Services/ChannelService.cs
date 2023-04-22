@@ -1,3 +1,4 @@
+using System;
 using CSN.Application.Extensions;
 using CSN.Application.Services.Common;
 using CSN.Application.Services.Interfaces;
@@ -34,6 +35,7 @@ namespace CSN.Application.Services
                 throw new BadRequestException("Account is not found");
 
             IEnumerable<Channel>? channelsAll = await this.unitOfWork.Channel.GetAllAsync((channel) =>
+                channel.Users.All(userI => userI.Id != user.Id) &&
                 channel.IsDeleted == false &&
                 channel.CompanyId == companyId
             );
@@ -265,7 +267,13 @@ namespace CSN.Application.Services
             if (currentUser == null || targetUser == null)
                 throw new BadRequestException("Account is not found");
 
-            Channel? channel = currentUser.Channels.FirstOrDefault(channel => channel.Id == request.ChannelId);
+            Channel? channel = await this.unitOfWork.Channel.GetAsync(
+                (channel) => channel.Id == request.ChannelId &&
+                    targetUser.GetCompanyId() == channel.CompanyId,
+                (channel) => channel.Users);
+
+            if (channel == null)
+                throw new ForbiddenException("Channel is not found");
 
             if (channel is PrivateChannel && currentUser.Id == targetUser.Id)
                 throw new ForbiddenException("No access to this channel");
@@ -278,10 +286,11 @@ namespace CSN.Application.Services
             if (isExistsUser)
                 throw new BadRequestException("User already exists");
 
+            channel!.LastActivity = DateTime.Now;
             channel?.Users.Add(targetUser);
             await this.unitOfWork.SaveChangesAsync();
 
-            return new ChannelAddUserResponse(true);
+            return new ChannelAddUserResponse(true, channel);
         }
     }
 }

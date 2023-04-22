@@ -14,7 +14,7 @@ namespace CSN.Persistence.Extensions
             string fullName = $"{Guid.NewGuid()}.{fileName}.{DateTime.Now.ToString("ddMMyyyy.HHmm")}";
             string fullPath = $"{path}/{fullName}";
 
-            if (image == null) return null;
+            if (image == null || image.Length <= 0) return null;
 
             await File.WriteAllBytesAsync(fullPath, image);
             return fullPath;

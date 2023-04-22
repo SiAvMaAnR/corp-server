@@ -187,6 +187,7 @@ public class ChatHub : BaseHub, IHub
 
             await Clients.Caller.SendAsync("AddUser", new
             {
+                channel = result.Channel,
                 isSuccess = result.IsSuccess,
             });
         }
