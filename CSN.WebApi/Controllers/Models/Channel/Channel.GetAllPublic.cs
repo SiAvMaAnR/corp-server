@@ -1,8 +1,8 @@
 using static CSN.Application.Services.Filters.ChannelFilters;
 
-namespace CSN.WebApi.Models.Channel;
+namespace CSN.WebApi.Controllers.Models.Channel;
 
-public class ChannelGetAll
+public class ChannelGetAllPublic
 {
     public string? SearchFilter { get; set; }
 }

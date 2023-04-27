@@ -1,3 +1,4 @@
+using CSN.Application.AppData.Interfaces;
 using CSN.Application.Extensions;
 using CSN.Application.Services.Common;
 using CSN.Application.Services.Interfaces;
@@ -16,11 +17,14 @@ namespace CSN.Application.Services;
 public class EmployeeControlService : BaseService, IEmployeeControlService
 {
     private readonly IConfiguration configuration;
+    private readonly IAppData appData;
 
-    public EmployeeControlService(IUnitOfWork unitOfWork, IHttpContextAccessor context, IConfiguration configuration)
+    public EmployeeControlService(IUnitOfWork unitOfWork, IHttpContextAccessor context,
+        IConfiguration configuration, IAppData appData)
         : base(unitOfWork, context)
     {
         this.configuration = configuration;
+        this.appData = appData;
     }
 
     public async Task<EmployeeControlEmployeesResponse> GetEmployeesAsync(EmployeeControlEmployeesRequest request)
@@ -39,7 +43,7 @@ public class EmployeeControlService : BaseService, IEmployeeControlService
             Email = employee.Email,
             Role = employee.Role,
             Post = employee.Post,
-            State = employee.State,
+            State = this.appData.GetById(employee.Id)?.State ?? UserState.Offline,
             Image = employee.Image.ReadToBytes(),
             CreatedAt = employee.CreatedAt,
             UpdatedAt = employee.UpdatedAt,

@@ -1,5 +1,9 @@
+using System.Diagnostics;
 using System.Security.Claims;
+using CSN.Application.Services.Helpers;
+using CSN.Application.Services.Helpers.Enums;
 using CSN.Application.Services.Interfaces;
+using CSN.Application.Services.Models.AppDataDto;
 using CSN.Application.Services.Models.ChannelDto;
 using CSN.Application.Services.Models.MessageDto;
 using CSN.Domain.Entities.Channels;
@@ -15,23 +19,26 @@ public class ChatHub : BaseHub, IHub
 {
     private readonly IChannelService channelService;
     private readonly IMessageService messageService;
+    private readonly IAppDataService appDataService;
 
-    public ChatHub(IChannelService channelService, IMessageService messageService)
+    public ChatHub(IChannelService channelService, IMessageService messageService, IAppDataService appDataService)
     {
         this.channelService = channelService;
         this.messageService = messageService;
+        this.appDataService = appDataService;
     }
 
     [Authorize]
     public override async Task OnConnectedAsync()
     {
         this.channelService.SetClaimsPrincipal(Context?.User);
+        await this.appDataService.ConnectUserAsync(new UserConnectRequest(Context?.ConnectionId, HubType.Chat));
         await base.OnConnectedAsync();
     }
 
-    [Authorize]
     public override async Task OnDisconnectedAsync(Exception? exception)
     {
+        await this.appDataService.DisconnectUserAsync(new UserDisconnectRequest(HubType.Chat));
         await base.OnDisconnectedAsync(exception);
     }
 
@@ -46,15 +53,15 @@ public class ChatHub : BaseHub, IHub
                 Message = message,
                 TargetMessageId = targetMessageId
             });
-
-            await Clients.Clients(result.ConnectionIds).SendAsync("SendMessage", new
+            var ids = this.appDataService.GetConnectionIds(result.Users, HubType.Chat);
+            await Clients.Clients(ids).SendAsync("GetChannel", new
             {
-                message = result.Message
+                channel = result.Message.Channel
             });
         }
         catch (Exception exception)
         {
-            await Clients.Caller.SendAsync("SendMessage", null, exception.Message);
+            await Clients.Caller.SendAsync("GetChannel", null, exception.Message);
         }
     }
 
@@ -75,11 +82,17 @@ public class ChatHub : BaseHub, IHub
         }
     }
 
+
+    //перенести в api
     [Authorize]
     public async Task GetAllChannelsAsync(int pageNumber, int pageSize, GetAllFilter typeFilter, string searchFilter)
     {
         try
         {
+            Stopwatch stopwatch = new Stopwatch();
+
+            stopwatch.Start();
+            
             var result = await this.channelService.GetAllAsync(new ChannelGetAllRequest()
             {
                 PageNumber = pageNumber,
@@ -97,6 +110,11 @@ public class ChatHub : BaseHub, IHub
                 pageCount = result.PagesCount,
                 unreadChannelsCount = result.UnreadChannelsCount
             });
+
+            stopwatch.Stop();
+            var elapsed = stopwatch.Elapsed;
+            Console.WriteLine("=============================================================================");
+            Console.WriteLine(elapsed);
         }
         catch (Exception exception)
         {
@@ -114,8 +132,8 @@ public class ChatHub : BaseHub, IHub
             {
                 TargetUserId = targetUserId
             });
-
-            await Clients.Caller.SendAsync("CreateDialogChannel", new
+            var ids = this.appDataService.GetConnectionIds(result.Users, HubType.Chat);
+            await Clients.Clients(ids).SendAsync("CreateDialogChannel", new
             {
                 channel = result.Channel,
                 isSuccess = result.IsSuccess,
@@ -184,8 +202,10 @@ public class ChatHub : BaseHub, IHub
                 TargetUserId = targetUserId,
                 ChannelId = channelId
             });
+            string connectionId = Context.ConnectionId;
 
-            await Clients.Caller.SendAsync("AddUser", new
+            var ids = this.appDataService.GetConnectionIds(result.Users, HubType.Chat);
+            await Clients.Clients(ids).SendAsync("AddUser", new
             {
                 channel = result.Channel,
                 isSuccess = result.IsSuccess,

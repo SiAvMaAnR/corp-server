@@ -14,6 +14,8 @@ using CSN.Domain.Exceptions;
 using CSN.Application.Extensions;
 using CSN.Persistence.Extensions;
 using CSN.Domain.Entities.Invitations;
+using CSN.Application.AppData.Interfaces;
+using CSN.Domain.Shared.Enums;
 
 namespace CSN.Application.Services;
 
@@ -21,12 +23,14 @@ public class EmployeeService : BaseService, IEmployeeService
 {
     public readonly IConfiguration configuration;
     public readonly IDataProtectionProvider protection;
+    public readonly IAppData appData;
 
     public EmployeeService(IUnitOfWork unitOfWork, IHttpContextAccessor context, IConfiguration configuration,
-        IDataProtectionProvider protection) : base(unitOfWork, context)
+        IAppData appData, IDataProtectionProvider protection) : base(unitOfWork, context)
     {
         this.configuration = configuration;
         this.protection = protection;
+        this.appData = appData;
     }
 
     public async Task<EmployeeLoginResponse> LoginAsync(EmployeeLoginRequest request)
@@ -180,7 +184,7 @@ public class EmployeeService : BaseService, IEmployeeService
             Email = employee.Email,
             Image = employee.Image.ReadToBytes(),
             Role = employee.Role,
-            State = employee.State,
+            State = this.appData.GetById(employee.Id)?.State ?? UserState.Offline,
             CreatedAt = employee.CreatedAt,
             UpdatedAt = employee.UpdatedAt,
             CompanyId = employee.CompanyId,
@@ -191,7 +195,7 @@ public class EmployeeService : BaseService, IEmployeeService
                 Email = employee.Company.Email,
                 Role = employee.Company.Role,
                 Image = employee.Company.Image.ReadToBytes(),
-                State = employee.Company.State,
+                State = this.appData.GetById(employee.Company.Id)?.State ?? UserState.Offline,
                 Description = employee.Company.Description
             }
         };

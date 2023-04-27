@@ -1,7 +1,7 @@
 using CSN.Domain.Shared.Enums;
 using System.ComponentModel.DataAnnotations;
 
-namespace CSN.WebApi.Models.Invite;
+namespace CSN.WebApi.Controllers.Models.Invite;
 
 public class InviteSend
 {

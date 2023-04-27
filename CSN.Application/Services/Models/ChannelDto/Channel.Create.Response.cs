@@ -11,9 +11,6 @@ namespace CSN.Application.Services.Models.ChannelDto
     {
         public bool IsSuccess { get; set; } = false;
         public ICollection<User> Users { get; set; }
-        public IEnumerable<string> ConnectionIds => this.Users
-            .Where(user => user.ConnectionId != null)
-            .Select(user => user.ConnectionId!);
 
         public ChannelCreateResponse(bool isSuccess, ICollection<User> users)
         {

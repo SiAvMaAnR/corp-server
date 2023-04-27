@@ -1,12 +1,10 @@
 using System.ComponentModel.DataAnnotations;
 
-namespace CSN.WebApi.Models.Company;
+namespace CSN.WebApi.Controllers.Models.Employee;
 
-public class CompanyEdit
+public class EmployeeEdit
 {
     [MaxLength(40)]
     public string Login { get; set; } = null!;
-    [MaxLength(400)]
-    public string? Description { get; set; }
     public string? Image { get; set; }
 }

@@ -1,4 +1,6 @@
 using System;
+using System.Diagnostics;
+using CSN.Application.AppData.Interfaces;
 using CSN.Application.Extensions;
 using CSN.Application.Services.Common;
 using CSN.Application.Services.Interfaces;
@@ -17,10 +19,12 @@ namespace CSN.Application.Services
 {
     public class ChannelService : BaseService, IChannelService
     {
-        public ChannelService(IUnitOfWork unitOfWork, IHttpContextAccessor context)
+        private IAppData appData;
+
+        public ChannelService(IUnitOfWork unitOfWork, IHttpContextAccessor context, IAppData appData)
             : base(unitOfWork, context)
         {
-
+            this.appData = appData;
         }
 
         public async Task<ChannelGetAllOfCompanyResponse> GetAllOfCompanyAsync(ChannelGetAllOfCompanyRequest request)
@@ -290,7 +294,7 @@ namespace CSN.Application.Services
             channel?.Users.Add(targetUser);
             await this.unitOfWork.SaveChangesAsync();
 
-            return new ChannelAddUserResponse(true, channel);
+            return new ChannelAddUserResponse(true, channel!.Users, channel);
         }
     }
 }

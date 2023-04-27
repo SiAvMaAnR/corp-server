@@ -11,7 +11,7 @@ namespace CSN.Persistence.EntityConfigurations
             builder.UseTpcMappingStrategy();
             builder.HasIndex(user => user.Email).IsUnique();
             builder.HasMany(user => user.Channels).WithMany(channel => channel.Users);
-            builder.Ignore(user => user.ConnectionId);
+            // builder.Ignore(user => user.ConnectionId);
         }
     }
 }

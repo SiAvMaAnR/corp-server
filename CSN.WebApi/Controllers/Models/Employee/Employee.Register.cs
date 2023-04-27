@@ -1,6 +1,6 @@
 using System.ComponentModel.DataAnnotations;
 
-namespace CSN.WebApi.Models.Employee;
+namespace CSN.WebApi.Controllers.Models.Employee;
 
 public class EmployeeRegister
 {

@@ -1,7 +1,7 @@
 ﻿using System.Reflection;
 using CSN.Application.Services.Interfaces;
 using CSN.Application.Services.Models.ChannelDto;
-using CSN.WebApi.Models.Channel;
+using CSN.WebApi.Controllers.Models.Channel;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using static CSN.Application.Services.Filters.ChannelFilters;
@@ -22,7 +22,7 @@ namespace CSN.WebApi.Controllers
         }
 
         [HttpGet("GetPublicChannelsOfCompany"), Authorize]
-        public async Task<IActionResult> GetAllPublicChannelsOfCompany([FromQuery] ChannelGetAll request)
+        public async Task<IActionResult> GetAllPublicChannelsOfCompany([FromQuery] ChannelGetAllPublic request)
         {
             var response = await channelService.GetAllOfCompanyAsync(new ChannelGetAllOfCompanyRequest()
             {
@@ -34,6 +34,28 @@ namespace CSN.WebApi.Controllers
             {
                 response.Channels,
                 response.ChannelsCount
+            });
+        }
+
+        [HttpGet("GetAllChannels"), Authorize]
+        public async Task<IActionResult> GetAllChannels([FromQuery] ChannelGetAll request)
+        {
+            var response = await channelService.GetAllAsync(new ChannelGetAllRequest()
+            {
+                PageNumber = request.PageNumber,
+                PageSize = request.PageSize,
+                TypeFilter = request.TypeFilter,
+                SearchFilter = request.SearchFilter
+            });
+
+            return Ok(new
+            {
+                channels = response.Channels,
+                channelsCount = response.ChannelsCount,
+                pageNumber = response.PageNumber,
+                pageSize = response.PageSize,
+                pageCount = response.PagesCount,
+                unreadChannelsCount = response.UnreadChannelsCount
             });
         }
     }

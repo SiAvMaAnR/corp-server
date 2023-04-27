@@ -1,4 +1,4 @@
-namespace CSN.WebApi.Models.Company;
+namespace CSN.WebApi.Controllers.Models.Company;
 
 public class CompanyRemoveEmployee
 {

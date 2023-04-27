@@ -1,6 +1,6 @@
 using CSN.Application.Services.Interfaces;
 using CSN.Application.Services.Models.InvitationDto;
-using CSN.WebApi.Models.Invite;
+using CSN.WebApi.Controllers.Models.Invite;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 

@@ -5,14 +5,14 @@ using System.Threading.Tasks;
 
 namespace CSN.Application.Services.Models.AppDataDto
 {
-    public class UserRemoveResponse
+    public class UserDisconnectResponse
     {
         public bool IsSuccess { get; set; } = false;
-        public UserRemoveResponse(bool isSuccess)
+        public UserDisconnectResponse(bool isSuccess)
         {
             this.IsSuccess = isSuccess;
         }
 
-        public UserRemoveResponse() { }
+        public UserDisconnectResponse() { }
     }
 }

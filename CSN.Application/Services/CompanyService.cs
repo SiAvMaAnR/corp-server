@@ -1,3 +1,4 @@
+using CSN.Application.AppData.Interfaces;
 using CSN.Application.Extensions;
 using CSN.Application.Services.Common;
 using CSN.Application.Services.Interfaces;
@@ -6,6 +7,7 @@ using CSN.Application.Services.Models.CompanyDto;
 using CSN.Domain.Entities.Companies;
 using CSN.Domain.Exceptions;
 using CSN.Domain.Interfaces.UnitOfWork;
+using CSN.Domain.Shared.Enums;
 using CSN.Email;
 using CSN.Email.Handlers;
 using CSN.Email.Models;
@@ -24,12 +26,14 @@ public class CompanyService : BaseService, ICompanyService
     private readonly IConfiguration configuration;
     public readonly IDataProtectionProvider protection;
     private readonly EmailClient emailClient;
+    private readonly IAppData appData;
 
-    public CompanyService(IUnitOfWork unitOfWork, IHttpContextAccessor context,
+    public CompanyService(IUnitOfWork unitOfWork, IHttpContextAccessor context, IAppData appData,
         IConfiguration configuration, IDataProtectionProvider protection) : base(unitOfWork, context)
     {
         this.configuration = configuration;
         this.protection = protection;
+        this.appData = appData;
 
         var smtpModel = new SmtpModel()
         {
@@ -154,7 +158,7 @@ public class CompanyService : BaseService, ICompanyService
             Email = company.Email,
             Image = image,
             Role = company.Role,
-            State = company.State,
+            State = this.appData.GetById(company.Id)?.State ?? UserState.Offline,
             Description = company.Description,
         };
     }

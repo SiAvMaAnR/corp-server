@@ -4,7 +4,7 @@ using System.Linq;
 using System.Threading.Tasks;
 using CSN.Application.Services.Interfaces;
 using CSN.Application.Services.Models.UserDto;
-using CSN.WebApi.Models.User;
+using CSN.WebApi.Controllers.Models.User;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 

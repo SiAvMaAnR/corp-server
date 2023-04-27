@@ -11,10 +11,12 @@ namespace CSN.Application.Services.Models.ChannelDto
     {
         public bool IsSuccess { get; set; }
         public Channel? Channel { get; set; }
+        public ICollection<User>? Users { get; set; }
 
-        public ChannelAddUserResponse(bool isSuccess, Channel? channel)
+        public ChannelAddUserResponse(bool isSuccess, ICollection<User>? users, Channel? channel)
         {
             this.IsSuccess = isSuccess;
+            this.Users = users;
             this.Channel = channel;
         }
     }

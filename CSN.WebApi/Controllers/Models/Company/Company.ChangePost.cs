@@ -1,6 +1,6 @@
 using CSN.Domain.Shared.Enums;
 
-namespace CSN.WebApi.Models.Company;
+namespace CSN.WebApi.Controllers.Models.Company;
 
 public class CompanyChangePost
 {

@@ -5,14 +5,14 @@ using System.Threading.Tasks;
 
 namespace CSN.Application.Services.Models.AppDataDto
 {
-    public class UserAddResponse
+    public class UserConnectResponse
     {
         public bool IsSuccess { get; set; } = false;
-        public UserAddResponse(bool isSuccess)
+        public UserConnectResponse(bool isSuccess)
         {
             this.IsSuccess = isSuccess;
         }
 
-        public UserAddResponse() { }
+        public UserConnectResponse() { }
     }
 }

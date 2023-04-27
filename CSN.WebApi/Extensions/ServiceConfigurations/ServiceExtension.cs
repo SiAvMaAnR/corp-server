@@ -60,6 +60,7 @@ namespace CSN.WebApi.Extensions.ServiceConfigurations
             serviceCollection.AddControllers(config =>
             {
                 config.Filters.Add(new ValidationFilterAttribute());
+                config.Filters.Add(new AntiDuplicateFilterAttribute());
             }).AddJsonOptions(options =>
             {
                 options.JsonSerializerOptions.ReferenceHandler = ReferenceHandler.IgnoreCycles;
@@ -70,7 +71,8 @@ namespace CSN.WebApi.Extensions.ServiceConfigurations
             serviceCollection.AddCors(options => options.CorsConfig());
             serviceCollection.AddAuthorization(options => options.AuthConfig());
             serviceCollection.AddSwaggerGen(options => options.Config());
-            serviceCollection.AddAuthentication(JwtBearerDefaults.AuthenticationScheme).AddJwtBearer(options => options.Config(config));
+            serviceCollection.AddAuthentication(JwtBearerDefaults.AuthenticationScheme)
+                .AddJwtBearer(options => options.Config(config));
             serviceCollection.AddDataProtection();
             serviceCollection.AddSignalR().AddJsonProtocol(options =>
             {

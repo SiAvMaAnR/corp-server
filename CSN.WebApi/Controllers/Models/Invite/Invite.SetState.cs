@@ -1,4 +1,4 @@
-namespace CSN.WebApi.Models.Invite;
+namespace CSN.WebApi.Controllers.Models.Invite;
 
 public class InviteSetState
 {

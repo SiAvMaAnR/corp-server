@@ -1,4 +1,4 @@
-namespace CSN.WebApi.Models.User
+namespace CSN.WebApi.Controllers.Models.User
 {
     public class UserGetAll
     {

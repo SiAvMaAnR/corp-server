@@ -8,8 +8,4 @@ public class MessageSendResponse
     public Message Message { get; set; } = null!;
 
     public ICollection<User> Users { get; set; } = null!;
-
-    public IEnumerable<string> ConnectionIds => this.Users
-        .Where(user => user.ConnectionId != null)
-        .Select(user => user.ConnectionId!);
 }

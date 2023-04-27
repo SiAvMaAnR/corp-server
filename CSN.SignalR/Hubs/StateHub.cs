@@ -1,3 +1,4 @@
+using CSN.Application.Services.Helpers.Enums;
 using CSN.Application.Services.Interfaces;
 using CSN.Application.Services.Models.AppDataDto;
 using CSN.Domain.Shared.Enums;
@@ -27,14 +28,14 @@ public class StateHub : BaseHub, IHub
     {
         this.appDataService.SetClaimsPrincipal(Context?.User);
 
-        await this.appDataService.AddUserAsync(new UserAddRequest(Context?.ConnectionId));
+        await this.appDataService.ConnectUserAsync(new UserConnectRequest(Context?.ConnectionId, HubType.State));
         await this.appDataService.SetStateAsync(new UserStateRequest(UserState.Online));
         await base.OnConnectedAsync();
     }
 
     public override async Task OnDisconnectedAsync(Exception? exception)
     {
-        await this.appDataService.RemoveUserAsync(new UserRemoveRequest());
+        await this.appDataService.DisconnectUserAsync(new UserDisconnectRequest(HubType.State));
         await this.appDataService.SetStateAsync(new UserStateRequest(UserState.Offline));
         await base.OnDisconnectedAsync(exception);
     }
