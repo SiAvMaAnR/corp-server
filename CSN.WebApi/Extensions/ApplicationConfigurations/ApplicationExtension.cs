@@ -1,4 +1,5 @@
 ﻿using CSN.SignalR.Hubs;
+using CSN.WebApi.Middlewares;
 
 namespace CSN.WebApi.Extensions.ApplicationConfigurations
 {
@@ -32,6 +33,7 @@ namespace CSN.WebApi.Extensions.ApplicationConfigurations
             webApplication.UseAuthentication();
             webApplication.UseAuthorization();
             webApplication.MapControllers();
+            webApplication.UseMiddleware<TimingMiddleware>();
         }
 
 

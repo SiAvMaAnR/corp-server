@@ -24,6 +24,7 @@ public class StateHub : BaseHub, IHub
         await this.Clients.Caller.SendAsync("State", true);
     }
 
+    [Authorize]
     public override async Task OnConnectedAsync()
     {
         this.appDataService.SetClaimsPrincipal(Context?.User);

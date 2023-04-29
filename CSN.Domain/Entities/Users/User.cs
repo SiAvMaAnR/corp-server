@@ -23,9 +23,6 @@ public partial class User : BaseEntity
     [JsonIgnore]
     public byte[] PasswordSalt { get; set; } = null!;
     public string Role { get; set; } = null!;
-    public string? ChatHubId { get; set; }
-    public string? StateHubId { get; set; }
-    public string? NotificationHubId { get; set; }
     public string? Image { get; set; }
     public UserState State { get; set; } = UserState.Offline;
     public ICollection<Channel> Channels { get; set; } = new List<Channel>();

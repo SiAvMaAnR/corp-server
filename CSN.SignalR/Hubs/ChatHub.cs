@@ -83,16 +83,11 @@ public class ChatHub : BaseHub, IHub
     }
 
 
-    //перенести в api
     [Authorize]
     public async Task GetAllChannelsAsync(int pageNumber, int pageSize, GetAllFilter typeFilter, string searchFilter)
     {
         try
         {
-            Stopwatch stopwatch = new Stopwatch();
-
-            stopwatch.Start();
-            
             var result = await this.channelService.GetAllAsync(new ChannelGetAllRequest()
             {
                 PageNumber = pageNumber,
@@ -110,11 +105,6 @@ public class ChatHub : BaseHub, IHub
                 pageCount = result.PagesCount,
                 unreadChannelsCount = result.UnreadChannelsCount
             });
-
-            stopwatch.Stop();
-            var elapsed = stopwatch.Elapsed;
-            Console.WriteLine("=============================================================================");
-            Console.WriteLine(elapsed);
         }
         catch (Exception exception)
         {

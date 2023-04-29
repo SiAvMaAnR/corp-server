@@ -16,7 +16,7 @@ namespace CSN.Application.Services
     public class AppDataService : BaseService, IAppDataService
     {
         private readonly IAppData appData;
-        private Mutex mutex = new();
+        private readonly object _lock = new object();
 
         public AppDataService(
             IUnitOfWork unitOfWork,
@@ -40,12 +40,15 @@ namespace CSN.Application.Services
             User? user = await this.claimsPrincipal.GetUserAsync(unitOfWork) ??
                 throw new NotFoundException("Account is not found");
 
-            if (user != null)
+            lock (_lock)
             {
-                var userC = this.appData.GetById(user.Id) ??
-                    throw new BadRequestException("Connected user not found");
+                if (user != null)
+                {
+                    var userC = this.appData.GetById(user.Id) ??
+                        throw new BadRequestException("Connected user not found");
 
-                userC.State = request.State;
+                    userC.State = request.State;
+                }
             }
 
             return new UserStateResponse(true);
@@ -58,23 +61,25 @@ namespace CSN.Application.Services
 
             var user = await this.claimsPrincipal.GetUserAsync(this.unitOfWork);
 
-            if (user != null)
+            lock (_lock)
             {
-                var userC = this.appData.GetById(user.Id);
-
-                if (userC == null)
+                if (user != null)
                 {
-                    userC = new UserC(user.Id);
-                    this.appData.AddUserConnected(userC);
+                    var userC = this.appData.GetById(user.Id);
+
+                    if (userC == null)
+                    {
+                        userC = new UserC(user.Id);
+                        this.appData.AddUserConnected(userC);
+                    }
+
+                    if (request.Type == HubType.Chat)
+                        userC.ChatHubId = request.ConnectionId;
+                    else if (request.Type == HubType.State)
+                        userC.StateHubId = request.ConnectionId;
+                    else if (request.Type == HubType.Notification)
+                        userC.NotificationHubId = request.ConnectionId;
                 }
-
-                if (request.Type == HubType.Chat)
-                    userC.ChatHubId = request.ConnectionId;
-                else if (request.Type == HubType.State)
-                    userC.StateHubId = request.ConnectionId;
-                else if (request.Type == HubType.Notification)
-                    userC.NotificationHubId = request.ConnectionId;
-
             }
 
             return new UserConnectResponse(true);
@@ -88,21 +93,24 @@ namespace CSN.Application.Services
             User? user = await this.claimsPrincipal.GetUserAsync(this.unitOfWork) ??
                 throw new BadRequestException("Account is not found");
 
-            if (user != null)
+            lock (_lock)
             {
-                var userC = this.appData.GetById(user.Id) ??
-                    throw new BadRequestException("Connected user not found");
-
-                if (request.Type == HubType.Chat)
-                    userC.ChatHubId = null;
-                else if (request.Type == HubType.State)
-                    userC.StateHubId = null;
-                else if (request.Type == HubType.Notification)
-                    userC.NotificationHubId = null;
-
-                if (user.ChatHubId == null && user.StateHubId == null && user.NotificationHubId == null && user.State == UserState.Offline)
+                if (user != null)
                 {
-                    this.appData.RemoveUserConnected(userC.Id);
+                    var userC = this.appData.GetById(user.Id) ??
+                        throw new BadRequestException("Connected user not found");
+
+                    if (request.Type == HubType.Chat)
+                        userC.ChatHubId = null;
+                    else if (request.Type == HubType.State)
+                        userC.StateHubId = null;
+                    else if (request.Type == HubType.Notification)
+                        userC.NotificationHubId = null;
+
+                    if (userC.ChatHubId == null && userC.StateHubId == null && userC.NotificationHubId == null && userC.State == UserState.Offline)
+                    {
+                        this.appData.RemoveUserConnected(userC.Id);
+                    }
                 }
             }
 

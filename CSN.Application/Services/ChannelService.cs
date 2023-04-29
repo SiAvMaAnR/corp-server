@@ -80,7 +80,7 @@ namespace CSN.Application.Services
                 throw new BadRequestException("Account is not found");
 
             IEnumerable<Channel>? channelsAll = await this.unitOfWork.Channel.GetAllAsync(
-                (channel) => channel.IsDeleted == false &&
+                (channel) => !channel.IsDeleted &&
                     channel.Users.Contains(user),
                 (channel) => channel.Users,
                 (channel) => channel.Messages
@@ -154,8 +154,10 @@ namespace CSN.Application.Services
             User user = await this.claimsPrincipal.GetUserAsync(this.unitOfWork) ??
                 throw new BadRequestException("Account is not found");
 
-            bool isExistsPublicChannel = await this.unitOfWork.PublicChannel.AnyAsync(channel => channel.Name == request.Name);
-            bool isExistsPrivateChannel = await this.unitOfWork.PrivateChannel.AnyAsync(channel => channel.Name == request.Name);
+            bool isExistsPublicChannel = await this.unitOfWork.PublicChannel.AnyAsync(channel =>
+                channel.Name == request.Name && channel.CompanyId == user.GetCompanyId());
+            bool isExistsPrivateChannel = await this.unitOfWork.PrivateChannel.AnyAsync(channel =>
+                channel.Name == request.Name && channel.CompanyId == user.GetCompanyId());
 
             if (isExistsPublicChannel || isExistsPrivateChannel)
                 throw new BadRequestException("Channel already exists");
@@ -172,6 +174,24 @@ namespace CSN.Application.Services
                 CompanyId = companyId
             };
 
+            //================  test
+            // var tasks = new List<Task>();
+            // for (int i = 0; i < 100; i++)
+            // {
+            //     PublicChannel publicChannel1 = new PublicChannel()
+            //     {
+            //         Name = request.Name + DateTime.Now.ToLocalTime() + i,
+            //         AdminId = user.Id,
+            //         Users = { user },
+            //         IsPublic = true,
+            //         CompanyId = companyId
+            //     };
+
+            //     await this.unitOfWork.PublicChannel.AddAsync(publicChannel1);
+            // }
+            // await Task.WhenAll(tasks);
+            //================
+
             await this.unitOfWork.PublicChannel.AddAsync(publicChannel);
             await this.unitOfWork.SaveChangesAsync();
 
@@ -186,8 +206,10 @@ namespace CSN.Application.Services
             User user = await this.claimsPrincipal.GetUserAsync(this.unitOfWork) ??
                 throw new BadRequestException("Account is not found");
 
-            bool isExistsPublicChannel = await this.unitOfWork.PublicChannel.AnyAsync(channel => channel.Name == request.Name);
-            bool isExistsPrivateChannel = await this.unitOfWork.PrivateChannel.AnyAsync(channel => channel.Name == request.Name);
+            bool isExistsPublicChannel = await this.unitOfWork.PublicChannel.AnyAsync(channel =>
+                channel.Name == request.Name && channel.CompanyId == user.GetCompanyId());
+            bool isExistsPrivateChannel = await this.unitOfWork.PrivateChannel.AnyAsync(channel =>
+                channel.Name == request.Name && channel.CompanyId == user.GetCompanyId());
 
             if (isExistsPublicChannel || isExistsPrivateChannel)
                 throw new BadRequestException("Channel already exists");

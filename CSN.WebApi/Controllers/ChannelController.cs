@@ -1,4 +1,5 @@
-﻿using System.Reflection;
+﻿using System.Diagnostics;
+using System.Reflection;
 using CSN.Application.Services.Interfaces;
 using CSN.Application.Services.Models.ChannelDto;
 using CSN.WebApi.Controllers.Models.Channel;

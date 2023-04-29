@@ -17,7 +17,7 @@ public class AppData : IAppData
 
     public IReadOnlyList<string> GetConnectionIds(ICollection<User>? users, HubType type)
     {
-        var connectionUsers = ConnectedUsers?.Where(userC => users?.Any(user => user.Id == userC.Id) ?? false);
+        var connectionUsers = this.ConnectedUsers?.Where(userC => users?.Any(user => user.Id == userC.Id) ?? false).ToList();
 
         List<string>? hubIds = type switch
         {
