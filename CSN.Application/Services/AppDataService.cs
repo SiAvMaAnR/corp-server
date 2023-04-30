@@ -16,7 +16,7 @@ namespace CSN.Application.Services
     public class AppDataService : BaseService, IAppDataService
     {
         private readonly IAppData appData;
-        private readonly ReaderWriterLockSlim _lock = new ();
+        private readonly ReaderWriterLockSlim _lock = new();
 
         public AppDataService(
             IUnitOfWork unitOfWork,
@@ -40,9 +40,9 @@ namespace CSN.Application.Services
             User? user = await this.claimsPrincipal.GetUserAsync(unitOfWork) ??
                 throw new NotFoundException("Account is not found");
 
-            lock (_lock)
+            if (user != null)
             {
-                if (user != null)
+                lock (_lock)
                 {
                     var userC = this.appData.GetById(user.Id) ??
                         throw new BadRequestException("Connected user not found");
@@ -61,9 +61,9 @@ namespace CSN.Application.Services
 
             var user = await this.claimsPrincipal.GetUserAsync(this.unitOfWork);
 
-            lock (_lock)
+            if (user != null)
             {
-                if (user != null)
+                lock (_lock)
                 {
                     var userC = this.appData.GetById(user.Id);
 
@@ -93,9 +93,9 @@ namespace CSN.Application.Services
             User? user = await this.claimsPrincipal.GetUserAsync(this.unitOfWork) ??
                 throw new BadRequestException("Account is not found");
 
-            lock (_lock)
+            if (user != null)
             {
-                if (user != null)
+                lock (_lock)
                 {
                     var userC = this.appData.GetById(user.Id) ??
                         throw new BadRequestException("Connected user not found");
