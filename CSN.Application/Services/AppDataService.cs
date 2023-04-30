@@ -16,7 +16,7 @@ namespace CSN.Application.Services
     public class AppDataService : BaseService, IAppDataService
     {
         private readonly IAppData appData;
-        private readonly object _lock = new object();
+        private readonly ReaderWriterLockSlim _lock = new ();
 
         public AppDataService(
             IUnitOfWork unitOfWork,

@@ -54,14 +54,14 @@ public class ChatHub : BaseHub, IHub
                 TargetMessageId = targetMessageId
             });
             var ids = this.appDataService.GetConnectionIds(result.Users, HubType.Chat);
-            await Clients.Clients(ids).SendAsync("GetChannel", new
+            await Clients.Clients(ids).SendAsync("Send", new
             {
-                channel = result.Message.Channel
+                message = result.Message
             });
         }
         catch (Exception exception)
         {
-            await Clients.Caller.SendAsync("GetChannel", null, exception.Message);
+            await Clients.Caller.SendAsync("Send", null, exception.Message);
         }
     }
 
