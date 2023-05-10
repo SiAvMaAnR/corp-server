@@ -20,8 +20,6 @@ Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "CSN.SignalR", "CSN.SignalR\
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "CSN.Tests", "CSN.Tests\CSN.Tests.csproj", "{3138A2C1-B0E0-4CE7-A1D0-352FFC3F2068}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Temp", "Temp\Temp.csproj", "{B0A5F47B-5161-4E51-9642-01AB3EE85081}"
-EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -64,10 +62,6 @@ Global
 		{3138A2C1-B0E0-4CE7-A1D0-352FFC3F2068}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{3138A2C1-B0E0-4CE7-A1D0-352FFC3F2068}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{3138A2C1-B0E0-4CE7-A1D0-352FFC3F2068}.Release|Any CPU.Build.0 = Release|Any CPU
-		{B0A5F47B-5161-4E51-9642-01AB3EE85081}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
-		{B0A5F47B-5161-4E51-9642-01AB3EE85081}.Debug|Any CPU.Build.0 = Debug|Any CPU
-		{B0A5F47B-5161-4E51-9642-01AB3EE85081}.Release|Any CPU.ActiveCfg = Release|Any CPU
-		{B0A5F47B-5161-4E51-9642-01AB3EE85081}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE

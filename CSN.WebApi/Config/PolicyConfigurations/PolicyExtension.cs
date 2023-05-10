@@ -1,7 +1,7 @@
 ﻿using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Cors.Infrastructure;
 
-namespace CSN.WebApi.Extensions.PolicyConfigurations
+namespace CSN.WebApi.Config.PolicyConfigurations
 {
     public static class PolicyExtension
     {

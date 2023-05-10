@@ -17,5 +17,8 @@ namespace CSN.Application.Services.Models.UserDto
     {
         public ICollection<UserResponse>? Users { get; set; } = new List<UserResponse>();
         public int UsersCount { get; set; }
+        public int PageSize { get; set; }
+        public int PageNumber { get; set; }
+        public int PagesCount { get; set; }
     }
 }

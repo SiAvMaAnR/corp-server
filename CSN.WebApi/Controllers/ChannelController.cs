@@ -27,6 +27,8 @@ namespace CSN.WebApi.Controllers
         {
             var response = await channelService.GetAllOfCompanyAsync(new ChannelGetAllOfCompanyRequest()
             {
+                PageNumber = request.PageNumber,
+                PageSize = request.PageSize,
                 SearchFilter = request.SearchFilter,
                 TypeFilter = GetAllFilter.OnlyPublic
             });
@@ -34,7 +36,10 @@ namespace CSN.WebApi.Controllers
             return Ok(new
             {
                 response.Channels,
-                response.ChannelsCount
+                response.ChannelsCount,
+                response.PageNumber,
+                response.PagesCount,
+                response.PageSize
             });
         }
 

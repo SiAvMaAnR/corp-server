@@ -2,6 +2,7 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
+using CSN.WebApi.Controllers;
 using Microsoft.AspNetCore.Mvc.Filters;
 
 namespace CSN.WebApi.Filters
@@ -13,7 +14,8 @@ namespace CSN.WebApi.Filters
 
         public void OnActionExecuting(ActionExecutingContext context)
         {
-            if (HttpMethods.IsPost(context.HttpContext.Request.Method))
+            if (!context.Controller.GetType().Equals(typeof(ErrorController)) &&
+                HttpMethods.IsPost(context.HttpContext.Request.Method))
             {
                 var antiDuplicateFormValue = Guid.NewGuid().ToString();
 

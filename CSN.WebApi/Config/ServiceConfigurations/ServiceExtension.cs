@@ -5,8 +5,8 @@ using CSN.Domain.Interfaces.UnitOfWork;
 using CSN.Infrastructure.Extensions;
 using CSN.Persistence.DBContext;
 using CSN.Persistence.UnitOfWork;
-using CSN.WebApi.Extensions.PolicyConfigurations;
-using CSN.WebApi.Extensions.SwaggerConfigurations;
+using CSN.WebApi.Config.PolicyConfigurations;
+using CSN.WebApi.Config.SwaggerConfigurations;
 using CSN.WebApi.Filters;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.AspNetCore.Mvc;
@@ -17,7 +17,7 @@ using CSN.Application.AppData.Interfaces;
 using Microsoft.AspNetCore.SignalR;
 using CSN.WebApi.Helpers;
 
-namespace CSN.WebApi.Extensions.ServiceConfigurations
+namespace CSN.WebApi.Config.ServiceConfigurations
 {
     public static class ServiceExtension
     {

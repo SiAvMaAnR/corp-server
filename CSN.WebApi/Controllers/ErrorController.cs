@@ -15,15 +15,14 @@ namespace CSN.WebApi.Controllers
 
             Exception exception = exceptionHandlerFeature.Error;
 
-            return exception is BadRequestException
-                ? BadRequest(exception.Message)
-                : exception is UnauthorizedException
-                ? Unauthorized(exception.Message)
-                : exception is NotFoundException
-                ? NotFound(exception.Message)
-                : exception is ForbiddenException 
-                ? Forbid() 
-                : BadRequest(exception.Message);
+            return exception switch
+            {
+                BadRequestException => BadRequest(exception.Message),
+                UnauthorizedException => Unauthorized(exception.Message),
+                NotFoundException => NotFound(exception.Message),
+                ForbiddenException => Forbid(),
+                _ => BadRequest(exception.Message)
+            };
         }
 
 
@@ -45,15 +44,14 @@ namespace CSN.WebApi.Controllers
                 exception.HResult
             };
 
-            return exception is BadRequestException
-                ? BadRequest(errorInfo)
-                : exception is UnauthorizedException
-                ? Unauthorized(errorInfo)
-                : exception is NotFoundException 
-                ? NotFound(errorInfo) 
-                : exception is ForbiddenException 
-                ? Forbid() 
-                : BadRequest(errorInfo);
+            return exception switch
+            {
+                BadRequestException => BadRequest(errorInfo),
+                UnauthorizedException => Unauthorized(errorInfo),
+                NotFoundException => NotFound(errorInfo),
+                ForbiddenException => Forbid(),
+                _ => BadRequest(errorInfo)
+            };
         }
     }
 }

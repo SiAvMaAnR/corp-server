@@ -1,7 +1,7 @@
 ﻿using CSN.SignalR.Hubs;
 using CSN.WebApi.Middlewares;
 
-namespace CSN.WebApi.Extensions.ApplicationConfigurations
+namespace CSN.WebApi.Config.ApplicationConfigurations
 {
     public static class ApplicationExtension
     {
@@ -27,13 +27,13 @@ namespace CSN.WebApi.Extensions.ApplicationConfigurations
 
         public static void CommonConfiguration(this WebApplication webApplication)
         {
+            webApplication.UseMiddleware<TimingMiddleware>();
             webApplication.UseCors("CorsPolicy");
             webApplication.UseHttpsRedirection();
             webApplication.UseRouting();
             webApplication.UseAuthentication();
             webApplication.UseAuthorization();
             webApplication.MapControllers();
-            webApplication.UseMiddleware<TimingMiddleware>();
         }
 
 

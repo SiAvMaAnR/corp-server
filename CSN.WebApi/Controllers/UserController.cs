@@ -29,12 +29,17 @@ namespace CSN.WebApi.Controllers
             var response = await userService.GetAllOfCompanyAsync(new UserGetAllOfCompanyRequest()
             {
                 SearchFilter = request.SearchFilter,
+                PageNumber = request.PageNumber,
+                PageSize = request.PageSize,
             });
 
             return Ok(new
             {
                 response.Users,
-                response.UsersCount
+                response.UsersCount,
+                pageNumber = response.PageNumber,
+                pageSize = response.PageSize,
+                pageCount = response.PagesCount,
             });
         }
     }

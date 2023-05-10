@@ -6,6 +6,7 @@ namespace CSN.Application.Services.Models.MessageDto;
 public class MessageSendResponse
 {
     public Message Message { get; set; } = null!;
-
     public ICollection<User> Users { get; set; } = null!;
+    public int UnreadMessagesCount { get; set; }
+    public DateTime LastActivity { get; set; }
 }

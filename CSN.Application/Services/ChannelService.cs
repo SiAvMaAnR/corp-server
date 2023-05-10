@@ -1,3 +1,4 @@
+using System.Security.Authentication.ExtendedProtection;
 using System;
 using System.Diagnostics;
 using CSN.Application.AppData.Interfaces;
@@ -14,6 +15,8 @@ using CSN.Domain.Exceptions;
 using CSN.Domain.Interfaces.UnitOfWork;
 using Microsoft.AspNetCore.Http;
 using static CSN.Application.Services.Filters.ChannelFilters;
+using CSN.Application.Services.Adapters;
+using Microsoft.EntityFrameworkCore;
 
 namespace CSN.Application.Services
 {
@@ -25,6 +28,30 @@ namespace CSN.Application.Services
             : base(unitOfWork, context)
         {
             this.appData = appData;
+        }
+
+        public async Task<ChannelGetUsersResponse> GetUsersOfChannelAsync(ChannelGetUsersRequest request)
+        {
+            if (this.claimsPrincipal == null)
+                throw new ForbiddenException("Forbidden");
+
+            User user = await this.claimsPrincipal.GetUserAsync(this.unitOfWork) ??
+                throw new BadRequestException("Account is not found");
+
+            int companyId = user.GetCompanyId() ??
+                throw new BadRequestException("Account is not found");
+
+            Channel? channelWithUsers = await this.unitOfWork.Channel.GetAsync(
+                (channel) => channel.CompanyId == companyId,
+                (channel) => channel.Users);
+
+            List<User>? users = channelWithUsers?.Users.ToList();
+
+            return new ChannelGetUsersResponse()
+            {
+                Users = users,
+                UsersCount = users?.Count ?? 0
+            };
         }
 
         public async Task<ChannelGetAllOfCompanyResponse> GetAllOfCompanyAsync(ChannelGetAllOfCompanyRequest request)
@@ -62,12 +89,19 @@ namespace CSN.Application.Services
 
             List<Channel>? channels = filterChannels?
                 .OrderByDescending(channel => channel.CreatedAt)
+                .Skip(request.PageNumber * request.PageSize)
+                .Take(request.PageSize)
                 .ToList();
+
+            int pagesCount = (int)Math.Ceiling(((decimal)channelsCount / request.PageSize));
 
             return new ChannelGetAllOfCompanyResponse()
             {
                 Channels = channels,
                 ChannelsCount = channelsCount,
+                PagesCount = pagesCount,
+                PageSize = request.PageSize,
+                PageNumber = request.PageNumber,
             };
         }
 
@@ -84,8 +118,7 @@ namespace CSN.Application.Services
                     channel.Users.Contains(user),
                 (channel) => channel.Users,
                 (channel) => channel.Messages
-                    .OrderByDescending(message => message.CreatedAt)
-                    .Take(1));
+                    .OrderByDescending(message => message.CreatedAt));
 
             int unreadChannelsCount = channelsAll?.Count(channel =>
                 channel.Messages.Any((message) => message.ReadUsers.Contains(user))) ?? 0;
@@ -112,13 +145,13 @@ namespace CSN.Application.Services
                 .Take(request.PageSize)
                 .ToList();
 
-            channels?.ForEach(channel => channel.UpdateUnreadMessagesCount(user));
-
             int pagesCount = (int)Math.Ceiling(((decimal)channelsCount / request.PageSize));
+
+            var adaptedChannels = channels?.ToChannelResponseForAll(user)?.ToList();
 
             return new ChannelGetAllResponse()
             {
-                Channels = channels,
+                Channels = adaptedChannels,
                 ChannelsCount = channelsCount,
                 UnreadChannelsCount = unreadChannelsCount,
                 PagesCount = pagesCount,
@@ -135,15 +168,46 @@ namespace CSN.Application.Services
             User? user = await this.claimsPrincipal.GetUserAsync(this.unitOfWork) ??
                 throw new BadRequestException("Account is not found");
 
-            Channel? channel = await this.unitOfWork.Channel.GetAsync(
-                (channel) =>
+            // Channel? channel1 = await this.unitOfWork.Channel.GetAsync(
+            //     (channel) =>
+            //         channel.IsDeleted == false &&
+            //         channel.Users.Contains(user) &&
+            //         channel.Id == request.Id,
+            //     (channel) => channel.Messages
+            //         .OrderByDescending(message => message.CreatedAt)
+            //         .Take(request.Count),
+            //     (channel) => channel.Users);
+
+            IQueryable<Channel> queryableChannel = await this.unitOfWork.Channel.CustomAsync();
+
+            Channel? channel = await queryableChannel
+                .Include((channel) => channel.Users)
+                .Include((channel) => channel.Messages
+                    .OrderByDescending(message => message.CreatedAt)
+                    .Take(request.Count))
+                    .ThenInclude((message) => message.ReadUsers)
+                .FirstOrDefaultAsync((channel) =>
                     channel.IsDeleted == false &&
                     channel.Users.Contains(user) &&
-                    channel.Id == request.Id,
-                (channel) => channel.Messages.OrderByDescending(message => message.CreatedAt),
-                (channel) => channel.Users);
+                    channel.Id == request.Id);
 
-            return new ChannelGetResponse(channel);
+
+            if (channel == null)
+                throw new NotFoundException("Channel not found");
+
+            foreach (var message in channel.Messages)
+            {
+                message.IsRead = true;
+
+                if (!message.ReadUsers.Contains(user))
+                {
+                    message.ReadUsers.Add(user);
+                }
+            };
+
+            await this.unitOfWork.SaveChangesAsync();
+
+            return new ChannelGetResponse(channel?.ToChannelResponseForOne(user, this.appData));
         }
 
         public async Task<PublicChannelCreateResponse> CreateAsync(PublicChannelCreateRequest request)

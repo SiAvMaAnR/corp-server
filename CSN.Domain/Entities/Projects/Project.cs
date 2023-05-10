@@ -12,7 +12,9 @@ public partial class Project : BaseEntity
     public string Name { get; set; } = null!;
     public string? Description { get; set; }
     public string? Link { get; set; }
+    public Priority Priority { get; set; } = Priority.Medium;
     public ProjectState State { get; set; }
+    public string? Customer { get; set; }
     public ICollection<User> Users { get; set; } = new List<User>();
     public ICollection<ProjectTask> Tasks { get; set; } = new List<ProjectTask>();
 }

@@ -12,4 +12,5 @@ public interface IChannelService : IBaseService
     Task<DialogChannelCreateResponse> CreateAsync(DialogChannelCreateRequest request);
     Task<ChannelAddUserResponse> AddUserAsync(ChannelAddUserRequest request);
     Task<ChannelGetAllOfCompanyResponse> GetAllOfCompanyAsync(ChannelGetAllOfCompanyRequest request);
+    Task<ChannelGetUsersResponse> GetUsersOfChannelAsync(ChannelGetUsersRequest request);
 }

@@ -36,6 +36,7 @@ public class ChatHub : BaseHub, IHub
         await base.OnConnectedAsync();
     }
 
+    [Authorize]
     public override async Task OnDisconnectedAsync(Exception? exception)
     {
         await this.appDataService.DisconnectUserAsync(new UserDisconnectRequest(HubType.Chat));
@@ -43,20 +44,23 @@ public class ChatHub : BaseHub, IHub
     }
 
     [Authorize]
-    public async Task SendAsync(int channelId, string message, int? targetMessageId)
+    public async Task SendAsync(int channelId, string text, string html, int? targetMessageId)
     {
         try
         {
             var result = await this.messageService.SendAsync(new MessageSendRequest()
             {
                 ChannelId = channelId,
-                Message = message,
+                Text = text,
+                Html = html,
                 TargetMessageId = targetMessageId
             });
             var ids = this.appDataService.GetConnectionIds(result.Users, HubType.Chat);
             await Clients.Clients(ids).SendAsync("Send", new
             {
-                message = result.Message
+                message = result.Message,
+                unreadMessagesCount = result.UnreadMessagesCount,
+                lastActivity = result.LastActivity
             });
         }
         catch (Exception exception)
@@ -66,11 +70,11 @@ public class ChatHub : BaseHub, IHub
     }
 
     [Authorize]
-    public async Task GetChannelAsync(int id)
+    public async Task GetChannelAsync(int id, int count)
     {
         try
         {
-            var result = await this.channelService.GetAsync(new ChannelGetRequest(id));
+            var result = await this.channelService.GetAsync(new ChannelGetRequest(id, count));
             await Clients.Caller.SendAsync("GetChannel", new
             {
                 channel = result.Channel
@@ -82,6 +86,27 @@ public class ChatHub : BaseHub, IHub
         }
     }
 
+    [Authorize]
+    public async Task GetUsersOfChannelAsync(int channelId)
+    {
+        try
+        {
+            var result = await this.channelService.GetUsersOfChannelAsync(new ChannelGetUsersRequest()
+            {
+                ChannelId = channelId
+            });
+
+            await Clients.Caller.SendAsync("GetUsersOfChannel", new
+            {
+                users = result.Users,
+                usersCount = result.UsersCount,
+            });
+        }
+        catch (Exception exception)
+        {
+            await Clients.Caller.SendAsync("GetUsersOfChannel", null, exception.Message);
+        }
+    }
 
     [Authorize]
     public async Task GetAllChannelsAsync(int pageNumber, int pageSize, GetAllFilter typeFilter, string searchFilter)
@@ -111,7 +136,6 @@ public class ChatHub : BaseHub, IHub
             await Clients.Caller.SendAsync("GetAllChannels", null, exception.Message);
         }
     }
-
 
     [Authorize]
     public async Task CreateDialogChannelAsync(int targetUserId)

@@ -10,6 +10,7 @@ using CSN.Domain.Entities.Users;
 using CSN.Domain.Exceptions;
 using CSN.Domain.Interfaces.UnitOfWork;
 using Microsoft.AspNetCore.Http;
+using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Configuration;
 
 namespace CSN.Application.Services;
@@ -32,18 +33,31 @@ public class MessageService : BaseService, IMessageService
         User? user = await this.claimsPrincipal.GetUserAsync(this.unitOfWork) ??
             throw new BadRequestException("Account is not found");
 
-        Channel? channel = await this.unitOfWork.Channel.GetAsync(
-            (channel) =>
+        // Channel? channel = await this.unitOfWork.Channel.GetAsync(
+        //     (channel) =>
+        //         channel.IsDeleted == false &&
+        //         channel.Users.Contains(user) &&
+        //         channel.Id == request.ChannelId,
+        //     (channel) => channel.Users,
+        //     (channel) => channel.Messages);
+
+        IQueryable<Channel> queryableChannel = await this.unitOfWork.Channel.CustomAsync();
+
+        Channel? channel = await queryableChannel
+            .Include((channel) => channel.Users)
+            .Include((channel) => channel.Messages)
+                .ThenInclude((message) => message.ReadUsers)
+            .FirstOrDefaultAsync((channel) =>
                 channel.IsDeleted == false &&
                 channel.Users.Contains(user) &&
-                channel.Id == request.ChannelId,
-            (channel) => channel.Users);
+                channel.Id == request.ChannelId);
 
         if (channel == null) throw new BadRequestException("Channel is not found");
 
         Message message = new Message()
         {
-            Text = request.Message,
+            Text = request.Text,
+            HtmlText = request.Html,
             TargetMessageId = request.TargetMessageId,
             Author = user
         };
@@ -51,11 +65,12 @@ public class MessageService : BaseService, IMessageService
         channel.Messages.Add(message);
 
         await this.unitOfWork.SaveChangesAsync();
-
         return new MessageSendResponse()
         {
             Users = channel.Users,
-            Message = message
+            Message = message,
+            UnreadMessagesCount = channel.GetUnreadMessagesCount(user),
+            LastActivity = DateTime.Now
         };
     }
 }

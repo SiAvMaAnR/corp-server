@@ -8,6 +8,6 @@ public partial class Message : IAggregateRoot
 {
     public bool IsContainsReadUser(User targetUser)
     {
-        return this.ReadUsers.Contains(targetUser);
+        return this.ReadUsers.Any(user => user.Id == targetUser.Id);
     }
 }

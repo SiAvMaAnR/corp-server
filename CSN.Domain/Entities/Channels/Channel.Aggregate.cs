@@ -5,8 +5,8 @@ namespace CSN.Domain.Entities.Channels;
 
 public partial class Channel : IAggregateRoot
 {
-    public void UpdateUnreadMessagesCount(User targetUser)
+    public int GetUnreadMessagesCount(User targetUser)
     {
-        this.UnreadMessagesCount = Messages.Count(message => message.IsContainsReadUser(targetUser) == false);
+        return this.Messages.Count(message => message.IsContainsReadUser(targetUser) == false);
     }
 }
