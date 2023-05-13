@@ -14,7 +14,6 @@ using CSN.Domain.Entities.Users;
 using CSN.Domain.Exceptions;
 using CSN.Domain.Interfaces.UnitOfWork;
 using Microsoft.AspNetCore.Http;
-using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Configuration;
 
 namespace CSN.Application.Services;
@@ -34,17 +33,20 @@ public class MessageService : BaseService, IMessageService
 
     public async Task<ChannelGetUnreadMessagesResponse> GetUnreadMessagesAsync(ChannelGetUnreadMessagesRequest request)
     {
-        var messages = (await this.unitOfWork.Message.GetAllAsync(
-            message => message.ChannelId == request.ChannelId,
-            message => message.ReadUsers))?.ToList();
-
-
         UserC userC = this.appData.GetByChatCId(request.ConnectionId) ??
             throw new NotFoundException("User connection not found");
 
         User? user = await this.unitOfWork.User.GetAsync(
-            (user) => user.Id == userC.Id) ??
+            (user) => user.Id == userC.Id,
+            (user) => user.Channels) ??
             throw new NotFoundException("User not found");
+
+        if (!user.Channels.Any(channel => channel.Id == request.ChannelId))
+            throw new ForbiddenException("Forbidden");
+
+        var messages = (await this.unitOfWork.Message.GetAllAsync(
+            message => message.ChannelId == request.ChannelId,
+            message => message.ReadUsers))?.ToList();
 
         int unreadMessagesCount = messages?.Count(message => !message.IsContainsReadUser(user)) ?? 0;
 

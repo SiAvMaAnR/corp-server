@@ -6,6 +6,7 @@ namespace CSN.Application.Services.Models.MessageDto;
 
 public class MessageResponse
 {
+    public int Id { get; set; }
     public string? Text { get; set; }
     public string? HtmlText { get; set; }
     public DateTime? ModifiedDate { get; set; }

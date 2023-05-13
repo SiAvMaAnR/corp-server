@@ -7,6 +7,10 @@ using CSN.Domain.Entities.Companies;
 using CSN.Domain.Entities.Employees;
 using CSN.Domain.Entities.Invitations;
 using CSN.Domain.Entities.Messages;
+using CSN.Domain.Entities.Notifications;
+using CSN.Domain.Entities.Projects;
+using CSN.Domain.Entities.Reports;
+using CSN.Domain.Entities.Tasks;
 using CSN.Domain.Entities.Users;
 
 namespace CSN.Domain.Interfaces.UnitOfWork
@@ -22,6 +26,9 @@ namespace CSN.Domain.Interfaces.UnitOfWork
         IPublicChannelRepository PublicChannel { get; }
         IDialogChannelRepository DialogChannel { get; }
         IInvitationRepository Invitation { get; }
-        IAttachmentRepository Attachment { get; }
+        IProjectRepository Project { get; }
+        ITaskRepository Task { get; }
+        IReportRepository Report { get; }
+        INotificationRepository Notification { get; }
     }
 }

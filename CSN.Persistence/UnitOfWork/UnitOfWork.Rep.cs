@@ -7,6 +7,10 @@ using CSN.Domain.Entities.Companies;
 using CSN.Domain.Entities.Employees;
 using CSN.Domain.Entities.Invitations;
 using CSN.Domain.Entities.Messages;
+using CSN.Domain.Entities.Notifications;
+using CSN.Domain.Entities.Projects;
+using CSN.Domain.Entities.Reports;
+using CSN.Domain.Entities.Tasks;
 using CSN.Domain.Entities.Users;
 using CSN.Persistence.DBContext;
 using CSN.Persistence.Repositories;
@@ -27,6 +31,10 @@ namespace CSN.Persistence.UnitOfWork
         public IDialogChannelRepository DialogChannel { get; set; }
         public IInvitationRepository Invitation { get; }
         public IAttachmentRepository Attachment { get; }
+        public IProjectRepository Project { get; }
+        public ITaskRepository Task { get; }
+        public IReportRepository Report { get; }
+        public INotificationRepository Notification { get; }
 
         public UnitOfWork(EFContext eFContext)
         {
@@ -41,6 +49,10 @@ namespace CSN.Persistence.UnitOfWork
             DialogChannel = new DialogChannelRepository(eFContext);
             Invitation = new InvitationRepository(eFContext);
             Attachment = new AttachmentRepository(eFContext);
+            Project = new ProjectRepository(eFContext);
+            Task = new TaskRepository(eFContext);
+            Report = new ReportRepository(eFContext);
+            Notification = new NotificationRepository(eFContext);
         }
     }
 }

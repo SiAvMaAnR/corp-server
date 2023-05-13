@@ -1,6 +1,3 @@
-using System.Security.Authentication.ExtendedProtection;
-using System;
-using System.Diagnostics;
 using CSN.Application.AppData.Interfaces;
 using CSN.Application.Extensions;
 using CSN.Application.Services.Common;
@@ -17,9 +14,7 @@ using Microsoft.AspNetCore.Http;
 using static CSN.Application.Services.Filters.ChannelFilters;
 using CSN.Application.Services.Adapters;
 using Microsoft.EntityFrameworkCore;
-using CSN.Application.AppContext.Models;
 using CSN.Application.Services.Models.MessageDto;
-using CSN.Domain.Entities.Messages;
 
 namespace CSN.Application.Services
 {
@@ -206,6 +201,9 @@ namespace CSN.Application.Services
 
             if (channel == null)
                 throw new NotFoundException("Channel not found");
+
+            if(user.GetCompanyId() != channel.CompanyId)
+                throw new ForbiddenException("Forbidden");
 
             foreach (var message in channel.Messages)
             {

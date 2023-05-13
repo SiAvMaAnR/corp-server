@@ -7,6 +7,7 @@ namespace CSN.Domain.Shared.Enums
 {
     public enum Priority
     {
+        Default,
         Low,
         Medium,
         High,

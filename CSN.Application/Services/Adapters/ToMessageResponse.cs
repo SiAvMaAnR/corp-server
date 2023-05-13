@@ -14,6 +14,7 @@ namespace CSN.Application.Services.Adapters
         {
             return new MessageResponse()
             {
+                Id = message.Id,
                 Text = message.Text,
                 HtmlText = message.HtmlText,
                 ModifiedDate = message.ModifiedDate,
