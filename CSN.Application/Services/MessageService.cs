@@ -46,8 +46,6 @@ public class MessageService : BaseService, IMessageService
             (user) => user.Id == userC.Id) ??
             throw new NotFoundException("User not found");
 
-        // var unread = messages?.Where(message => !message.IsContainsReadUser(user)).ToList();
-
         int unreadMessagesCount = messages?.Count(message => !message.IsContainsReadUser(user)) ?? 0;
 
         return new ChannelGetUnreadMessagesResponse()
