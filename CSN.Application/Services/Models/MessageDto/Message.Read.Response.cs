@@ -10,6 +10,7 @@ namespace CSN.Application.Services.Models.MessageDto
     {
         public ICollection<User> Users { get; set; } = null!;
         public IEnumerable<int> UnReadMessageIds { get; set; } = null!;
+        public int UnreadMessagesCount { get; set; }
         public int ChannelId { get; set; }
     }
 }

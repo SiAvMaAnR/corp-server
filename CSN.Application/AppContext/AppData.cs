@@ -3,12 +3,14 @@ using CSN.Application.AppData.Interfaces;
 using CSN.Application.Services.Helpers.Enums;
 using CSN.Domain.Entities.Users;
 using CSN.Domain.Exceptions;
+using CSN.Domain.Shared.Enums;
 
 namespace CSN.Application.AppData;
 
 public class AppData : IAppData
 {
     public List<UserC> ConnectedUsers { get; } = new List<UserC>();
+    private readonly ReaderWriterLockSlim _lock = new();
 
     public UserC? GetById(int id)
     {
@@ -41,16 +43,59 @@ public class AppData : IAppData
         return hubIds ?? new List<string>();
     }
 
-    public void AddUserConnected(UserC userC)
+    public void SetState(int userId, UserState state)
     {
-        this.ConnectedUsers.Add(userC);
+        lock (_lock)
+        {
+            var userC = this.GetById(userId) ??
+                throw new BadRequestException("Connected user not found");
+
+            userC.State = state;
+        }
     }
 
-    public bool RemoveUserConnected(int id)
+    public void AddUserConnected(User user, HubType type, string? connectionId)
     {
-        var userC = this.GetById(id);
-        return (userC != null)
-            ? this.ConnectedUsers.Remove(userC)
-            : false;
+        lock (_lock)
+        {
+            var userC = this.GetById(user.Id);
+
+            if (userC == null)
+            {
+                userC = new UserC(user.Id);
+                this.ConnectedUsers.Add(userC);
+            }
+
+            if (type == HubType.Chat)
+                userC.ChatHubId = connectionId;
+            else if (type == HubType.State)
+                userC.StateHubId = connectionId;
+            else if (type == HubType.Notification)
+                userC.NotificationHubId = connectionId;
+        }
+    }
+
+    public bool RemoveUserConnected(int userId, HubType type)
+    {
+        lock (_lock)
+        {
+            var userC = this.GetById(userId) ??
+                        throw new BadRequestException("Connected user not found");
+
+            if (type == HubType.Chat)
+                userC.ChatHubId = null;
+            else if (type == HubType.State)
+                userC.StateHubId = null;
+            else if (type == HubType.Notification)
+                userC.NotificationHubId = null;
+
+            if (userC.ChatHubId == null && userC.StateHubId == null && userC.NotificationHubId == null && userC.State == UserState.Offline)
+            {
+                return (userC != null)
+                    ? this.ConnectedUsers.Remove(userC)
+                    : false;
+            }
+            return false;
+        }
     }
 }

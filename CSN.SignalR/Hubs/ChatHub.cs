@@ -55,27 +55,29 @@ public class ChatHub : BaseHub, IHub
                 Html = html,
                 TargetMessageId = targetMessageId
             });
+
             var ids = this.appDataService.GetConnectionIds(result.Users, HubType.Chat);
             await Clients.Clients(ids).SendAsync("Send", new
             {
+                channelId = result.ChannelId,
                 message = result.Message,
                 lastActivity = result.LastActivity
             });
 
-            // foreach (var id in ids)
-            // {
-            //     var response = await this.messageService.GetUnreadMessagesAsync(new ChannelGetUnreadMessagesRequest()
-            //     {
-            //         ChannelId = channelId,
-            //         ConnectionId = id
-            //     });
+            foreach (var id in ids)
+            {
+                var response = await this.messageService.GetUnreadMessagesAsync(new ChannelGetUnreadMessagesRequest()
+                {
+                    ChannelId = channelId,
+                    ConnectionId = id
+                });
 
-            //     await Clients.Client(id).SendAsync("UnreadMessages", new
-            //     {
-            //         unreadMessagesCount = response.UnreadMessages,
-            //         channelId = channelId,
-            //     });
-            // }
+                await Clients.Client(id).SendAsync("UnreadMessages", new
+                {
+                    unreadMessagesCount = response.UnreadMessages,
+                    channelId = channelId,
+                });
+            }
         }
         catch (Exception exception)
         {
@@ -96,7 +98,13 @@ public class ChatHub : BaseHub, IHub
             await Clients.Clients(ids).SendAsync("ReadChannel", new
             {
                 channelId = result.ChannelId,
-                unReadMessageIds = result.UnReadMessageIds
+                unReadMessageIds = result.UnReadMessageIds,
+            });
+
+            await Clients.Caller.SendAsync("UnreadMessages", new
+            {
+                unreadMessagesCount = result.UnreadMessagesCount,
+                channelId = result.ChannelId,
             });
         }
         catch (Exception exception)

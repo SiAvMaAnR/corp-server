@@ -116,12 +116,13 @@ namespace CSN.Application.Services
             User user = await this.claimsPrincipal.GetUserAsync(this.unitOfWork) ??
                 throw new BadRequestException("Account is not found");
 
-            IEnumerable<Channel>? channelsAll = await this.unitOfWork.Channel.GetAllAsync(
-                (channel) => !channel.IsDeleted &&
-                    channel.Users.Contains(user),
-                (channel) => channel.Users,
-                (channel) => channel.Messages
-                    .OrderByDescending(message => message.CreatedAt));
+            var channelsQuery = await this.unitOfWork.Channel.CustomAsync();
+
+            IEnumerable<Channel>? channelsAll = channelsQuery
+            .Include(channel => channel.Users)
+            .Include(channel => channel.Messages.OrderByDescending(message => message.CreatedAt))
+                .ThenInclude(message => message.ReadUsers)
+            .Where(channel => !channel.IsDeleted && channel.Users.Contains(user));
 
             int unreadChannelsCount = channelsAll?.Count(channel =>
                 channel.Messages.Any((message) => message.ReadUsers.Contains(user))) ?? 0;
@@ -197,7 +198,6 @@ namespace CSN.Application.Services
             User? user = await this.claimsPrincipal.GetUserAsync(this.unitOfWork, user => user.Channels) ??
                 throw new BadRequestException("Account is not found");
 
-
             Channel? channel = await (await this.unitOfWork.Channel.CustomAsync())
                 .Include(channel => channel.Messages)
                     .ThenInclude(message => message.ReadUsers)
@@ -212,25 +212,26 @@ namespace CSN.Application.Services
                 if (message.AuthorId != user.Id)
                 {
                     message.IsRead = true;
-
-                    if (!message.ReadUsers.Contains(user))
-                        message.ReadUsers.Add(user);
                 }
+
+                if (!message.ReadUsers.Any(readUser => readUser.Id == user.Id))
+                    message.ReadUsers.Add(user);
             }
 
             await this.unitOfWork.SaveChangesAsync();
 
             var unReadMessages = channel.Messages.Where(message => !message.IsRead);
 
+            var unreadMessagesCount = channel.Messages.Count(message => !message.IsContainsReadUser(user));
+
             return new MessageReadResponse()
             {
                 Users = channel.Users,
                 ChannelId = channel.Id,
-                UnReadMessageIds = unReadMessages.Select(message => message.Id)
+                UnReadMessageIds = unReadMessages.Select(message => message.Id),
+                UnreadMessagesCount = unreadMessagesCount
             };
         }
-
-
 
         public async Task<PublicChannelCreateResponse> CreateAsync(PublicChannelCreateRequest request)
         {

@@ -3,6 +3,7 @@
 using CSN.Application.AppContext.Models;
 using CSN.Application.AppData.Interfaces;
 using CSN.Application.Extensions;
+using CSN.Application.Services.Adapters;
 using CSN.Application.Services.Common;
 using CSN.Application.Services.Interfaces;
 using CSN.Application.Services.Models.ChannelDto;
@@ -33,9 +34,10 @@ public class MessageService : BaseService, IMessageService
 
     public async Task<ChannelGetUnreadMessagesResponse> GetUnreadMessagesAsync(ChannelGetUnreadMessagesRequest request)
     {
-        var channel = await this.unitOfWork.Channel.GetAsync(
-            (channel) => channel.Id == request.ChannelId,
-            (channel) => channel.Messages);
+        var messages = (await this.unitOfWork.Message.GetAllAsync(
+            message => message.ChannelId == request.ChannelId,
+            message => message.ReadUsers))?.ToList();
+
 
         UserC userC = this.appData.GetByChatCId(request.ConnectionId) ??
             throw new NotFoundException("User connection not found");
@@ -44,7 +46,9 @@ public class MessageService : BaseService, IMessageService
             (user) => user.Id == userC.Id) ??
             throw new NotFoundException("User not found");
 
-        int unreadMessagesCount = channel?.GetUnreadMessagesCount(user) ?? 0;
+        // var unread = messages?.Where(message => !message.IsContainsReadUser(user)).ToList();
+
+        int unreadMessagesCount = messages?.Count(message => !message.IsContainsReadUser(user)) ?? 0;
 
         return new ChannelGetUnreadMessagesResponse()
         {
@@ -86,9 +90,9 @@ public class MessageService : BaseService, IMessageService
         return new MessageSendResponse()
         {
             Users = channel.Users,
-            Message = message,
-            UnreadMessagesCount = channel.GetUnreadMessagesCount(user),
-            LastActivity = channel.LastActivity
+            Message = message.ToMessageResponse(),
+            LastActivity = channel.LastActivity,
+            ChannelId = channel.Id,
         };
     }
 }

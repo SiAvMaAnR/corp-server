@@ -16,7 +16,6 @@ namespace CSN.Application.Services
     public class AppDataService : BaseService, IAppDataService
     {
         private readonly IAppData appData;
-        private readonly ReaderWriterLockSlim _lock = new();
 
         public AppDataService(
             IUnitOfWork unitOfWork,
@@ -42,13 +41,7 @@ namespace CSN.Application.Services
 
             if (user != null)
             {
-                lock (_lock)
-                {
-                    var userC = this.appData.GetById(user.Id) ??
-                        throw new BadRequestException("Connected user not found");
-
-                    userC.State = request.State;
-                }
+                this.appData.SetState(user.Id, request.State);
             }
 
             return new UserStateResponse(true);
@@ -63,23 +56,7 @@ namespace CSN.Application.Services
 
             if (user != null)
             {
-                lock (_lock)
-                {
-                    var userC = this.appData.GetById(user.Id);
-
-                    if (userC == null)
-                    {
-                        userC = new UserC(user.Id);
-                        this.appData.AddUserConnected(userC);
-                    }
-
-                    if (request.Type == HubType.Chat)
-                        userC.ChatHubId = request.ConnectionId;
-                    else if (request.Type == HubType.State)
-                        userC.StateHubId = request.ConnectionId;
-                    else if (request.Type == HubType.Notification)
-                        userC.NotificationHubId = request.ConnectionId;
-                }
+                this.appData.AddUserConnected(user, request.Type, request.ConnectionId);
             }
 
             return new UserConnectResponse(true);
@@ -95,23 +72,7 @@ namespace CSN.Application.Services
 
             if (user != null)
             {
-                lock (_lock)
-                {
-                    var userC = this.appData.GetById(user.Id) ??
-                        throw new BadRequestException("Connected user not found");
-
-                    if (request.Type == HubType.Chat)
-                        userC.ChatHubId = null;
-                    else if (request.Type == HubType.State)
-                        userC.StateHubId = null;
-                    else if (request.Type == HubType.Notification)
-                        userC.NotificationHubId = null;
-
-                    if (userC.ChatHubId == null && userC.StateHubId == null && userC.NotificationHubId == null && userC.State == UserState.Offline)
-                    {
-                        this.appData.RemoveUserConnected(userC.Id);
-                    }
-                }
+                this.appData.RemoveUserConnected(user.Id, request.Type);
             }
 
             return new UserDisconnectResponse(true);

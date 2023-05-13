@@ -7,6 +7,6 @@ public partial class Channel : IAggregateRoot
 {
     public int GetUnreadMessagesCount(User targetUser)
     {
-        return this.Messages.Count(message => message.IsContainsReadUser(targetUser) == false);
+        return this.Messages.Count(message => !message.IsContainsReadUser(targetUser));
     }
 }
