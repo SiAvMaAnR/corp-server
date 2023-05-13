@@ -17,6 +17,9 @@ using Microsoft.AspNetCore.Http;
 using static CSN.Application.Services.Filters.ChannelFilters;
 using CSN.Application.Services.Adapters;
 using Microsoft.EntityFrameworkCore;
+using CSN.Application.AppContext.Models;
+using CSN.Application.Services.Models.MessageDto;
+using CSN.Domain.Entities.Messages;
 
 namespace CSN.Application.Services
 {
@@ -168,47 +171,66 @@ namespace CSN.Application.Services
             User? user = await this.claimsPrincipal.GetUserAsync(this.unitOfWork) ??
                 throw new BadRequestException("Account is not found");
 
-            // Channel? channel1 = await this.unitOfWork.Channel.GetAsync(
-            //     (channel) =>
-            //         channel.IsDeleted == false &&
-            //         channel.Users.Contains(user) &&
-            //         channel.Id == request.Id,
-            //     (channel) => channel.Messages
-            //         .OrderByDescending(message => message.CreatedAt)
-            //         .Take(request.Count),
-            //     (channel) => channel.Users);
-
-            IQueryable<Channel> queryableChannel = await this.unitOfWork.Channel.CustomAsync();
-
-            Channel? channel = await queryableChannel
-                .Include((channel) => channel.Users)
-                .Include((channel) => channel.Messages
-                    .OrderByDescending(message => message.CreatedAt)
-                    .Take(request.Count))
-                    .ThenInclude((message) => message.ReadUsers)
-                .FirstOrDefaultAsync((channel) =>
+            Channel? channel = await this.unitOfWork.Channel.GetAsync(
+                (channel) =>
                     channel.IsDeleted == false &&
                     channel.Users.Contains(user) &&
-                    channel.Id == request.Id);
+                    channel.Id == request.Id,
+                (channel) => channel.Messages
+                    .OrderByDescending(message => message.CreatedAt)
+                    .Take(request.Count),
+                (channel) => channel.Users);
 
+            if (channel == null)
+                throw new NotFoundException("Channel not found");
+
+            await this.unitOfWork.SaveChangesAsync();
+
+            return new ChannelGetResponse(channel?.ToChannelResponseForOne(user, this.appData));
+        }
+
+        public async Task<MessageReadResponse> ReadAsync(MessageReadRequest request)
+        {
+            if (this.claimsPrincipal == null)
+                throw new ForbiddenException("Forbidden");
+
+            User? user = await this.claimsPrincipal.GetUserAsync(this.unitOfWork, user => user.Channels) ??
+                throw new BadRequestException("Account is not found");
+
+
+            Channel? channel = await (await this.unitOfWork.Channel.CustomAsync())
+                .Include(channel => channel.Messages)
+                    .ThenInclude(message => message.ReadUsers)
+                .Include(channel => channel.Users)
+                .FirstOrDefaultAsync(channel => channel.Id == request.ChannelId);
 
             if (channel == null)
                 throw new NotFoundException("Channel not found");
 
             foreach (var message in channel.Messages)
             {
-                message.IsRead = true;
-
-                if (!message.ReadUsers.Contains(user))
+                if (message.AuthorId != user.Id)
                 {
-                    message.ReadUsers.Add(user);
+                    message.IsRead = true;
+
+                    if (!message.ReadUsers.Contains(user))
+                        message.ReadUsers.Add(user);
                 }
-            };
+            }
 
             await this.unitOfWork.SaveChangesAsync();
 
-            return new ChannelGetResponse(channel?.ToChannelResponseForOne(user, this.appData));
+            var unReadMessages = channel.Messages.Where(message => !message.IsRead);
+
+            return new MessageReadResponse()
+            {
+                Users = channel.Users,
+                ChannelId = channel.Id,
+                UnReadMessageIds = unReadMessages.Select(message => message.Id)
+            };
         }
+
+
 
         public async Task<PublicChannelCreateResponse> CreateAsync(PublicChannelCreateRequest request)
         {
@@ -237,24 +259,6 @@ namespace CSN.Application.Services
                 IsPublic = true,
                 CompanyId = companyId
             };
-
-            //================  test
-            // var tasks = new List<Task>();
-            // for (int i = 0; i < 100; i++)
-            // {
-            //     PublicChannel publicChannel1 = new PublicChannel()
-            //     {
-            //         Name = request.Name + DateTime.Now.ToLocalTime() + i,
-            //         AdminId = user.Id,
-            //         Users = { user },
-            //         IsPublic = true,
-            //         CompanyId = companyId
-            //     };
-
-            //     await this.unitOfWork.PublicChannel.AddAsync(publicChannel1);
-            // }
-            // await Task.WhenAll(tasks);
-            //================
 
             await this.unitOfWork.PublicChannel.AddAsync(publicChannel);
             await this.unitOfWork.SaveChangesAsync();

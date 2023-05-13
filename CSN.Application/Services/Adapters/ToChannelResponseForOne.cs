@@ -41,7 +41,8 @@ namespace CSN.Application.Services.Adapters
                     Login = message.Author.Login,
                     Text = message.Text,
                     Html = message.HtmlText,
-                    CreatedAt = message.CreatedAt
+                    CreatedAt = message.CreatedAt,
+                    IsRead = message.IsRead
                 }).ToList(),
             };
         }

@@ -9,6 +9,7 @@ namespace CSN.Application.Services.Models.ChannelDto
         public string? Login { get; set; }
         public string? Text { get; set; }
         public string? Html { get; set; }
+        public bool IsRead { get; set; } = false;
         public DateTime? CreatedAt { get; set; }
     }
 

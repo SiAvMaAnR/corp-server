@@ -8,7 +8,6 @@ namespace CSN.Application.Services.Common
     public interface IBaseService
     {
         void SetClaimsPrincipal(ClaimsPrincipal? claimsPrincipal);
-
     }
 
     public abstract class BaseService : IBaseService

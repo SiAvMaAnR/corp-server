@@ -1,5 +1,6 @@
 using CSN.Application.Services.Common;
 using CSN.Application.Services.Models.ChannelDto;
+using CSN.Application.Services.Models.MessageDto;
 
 namespace CSN.Application.Services.Interfaces;
 
@@ -13,4 +14,5 @@ public interface IChannelService : IBaseService
     Task<ChannelAddUserResponse> AddUserAsync(ChannelAddUserRequest request);
     Task<ChannelGetAllOfCompanyResponse> GetAllOfCompanyAsync(ChannelGetAllOfCompanyRequest request);
     Task<ChannelGetUsersResponse> GetUsersOfChannelAsync(ChannelGetUsersRequest request);
+    Task<MessageReadResponse> ReadAsync(MessageReadRequest request);
 }

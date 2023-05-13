@@ -10,6 +10,7 @@ public interface IAppData
 {
     List<UserC> ConnectedUsers { get; }
     UserC? GetById(int id);
+    UserC? GetByChatCId(string chatCId);
     void AddUserConnected(UserC userC);
     bool RemoveUserConnected(int id);
     IReadOnlyList<string> GetConnectionIds(ICollection<User>? users, HubType type);

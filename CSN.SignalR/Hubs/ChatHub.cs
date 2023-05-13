@@ -59,15 +59,52 @@ public class ChatHub : BaseHub, IHub
             await Clients.Clients(ids).SendAsync("Send", new
             {
                 message = result.Message,
-                unreadMessagesCount = result.UnreadMessagesCount,
                 lastActivity = result.LastActivity
             });
+
+            // foreach (var id in ids)
+            // {
+            //     var response = await this.messageService.GetUnreadMessagesAsync(new ChannelGetUnreadMessagesRequest()
+            //     {
+            //         ChannelId = channelId,
+            //         ConnectionId = id
+            //     });
+
+            //     await Clients.Client(id).SendAsync("UnreadMessages", new
+            //     {
+            //         unreadMessagesCount = response.UnreadMessages,
+            //         channelId = channelId,
+            //     });
+            // }
         }
         catch (Exception exception)
         {
             await Clients.Caller.SendAsync("Send", null, exception.Message);
         }
     }
+
+
+    [Authorize]
+    public async Task ReadChannelAsync(int id)
+    {
+        try
+        {
+            var result = await this.channelService.ReadAsync(new MessageReadRequest(id));
+
+            var ids = this.appDataService.GetConnectionIds(result.Users, HubType.Chat);
+
+            await Clients.Clients(ids).SendAsync("ReadChannel", new
+            {
+                channelId = result.ChannelId,
+                unReadMessageIds = result.UnReadMessageIds
+            });
+        }
+        catch (Exception exception)
+        {
+            await Clients.Caller.SendAsync("ReadChannel", null, exception.Message);
+        }
+    }
+
 
     [Authorize]
     public async Task GetChannelAsync(int id, int count)

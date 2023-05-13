@@ -1,8 +1,11 @@
 
 
+using CSN.Application.AppContext.Models;
+using CSN.Application.AppData.Interfaces;
 using CSN.Application.Extensions;
 using CSN.Application.Services.Common;
 using CSN.Application.Services.Interfaces;
+using CSN.Application.Services.Models.ChannelDto;
 using CSN.Application.Services.Models.MessageDto;
 using CSN.Domain.Entities.Channels;
 using CSN.Domain.Entities.Messages;
@@ -17,12 +20,36 @@ namespace CSN.Application.Services;
 
 public class MessageService : BaseService, IMessageService
 {
-    public readonly IConfiguration configuration;
+    private readonly IConfiguration configuration;
+    private IAppData appData;
 
-    public MessageService(IUnitOfWork unitOfWork, IHttpContextAccessor context, IConfiguration configuration)
+
+    public MessageService(IUnitOfWork unitOfWork, IHttpContextAccessor context, IConfiguration configuration, IAppData appData)
     : base(unitOfWork, context)
     {
         this.configuration = configuration;
+        this.appData = appData;
+    }
+
+    public async Task<ChannelGetUnreadMessagesResponse> GetUnreadMessagesAsync(ChannelGetUnreadMessagesRequest request)
+    {
+        var channel = await this.unitOfWork.Channel.GetAsync(
+            (channel) => channel.Id == request.ChannelId,
+            (channel) => channel.Messages);
+
+        UserC userC = this.appData.GetByChatCId(request.ConnectionId) ??
+            throw new NotFoundException("User connection not found");
+
+        User? user = await this.unitOfWork.User.GetAsync(
+            (user) => user.Id == userC.Id) ??
+            throw new NotFoundException("User not found");
+
+        int unreadMessagesCount = channel?.GetUnreadMessagesCount(user) ?? 0;
+
+        return new ChannelGetUnreadMessagesResponse()
+        {
+            UnreadMessages = unreadMessagesCount
+        };
     }
 
     public async Task<MessageSendResponse> SendAsync(MessageSendRequest request)
@@ -33,24 +60,13 @@ public class MessageService : BaseService, IMessageService
         User? user = await this.claimsPrincipal.GetUserAsync(this.unitOfWork) ??
             throw new BadRequestException("Account is not found");
 
-        // Channel? channel = await this.unitOfWork.Channel.GetAsync(
-        //     (channel) =>
-        //         channel.IsDeleted == false &&
-        //         channel.Users.Contains(user) &&
-        //         channel.Id == request.ChannelId,
-        //     (channel) => channel.Users,
-        //     (channel) => channel.Messages);
-
-        IQueryable<Channel> queryableChannel = await this.unitOfWork.Channel.CustomAsync();
-
-        Channel? channel = await queryableChannel
-            .Include((channel) => channel.Users)
-            .Include((channel) => channel.Messages)
-                .ThenInclude((message) => message.ReadUsers)
-            .FirstOrDefaultAsync((channel) =>
+        Channel? channel = await this.unitOfWork.Channel.GetAsync(
+            (channel) =>
                 channel.IsDeleted == false &&
                 channel.Users.Contains(user) &&
-                channel.Id == request.ChannelId);
+                channel.Id == request.ChannelId,
+            (channel) => channel.Users,
+            (channel) => channel.Messages);
 
         if (channel == null) throw new BadRequestException("Channel is not found");
 
@@ -59,10 +75,12 @@ public class MessageService : BaseService, IMessageService
             Text = request.Text,
             HtmlText = request.Html,
             TargetMessageId = request.TargetMessageId,
-            Author = user
+            Author = user,
+            ReadUsers = { user }
         };
 
         channel.Messages.Add(message);
+        channel.LastActivity = DateTime.Now;
 
         await this.unitOfWork.SaveChangesAsync();
         return new MessageSendResponse()
@@ -70,7 +88,7 @@ public class MessageService : BaseService, IMessageService
             Users = channel.Users,
             Message = message,
             UnreadMessagesCount = channel.GetUnreadMessagesCount(user),
-            LastActivity = DateTime.Now
+            LastActivity = channel.LastActivity
         };
     }
 }

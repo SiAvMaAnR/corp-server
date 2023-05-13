@@ -15,6 +15,11 @@ public class AppData : IAppData
         return this.ConnectedUsers.FirstOrDefault(user => user.Id == id);
     }
 
+    public UserC? GetByChatCId(string chatCId)
+    {
+        return this.ConnectedUsers.FirstOrDefault(user => user.ChatHubId == chatCId);
+    }
+
     public IReadOnlyList<string> GetConnectionIds(ICollection<User>? users, HubType type)
     {
         var connectionUsers = this.ConnectedUsers?.Where(userC => users?.Any(user => user.Id == userC.Id) ?? false).ToList();
