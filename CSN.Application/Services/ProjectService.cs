@@ -37,6 +37,17 @@ namespace CSN.Application.Services
 
         public async Task<ProjectGetResponse> GetProjectAsync(ProjectGetRequest request)
         {
+            if (this.claimsPrincipal == null)
+                throw new ForbiddenException("Forbidden");
+
+            User user = await this.claimsPrincipal.GetUserAsync(this.unitOfWork) ??
+                throw new BadRequestException("Account is not found");
+
+            int companyId = user.GetCompanyId() ??
+                throw new BadRequestException("Company not found");
+
+            Project? project = await this.unitOfWork.Project.GetAsync(
+                (project) => project.Id == request.ProjectId && project.CompanyId == companyId);
 
             return new ProjectGetResponse()
             {
@@ -70,15 +81,20 @@ namespace CSN.Application.Services
 
             await this.unitOfWork.SaveChangesAsync();
 
-            return new ProjectCreateResponse()
-            {
-
-            };
+            return new ProjectCreateResponse(true);
         }
 
         public async Task<ProjectEditResponse> EditProjectAsync(ProjectEditRequest request)
         {
             return new ProjectEditResponse()
+            {
+
+            };
+        }
+
+        public async Task<ProjectAddUserResponse> AddUserToProjectAsync(ProjectAddUserRequest request)
+        {
+            return new ProjectAddUserResponse()
             {
 
             };

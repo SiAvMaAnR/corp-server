@@ -1,5 +1,3 @@
-
-
 using CSN.Application.AppContext.Models;
 using CSN.Application.AppData.Interfaces;
 using CSN.Application.Extensions;

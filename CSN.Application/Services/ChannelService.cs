@@ -141,7 +141,7 @@ namespace CSN.Application.Services
             List<Channel>? channels = filterChannels?
                 .OrderByDescending(channel => channel.LastActivity)
                 .Skip(request.PageNumber * request.PageSize)
-                .Take(request.PageSize)
+                .Take((request.PageSize != 0) ? request.PageSize : channelsCount)
                 .ToList();
 
             int pagesCount = (int)Math.Ceiling(((decimal)channelsCount / request.PageSize));
@@ -202,7 +202,7 @@ namespace CSN.Application.Services
             if (channel == null)
                 throw new NotFoundException("Channel not found");
 
-            if(user.GetCompanyId() != channel.CompanyId)
+            if (user.GetCompanyId() != channel.CompanyId)
                 throw new ForbiddenException("Forbidden");
 
             foreach (var message in channel.Messages)
