@@ -7,6 +7,6 @@ namespace CSN.Application.Services.Models.ProjectDto
 {
     public class ProjectRemoveRequest
     {
-        
+        public int ProjectId { get; set; }
     }
 }

@@ -7,6 +7,7 @@ namespace CSN.Application.Services.Models.ProjectDto
 {
     public class ProjectAddUserRequest
     {
-        
+        public int TargetUserId { get; set; }
+        public int TargetProjectId { get; set; }
     }
 }

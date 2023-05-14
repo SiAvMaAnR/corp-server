@@ -89,7 +89,8 @@ namespace CSN.Application.Services
                 Link = request.Link,
                 State = ProjectState.Active,
                 Priority = Priority.Default,
-                CompanyId = companyId
+                CompanyId = companyId,
+                Users = { user }
             };
 
             await this.unitOfWork.Project.AddAsync(project);
@@ -156,18 +157,54 @@ namespace CSN.Application.Services
 
         public async Task<ProjectAddUserResponse> AddUserToProjectAsync(ProjectAddUserRequest request)
         {
-            return new ProjectAddUserResponse()
-            {
+            if (this.claimsPrincipal == null)
+                throw new ForbiddenException("Forbidden");
 
-            };
+            User user = await this.claimsPrincipal.GetUserAsync(this.unitOfWork) ??
+                throw new BadRequestException("Account is not found");
+
+            int companyId = user.GetCompanyId() ??
+                throw new BadRequestException("Company not found");
+
+            Project? project = await this.unitOfWork.Project.GetAsync(
+                (project) => project.CompanyId == companyId && project.Id == request.TargetProjectId,
+                (project) => project.Users) ??
+                throw new NotFoundException("Project not found");
+
+            User? targetUser = await this.unitOfWork.User.GetAsync(
+                (user) => user.Id == request.TargetUserId
+                    && user.GetCompanyId() == companyId) ??
+                throw new NotFoundException("User not found");
+
+            if (project.Users.Contains(targetUser))
+                throw new BadRequestException("This user already connected");
+
+            project.Users.Add(targetUser);
+
+            await this.unitOfWork.SaveChangesAsync();
+
+            return new ProjectAddUserResponse(true);
         }
 
         public async Task<ProjectRemoveResponse> RemoveProjectAsync(ProjectRemoveRequest request)
         {
-            return new ProjectRemoveResponse()
-            {
+            if (this.claimsPrincipal == null)
+                throw new ForbiddenException("Forbidden");
 
-            };
+            User user = await this.claimsPrincipal.GetUserAsync(this.unitOfWork) ??
+                throw new BadRequestException("Account is not found");
+
+            int companyId = user.GetCompanyId() ??
+                throw new BadRequestException("Company not found");
+
+            var project = await this.unitOfWork.Project.GetAsync(
+                (project) => project.CompanyId == companyId && project.Id == request.ProjectId) ??
+                throw new NotFoundException("Project not found");
+
+            await this.unitOfWork.Project.DeleteAsync(project);
+            await this.unitOfWork.SaveChangesAsync();
+
+            return new ProjectRemoveResponse(true);
         }
     }
 }

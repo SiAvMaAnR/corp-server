@@ -7,6 +7,11 @@ namespace CSN.Application.Services.Models.ProjectDto
 {
     public class ProjectAddUserResponse
     {
-        
+        public bool IsSuccess { get; set; }
+
+        public ProjectAddUserResponse(bool isSuccess)
+        {
+            this.IsSuccess = isSuccess;
+        }
     }
 }
