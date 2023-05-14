@@ -12,6 +12,7 @@ public partial class Message : AttachableEntity
     public string? HtmlText { get; set; }
     public DateTime? ModifiedDate { get; set; }
     public bool IsRead { get; set; } = false;
+    public bool IsDelete { get; set; } = false;
     [InverseProperty("ReadMessages")]
     public ICollection<User> ReadUsers { get; set; } = new List<User>();
     public ICollection<Message> ChildMessages { get; set; } = new List<Message>();

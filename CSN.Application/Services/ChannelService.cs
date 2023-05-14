@@ -175,6 +175,7 @@ namespace CSN.Application.Services
                     channel.Users.Contains(user) &&
                     channel.Id == request.Id,
                 (channel) => channel.Messages
+                    .Where(message => !message.IsDelete)
                     .OrderByDescending(message => message.CreatedAt)
                     .Take(request.Count),
                 (channel) => channel.Users);
