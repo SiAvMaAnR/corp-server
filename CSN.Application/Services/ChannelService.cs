@@ -144,7 +144,9 @@ namespace CSN.Application.Services
                 .Take((request.PageSize != 0) ? request.PageSize : channelsCount)
                 .ToList();
 
-            int pagesCount = (int)Math.Ceiling(((decimal)channelsCount / request.PageSize));
+            int pagesCount = (request.PageSize != 0)
+                ? (int)Math.Ceiling(((decimal)channelsCount / request.PageSize))
+                : 1;
 
             var adaptedChannels = channels?.ToChannelResponseForAll(user)?.ToList();
 
