@@ -14,6 +14,7 @@ namespace CSN.Application.Services.Common
     {
         protected readonly IUnitOfWork unitOfWork;
         protected ClaimsPrincipal? claimsPrincipal;
+        
 
         public BaseService(IUnitOfWork unitOfWork, IHttpContextAccessor context)
         {

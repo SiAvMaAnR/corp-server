@@ -5,8 +5,8 @@ using System.Threading.Tasks;
 
 namespace CSN.Application.Services.Models.ProjectDto
 {
-    public class ProjectGetAllRequest
+    public class ProjectGetUsersRequest
     {
-        public string? Search { get; set; }
+        public int ProjectId { get; set; }
     }
 }

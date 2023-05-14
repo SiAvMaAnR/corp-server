@@ -14,5 +14,7 @@ namespace CSN.Application.Services.Interfaces
         Task<ProjectCreateResponse> CreateProjectAsync(ProjectCreateRequest request);
         Task<ProjectEditResponse> EditProjectAsync(ProjectEditRequest request);
         Task<ProjectAddUserResponse> AddUserToProjectAsync(ProjectAddUserRequest request);
+        Task<ProjectRemoveResponse> RemoveProjectAsync(ProjectRemoveRequest request);
+        Task<ProjectGetUsersResponse> GetUsersFromProjectAsync(ProjectGetUsersRequest request);
     }
 }

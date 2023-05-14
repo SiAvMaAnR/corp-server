@@ -1,3 +1,4 @@
+using System.Globalization;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -7,6 +8,11 @@ namespace CSN.Application.Services.Models.ProjectDto
 {
     public class ProjectEditResponse
     {
-        
+        public bool IsSuccess { get; set; }
+
+        public ProjectEditResponse(bool isSuccess)
+        {
+            this.IsSuccess = isSuccess;
+        }
     }
 }

@@ -1,8 +1,5 @@
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Threading.Tasks;
 using CSN.Application.Extensions;
+using CSN.Application.Services.Adapters;
 using CSN.Application.Services.Common;
 using CSN.Application.Services.Interfaces;
 using CSN.Application.Services.Models.ProjectDto;
@@ -12,7 +9,6 @@ using CSN.Domain.Exceptions;
 using CSN.Domain.Interfaces.UnitOfWork;
 using CSN.Domain.Shared.Enums;
 using Microsoft.AspNetCore.Http;
-using Microsoft.Extensions.Configuration;
 
 namespace CSN.Application.Services
 {
@@ -27,10 +23,29 @@ namespace CSN.Application.Services
 
         public async Task<ProjectGetAllResponse> GetProjectsAsync(ProjectGetAllRequest request)
         {
+            if (this.claimsPrincipal == null)
+                throw new ForbiddenException("Forbidden");
+
+            User user = await this.claimsPrincipal.GetUserAsync(this.unitOfWork) ??
+                throw new BadRequestException("Account is not found");
+
+            int companyId = user.GetCompanyId() ??
+                throw new BadRequestException("Company not found");
+
+            string searchField = request.Search?.ToLower() ?? "";
+
+            var projects = await this.unitOfWork.Project.GetAllAsync(
+                (project) => project.CompanyId == companyId &&
+                    project.Name.ToLower().Contains(searchField));
+
+            if (projects == null)
+                throw new NotFoundException("Projects not found");
+
+            var adaptedProjects = projects?.Select(project => project.ToProjectResponse());
 
             return new ProjectGetAllResponse()
             {
-
+                Projects = adaptedProjects
             };
         }
 
@@ -51,7 +66,7 @@ namespace CSN.Application.Services
 
             return new ProjectGetResponse()
             {
-
+                Project = project?.ToProjectResponse()
             };
         }
 
@@ -78,7 +93,6 @@ namespace CSN.Application.Services
             };
 
             await this.unitOfWork.Project.AddAsync(project);
-
             await this.unitOfWork.SaveChangesAsync();
 
             return new ProjectCreateResponse(true);
@@ -86,15 +100,71 @@ namespace CSN.Application.Services
 
         public async Task<ProjectEditResponse> EditProjectAsync(ProjectEditRequest request)
         {
-            return new ProjectEditResponse()
-            {
+            if (this.claimsPrincipal == null)
+                throw new ForbiddenException("Forbidden");
 
+            User user = await this.claimsPrincipal.GetUserAsync(this.unitOfWork) ??
+                throw new BadRequestException("Account is not found");
+
+            int companyId = user.GetCompanyId() ??
+                throw new BadRequestException("Company not found");
+
+            Project? project = await this.unitOfWork.Project.GetAsync(
+               (project) => project.CompanyId == companyId
+                    && project.Id == request.ProjectId
+            ) ?? throw new NotFoundException("Project not found");
+
+            project.Name = request.Name;
+            project.Description = request.Description;
+            project.Customer = request.Customer;
+            project.Link = request.Link;
+            project.Priority = request.Priority;
+            project.State = request.State;
+
+            await this.unitOfWork.Project.UpdateAsync(project);
+            await this.unitOfWork.SaveChangesAsync();
+
+            return new ProjectEditResponse(true);
+        }
+
+        public async Task<ProjectGetUsersResponse> GetUsersFromProjectAsync(ProjectGetUsersRequest request)
+        {
+            if (this.claimsPrincipal == null)
+                throw new ForbiddenException("Forbidden");
+
+            User user = await this.claimsPrincipal.GetUserAsync(this.unitOfWork,
+                (user) => user.Projects) ??
+                throw new BadRequestException("Account is not found");
+
+            int companyId = user.GetCompanyId() ??
+                throw new BadRequestException("Company not found");
+
+            var users = await this.unitOfWork.User.GetAllAsync(
+                (user) => user.Projects.Any(
+                    (project) => project.Id == request.ProjectId));
+
+            if (users == null)
+                throw new NotFoundException("Users not found");
+
+            var adaptUsers = users.Select(user => user.ToUserResponse());
+
+            return new ProjectGetUsersResponse()
+            {
+                Users = adaptUsers
             };
         }
 
         public async Task<ProjectAddUserResponse> AddUserToProjectAsync(ProjectAddUserRequest request)
         {
             return new ProjectAddUserResponse()
+            {
+
+            };
+        }
+
+        public async Task<ProjectRemoveResponse> RemoveProjectAsync(ProjectRemoveRequest request)
+        {
+            return new ProjectRemoveResponse()
             {
 
             };
