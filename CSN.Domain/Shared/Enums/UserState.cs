@@ -2,8 +2,8 @@
 
 public enum UserState
 {
-    Online,
     Offline,
+    Online,
     NotDisturb,
     Away
 }

@@ -1,6 +1,6 @@
 using CSN.Application.Services.Interfaces;
 using CSN.Application.Services.Models.EmployeeControlDto;
-using CSN.WebApi.Models.Company;
+using CSN.WebApi.Controllers.Models.Company;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 
@@ -19,10 +19,10 @@ public class EmployeeControlController : ControllerBase
         this.logger = logger;
     }
 
-    [HttpPut("ChangeRole"), Authorize(Policy = "OnlyCompany")]
-    public async Task<IActionResult> ChangeRoleEmployee([FromBody] CompanyChangeRole request)
+    [HttpPut("ChangePost"), Authorize(Policy = "OnlyCompany")]
+    public async Task<IActionResult> ChangePostEmployee([FromBody] CompanyChangePost request)
     {
-        var response = await employeeControlService.ChangeRoleAsync(new EmployeeControlChangeRoleRequest()
+        var response = await employeeControlService.ChangePostAsync(new EmployeeControlChangePostRequest()
         {
             EmployeeId = request.EmployeeId,
             EmployeePost = request.EmployeePost
@@ -61,6 +61,7 @@ public class EmployeeControlController : ControllerBase
             response.PagesCount,
             response.PageNumber,
             response.EmployeesCount,
+            response.OnlineCount,
             response.Employees
         });
     }

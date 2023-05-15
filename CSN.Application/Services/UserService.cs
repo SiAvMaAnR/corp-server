@@ -1,34 +1,69 @@
+using CSN.Application.Extensions;
 using CSN.Application.Services.Common;
 using CSN.Application.Services.Interfaces;
 using CSN.Application.Services.Models.UserDto;
+using CSN.Domain.Entities.Channels.DialogChannel;
 using CSN.Domain.Entities.Users;
+using CSN.Domain.Exceptions;
 using CSN.Domain.Interfaces.UnitOfWork;
-using CSN.Infrastructure.Exceptions;
-using CSN.Infrastructure.Extensions;
+using CSN.Persistence.Extensions;
 using Microsoft.AspNetCore.Http;
+using Microsoft.EntityFrameworkCore;
 
 namespace CSN.Application.Services;
 
-public class UserService : BaseService<User>, IUserService
+public class UserService : BaseService, IUserService
 {
     public UserService(IUnitOfWork unitOfWork, IHttpContextAccessor context) : base(unitOfWork, context)
     {
     }
 
-    public async Task<UserStateResponse> SetState(UserStateRequest request)
+    public async Task<UserGetAllOfCompanyResponse> GetAllOfCompanyAsync(UserGetAllOfCompanyRequest request)
     {
-        User? user = await this.claimsPrincipal!.GetUserAsync(unitOfWork);
+        if (this.claimsPrincipal == null)
+            throw new ForbiddenException("Forbidden");
 
-        if (user == null)
+        User user = await this.claimsPrincipal.GetUserAsync(this.unitOfWork) ??
+            throw new BadRequestException("Account is not found");
+
+        int companyId = user.GetCompanyId() ??
+            throw new BadRequestException("Account is not found");
+
+        var usersAll = (await this.unitOfWork.User.CustomAsync())
+            .Include((user) => user.Channels)
+                .ThenInclude(channel => channel.Users)
+            .Where((curUser) => curUser.Id != user.Id)
+            .Where((curUser) => !curUser.Channels
+                .Where((channel) => (channel is DialogChannel))
+                .Any((channel) => channel.Users
+                    .Any(userI => userI.Id == user.Id)))
+            .AsEnumerable()
+            .Where(user => user.GetCompanyId() == companyId);
+
+        string searchFilter = request.SearchFilter?.ToLower() ?? "";
+
+        IEnumerable<User>? filterUsers = usersAll?.Where(user =>
+            user?.Login?.ToLower().Contains(searchFilter) ?? false);
+
+        int usersCount = filterUsers?.ToList().Count ?? 0;
+
+        List<UserResponse>? users = filterUsers?
+            .OrderByDescending(user => user.Login)
+            .Select(user => new UserResponse()
+            {
+                Id = user.Id,
+                Email = user.Email,
+                Login = user.Login,
+                Role = user.Role,
+                Image = user.Image?.ReadToBytes(),
+                CreatedAt = user.CreatedAt
+            })
+            .ToList();
+
+        return new UserGetAllOfCompanyResponse()
         {
-            throw new NotFoundException("Account is not found");
-        }
-
-        user.State = request.State;
-
-        await this.unitOfWork.User.UpdateAsync(user);
-        await this.unitOfWork.SaveChangesAsync();
-
-        return new UserStateResponse() { IsSuccess = true };
+            Users = users,
+            UsersCount = usersCount,
+        };
     }
 }

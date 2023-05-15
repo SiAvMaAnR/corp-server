@@ -8,6 +8,7 @@ public class EmployeeControlEmployeesResponse
     public int PageSize { get; set; }
     public int PageNumber { get; set; }
     public int EmployeesCount { get; set; }
+    public int OnlineCount { get; set; }
     public int PagesCount { get; set; }
 }
 
@@ -18,7 +19,8 @@ public class CompanyEmployee
     public string Login { get; set; } = null!;
     public string Email { get; set; } = null!;
     public string Role { get; set; } = null!;
-    public byte[]? Image { get; set; } = null!;
+    public EmployeePost Post { get; set; }
+    public byte[]? Image { get; set; }
     public UserState State { get; set; }
     public DateTime? CreatedAt { get; set; }
     public DateTime? UpdatedAt { get; set; }

@@ -8,5 +8,7 @@ public class InvitationGetAllResponse
     public int PageSize { get; set; }
     public int PageNumber { get; set; }
     public int InvitationsCount { get; set; }
+    public int AcceptedCount { get; set; }
+    public int ActiveCount { get; set; }
     public int PagesCount { get; set; }
 }

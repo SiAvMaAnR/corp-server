@@ -1,6 +1,6 @@
 ﻿using CSN.Application.Services.Interfaces;
 using CSN.Application.Services.Models.CompanyDto;
-using CSN.WebApi.Models.Company;
+using CSN.WebApi.Controllers.Models.Company;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 
@@ -22,7 +22,7 @@ namespace CSN.WebApi.Controllers
         [HttpPost("Login")]
         public async Task<IActionResult> Login([FromBody] CompanyLogin request)
         {
-            var response = await companyService.LoginAsync(new CompanyLoginRequest()
+            var response = await this.companyService.LoginAsync(new CompanyLoginRequest()
             {
                 Email = request.Email,
                 Password = request.Password
@@ -39,7 +39,7 @@ namespace CSN.WebApi.Controllers
         [HttpPost("Register")]
         public async Task<IActionResult> Register([FromBody] CompanyRegister request)
         {
-            var response = await companyService.RegisterAsync(new CompanyRegisterRequest()
+            var response = await this.companyService.RegisterAsync(new CompanyRegisterRequest()
             {
                 Login = request.Login,
                 Email = request.Email,
@@ -72,14 +72,22 @@ namespace CSN.WebApi.Controllers
         [HttpPost("Confirm")]
         public async Task<IActionResult> Confirmation([FromBody] CompanyConfirm request)
         {
-            var response = await companyService.ConfirmAccountAsync(new CompanyConfirmationRequest()
+            var confirmResponse = await companyService.ConfirmAccountAsync(new CompanyConfirmationRequest()
             {
                 Confirmation = request.Confirmation
             });
 
+            var loginResponse = await this.companyService.LoginAsync(new CompanyLoginRequest()
+            {
+                Email = confirmResponse.Email,
+                Password = confirmResponse.Password
+            });
+
             return Ok(new
             {
-                response.IsSuccess
+                loginResponse.IsSuccess,
+                loginResponse.TokenType,
+                loginResponse.Token
             });
         }
 
@@ -95,6 +103,7 @@ namespace CSN.WebApi.Controllers
                 response.Email,
                 response.Role,
                 response.Description,
+                response.State,
                 response.Image
             });
         }

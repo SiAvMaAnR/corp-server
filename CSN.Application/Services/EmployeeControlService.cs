@@ -1,25 +1,30 @@
+using CSN.Application.AppData.Interfaces;
+using CSN.Application.Extensions;
 using CSN.Application.Services.Common;
 using CSN.Application.Services.Interfaces;
 using CSN.Application.Services.Models.EmployeeControlDto;
 using CSN.Domain.Entities.Companies;
 using CSN.Domain.Entities.Employees;
+using CSN.Domain.Exceptions;
 using CSN.Domain.Interfaces.UnitOfWork;
-using CSN.Infrastructure.Exceptions;
-
-using CSN.Infrastructure.Extensions;
+using CSN.Domain.Shared.Enums;
+using CSN.Persistence.Extensions;
 using Microsoft.AspNetCore.Http;
 using Microsoft.Extensions.Configuration;
 
 namespace CSN.Application.Services;
 
-public class EmployeeControlService : BaseService<Company>, IEmployeeControlService
+public class EmployeeControlService : BaseService, IEmployeeControlService
 {
     private readonly IConfiguration configuration;
+    private readonly IAppData appData;
 
-    public EmployeeControlService(IUnitOfWork unitOfWork, IHttpContextAccessor context, IConfiguration configuration)
+    public EmployeeControlService(IUnitOfWork unitOfWork, IHttpContextAccessor context,
+        IConfiguration configuration, IAppData appData)
         : base(unitOfWork, context)
     {
         this.configuration = configuration;
+        this.appData = appData;
     }
 
     public async Task<EmployeeControlEmployeesResponse> GetEmployeesAsync(EmployeeControlEmployeesRequest request)
@@ -37,15 +42,18 @@ public class EmployeeControlService : BaseService<Company>, IEmployeeControlServ
             Login = employee.Login,
             Email = employee.Email,
             Role = employee.Role,
-            State = employee.State,
-            Image = employee.Image,
+            Post = employee.Post,
+            State = this.appData.GetById(employee.Id)?.State ?? UserState.Offline,
+            Image = employee.Image.ReadToBytes(),
             CreatedAt = employee.CreatedAt,
             UpdatedAt = employee.UpdatedAt,
         });
 
         var employeesCount = employeesAll?.ToList().Count ?? 0;
+        var employeesOnlineCount = employeesAll?.Count(employee => employee.State == UserState.Online) ?? 0;
 
         var employees = employeesAll?
+            .OrderByDescending(employee => employee.UpdatedAt)
             .Skip(request.PageNumber * request.PageSize)
             .Take(request.PageSize)
             .ToList();
@@ -58,6 +66,7 @@ public class EmployeeControlService : BaseService<Company>, IEmployeeControlServ
             PageSize = request.PageSize,
             PageNumber = request.PageNumber,
             EmployeesCount = employeesCount,
+            OnlineCount = employeesOnlineCount,
             PagesCount = pagesCount,
         };
     }
@@ -88,7 +97,7 @@ public class EmployeeControlService : BaseService<Company>, IEmployeeControlServ
         };
     }
 
-    public async Task<EmployeeControlChangeRoleResponse> ChangeRoleAsync(EmployeeControlChangeRoleRequest request)
+    public async Task<EmployeeControlChangePostResponse> ChangePostAsync(EmployeeControlChangePostRequest request)
     {
         var employee = await this.unitOfWork.Employee.GetAsync(employee => employee.Id == request.EmployeeId);
 
@@ -97,16 +106,16 @@ public class EmployeeControlService : BaseService<Company>, IEmployeeControlServ
             throw new NotFoundException("Employee is not found");
         }
 
-        employee.Role = request.EmployeePost.ToString();
+        employee.Post = request.EmployeePost;
 
         await this.unitOfWork.Employee.UpdateAsync(employee);
 
         await this.unitOfWork.SaveChangesAsync();
 
-        return new EmployeeControlChangeRoleResponse()
+        return new EmployeeControlChangePostResponse()
         {
             EmployeeId = request.EmployeeId,
-            EmployeePost = request.EmployeePost.ToString()
+            EmployeePost = request.EmployeePost
         };
     }
 }

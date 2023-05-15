@@ -1,4 +1,4 @@
-using CSN.Infrastructure.Exceptions;
+using CSN.Domain.Exceptions;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.Extensions.Configuration;
 using Microsoft.IdentityModel.Tokens;
@@ -15,7 +15,7 @@ public static class TokenExtension
         string secretKey = config.GetSection("Authorization:SecretKey").Value
             ?? throw new BadRequestException("Incorrect secretKey");
 
-        options.RequireHttpsMetadata = true;
+        // options.RequireHttpsMetadata = true;
         options.SaveToken = true;
         options.TokenValidationParameters = new TokenValidationParameters
         {

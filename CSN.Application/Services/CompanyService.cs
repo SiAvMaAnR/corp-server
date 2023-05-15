@@ -1,15 +1,18 @@
+using CSN.Application.AppData.Interfaces;
+using CSN.Application.Extensions;
 using CSN.Application.Services.Common;
 using CSN.Application.Services.Interfaces;
 using CSN.Application.Services.Models.Common;
 using CSN.Application.Services.Models.CompanyDto;
 using CSN.Domain.Entities.Companies;
+using CSN.Domain.Exceptions;
 using CSN.Domain.Interfaces.UnitOfWork;
-using CSN.Infrastructure.Exceptions;
+using CSN.Domain.Shared.Enums;
 using CSN.Email;
 using CSN.Email.Handlers;
 using CSN.Email.Models;
 using CSN.Infrastructure.AuthOptions;
-using CSN.Infrastructure.Extensions;
+using CSN.Persistence.Extensions;
 using Microsoft.AspNetCore.DataProtection;
 using Microsoft.AspNetCore.Http;
 using Microsoft.Extensions.Configuration;
@@ -18,17 +21,19 @@ using System.Text.Json;
 
 namespace CSN.Application.Services;
 
-public class CompanyService : BaseService<Company>, ICompanyService
+public class CompanyService : BaseService, ICompanyService
 {
     private readonly IConfiguration configuration;
     public readonly IDataProtectionProvider protection;
     private readonly EmailClient emailClient;
+    private readonly IAppData appData;
 
-    public CompanyService(IUnitOfWork unitOfWork, IHttpContextAccessor context,
+    public CompanyService(IUnitOfWork unitOfWork, IHttpContextAccessor context, IAppData appData,
         IConfiguration configuration, IDataProtectionProvider protection) : base(unitOfWork, context)
     {
         this.configuration = configuration;
         this.protection = protection;
+        this.appData = appData;
 
         var smtpModel = new SmtpModel()
         {
@@ -43,19 +48,12 @@ public class CompanyService : BaseService<Company>, ICompanyService
 
     public async Task<CompanyLoginResponse> LoginAsync(CompanyLoginRequest request)
     {
-        Company? company = await this.unitOfWork.Company.GetAsync(company => company.Email == request.Email);
-
-        if (company == null)
-        {
+        Company company = await this.unitOfWork.Company.GetAsync(company => company.Email == request.Email) ??
             throw new NotFoundException("Account not found");
-        }
 
         bool isVerify = AuthOptions.VerifyPasswordHash(request.Password, company.PasswordHash, company.PasswordSalt);
 
-        if (!isVerify)
-        {
-            throw new BadRequestException("Incorrect email or password");
-        }
+        if (!isVerify) throw new BadRequestException("Incorrect email or password");
 
         var claims = new List<Claim>()
             {
@@ -91,9 +89,7 @@ public class CompanyService : BaseService<Company>, ICompanyService
     public async Task<CompanyRegisterResponse> RegisterAsync(CompanyRegisterRequest request)
     {
         if (await this.unitOfWork.User.AnyAsync(user => user.Email == request.Email))
-        {
             throw new BadRequestException("Account already exists");
-        }
 
         string baseUrl = this.configuration["Client:BaseUrl"] ?? throw new BadRequestException("Missing client baseUrl");
         string path = this.configuration["Confirm:Path"] ?? throw new BadRequestException("Missing confirm path");
@@ -132,15 +128,14 @@ public class CompanyService : BaseService<Company>, ICompanyService
 
     public async Task<CompanyEditResponse> EditAsync(CompanyEditRequest request)
     {
-        Company? company = await this.claimsPrincipal!.GetCompanyAsync(unitOfWork);
-
-        if (company == null)
-        {
+        Company company = await this.claimsPrincipal!.GetCompanyAsync(unitOfWork) ??
             throw new NotFoundException("Account is not found");
-        }
+
+        byte[] imageBytes = Convert.FromBase64String(request.Image ?? "");
+        string? imagePath = await imageBytes.WriteToFileAsync(company.Email);
 
         company.Login = request.Login;
-        company.Image = Convert.FromBase64String(request.Image ?? "");
+        company.Image = imagePath;
         company.Description = request.Description;
 
         await this.unitOfWork.Company.UpdateAsync(company);
@@ -151,21 +146,19 @@ public class CompanyService : BaseService<Company>, ICompanyService
 
     public async Task<CompanyInfoResponse> GetInfoAsync(CompanyInfoRequest request)
     {
-        Company? company = await this.claimsPrincipal!.GetCompanyAsync(unitOfWork);
-
-        if (company == null)
-        {
+        Company company = await this.claimsPrincipal!.GetCompanyAsync(unitOfWork) ??
             throw new NotFoundException("Account is not found");
-        }
+
+        byte[]? image = await company.Image.ReadToBytesAsync();
 
         return new CompanyInfoResponse()
         {
             Id = company.Id,
             Login = company.Login,
             Email = company.Email,
-            Image = company.Image,
+            Image = image,
             Role = company.Role,
-            State = company.State,
+            State = this.appData.GetById(company.Id)?.State ?? UserState.Offline,
             Description = company.Description,
         };
     }
@@ -177,42 +170,40 @@ public class CompanyService : BaseService<Company>, ICompanyService
         IDataProtector protector = this.protection.CreateProtector(secretKey);
         string confirmationJson = protector.Unprotect(request.Confirmation);
 
-        Confirmation? confirmation = JsonSerializer.Deserialize<Confirmation>(confirmationJson);
-
-        if (confirmation == null)
-        {
+        Confirmation confirmation = JsonSerializer.Deserialize<Confirmation>(confirmationJson) ??
             throw new BadRequestException("Incorrect confirmation");
-        }
 
         if (await this.unitOfWork.Company.AnyAsync(company => company.Email == confirmation.Email))
-        {
             throw new BadRequestException("Account already exists");
-        }
 
         if (!AuthOptions.CreatePasswordHash(confirmation.Password, out byte[] passwordHash, out byte[] passwordSalt))
-        {
             throw new BadRequestException("Incorrect password");
-        }
+
+        string? imagePath = await confirmation.Image.WriteToFileAsync(confirmation.Email);
+
+        if (await this.unitOfWork.User.AnyAsync(user => user.Email == confirmation.Email))
+            throw new BadRequestException("Account already exists");
 
         Company company = new Company()
         {
             Login = confirmation.Login,
             Email = confirmation.Email,
-            Image = confirmation.Image,
+            Image = imagePath,
             PasswordHash = passwordHash,
             PasswordSalt = passwordSalt,
             Description = confirmation.Description,
             Role = "Company",
         };
 
-        if (await this.unitOfWork.Company.AnyAsync(company => company.Email == confirmation.Email))
-        {
-            throw new BadRequestException("Account already exists");
-        }
         await this.unitOfWork.Company.AddAsync(company);
 
         await this.unitOfWork.SaveChangesAsync();
 
-        return new CompanyConfirmationResponse() { IsSuccess = true };
+        return new CompanyConfirmationResponse()
+        {
+            IsSuccess = true,
+            Email = confirmation.Email,
+            Password = confirmation.Password
+        };
     }
 }

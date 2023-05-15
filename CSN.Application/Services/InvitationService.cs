@@ -1,24 +1,23 @@
 using System.Text.Json;
+using CSN.Application.Extensions;
 using CSN.Application.Services.Common;
 using CSN.Application.Services.Interfaces;
 using CSN.Application.Services.Models.InvitationDto;
 using CSN.Domain.Entities.Companies;
 using CSN.Domain.Entities.Invitations;
 using CSN.Domain.Entities.Users;
+using CSN.Domain.Exceptions;
 using CSN.Domain.Interfaces.UnitOfWork;
-using CSN.Infrastructure.Exceptions;
-
 using CSN.Email;
 using CSN.Email.Handlers;
 using CSN.Email.Models;
-using CSN.Infrastructure.Extensions;
 using Microsoft.AspNetCore.DataProtection;
 using Microsoft.AspNetCore.Http;
 using Microsoft.Extensions.Configuration;
 
 namespace CSN.Application.Services;
 
-public class InvitationService : BaseService<Company>, IInvitationService
+public class InvitationService : BaseService, IInvitationService
 {
     private readonly EmailClient emailClient;
     private readonly IConfiguration configuration;
@@ -68,9 +67,13 @@ public class InvitationService : BaseService<Company>, IInvitationService
             Post = request.EmployeePost
         };
 
-        await this.unitOfWork.Invitation.AddAsync(invitation);
+        var isExistsInvitation = await this.unitOfWork.Invitation.AnyAsync(invite => invite.Email == invitation.Email);
 
-        await this.unitOfWork.SaveChangesAsync();
+        if (!isExistsInvitation)
+        {
+            await this.unitOfWork.Invitation.AddAsync(invitation);
+            await this.unitOfWork.SaveChangesAsync();
+        }
 
         string inviteJson = JsonSerializer.Serialize(new Invite()
         {
@@ -115,6 +118,9 @@ public class InvitationService : BaseService<Company>, IInvitationService
 
         var invitationsCount = invitationsAll?.ToList().Count ?? 0;
 
+        var invitationsActiveCount = invitationsAll?.Count(invitation => invitation.IsActive) ?? 0;
+        var invitationsAcceptedCount = invitationsAll?.Count(invitation => invitation.IsAccepted) ?? 0;
+
         var invitations = invitationsAll?
             .Skip(request.PageNumber * request.PageSize)
             .Take(request.PageSize)
@@ -128,6 +134,8 @@ public class InvitationService : BaseService<Company>, IInvitationService
             PageSize = request.PageSize,
             PageNumber = request.PageNumber,
             InvitationsCount = invitationsCount,
+            ActiveCount = invitationsActiveCount,
+            AcceptedCount = invitationsAcceptedCount,
             PagesCount = pagesCount,
         };
     }

@@ -1,8 +1,9 @@
+using CSN.Application.Services.Common;
 using CSN.Application.Services.Models.InvitationDto;
 
 namespace CSN.Application.Services.Interfaces;
 
-public interface IInvitationService
+public interface IInvitationService : IBaseService
 {
     Task<InvitationSendInviteResponse> SendInviteAsync(InvitationSendInviteRequest request);
     Task<InvitationGetAllResponse> GetInvitesAsync(InvitationGetAllRequest request);

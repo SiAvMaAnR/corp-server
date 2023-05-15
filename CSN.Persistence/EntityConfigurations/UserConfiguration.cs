@@ -9,6 +9,9 @@ namespace CSN.Persistence.EntityConfigurations
         public void Configure(EntityTypeBuilder<User> builder)
         {
             builder.UseTpcMappingStrategy();
+            builder.HasIndex(user => user.Email).IsUnique();
+            builder.HasMany(user => user.Channels).WithMany(channel => channel.Users);
+            // builder.Ignore(user => user.ConnectionId);
         }
     }
 }

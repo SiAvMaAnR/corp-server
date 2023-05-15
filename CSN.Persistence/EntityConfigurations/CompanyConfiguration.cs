@@ -8,10 +8,10 @@ namespace CSN.Persistence.EntityConfigurations
     {
         public void Configure(EntityTypeBuilder<Company> builder)
         {
-            builder.Property(company => company.Login).HasMaxLength(25).IsRequired();
+            builder.Property(company => company.Login).HasMaxLength(40).IsRequired();
 
             builder.HasIndex(company => company.Email).IsUnique();
-            builder.Property(company => company.Email).HasMaxLength(35).IsRequired();
+            builder.Property(company => company.Email).IsRequired();
 
             builder.Property(company => company.PasswordHash).IsRequired();
 

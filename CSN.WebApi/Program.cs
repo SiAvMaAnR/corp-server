@@ -1,5 +1,5 @@
-using CSN.WebApi.Extensions.ApplicationConfigurations;
-using CSN.WebApi.Extensions.ServiceConfigurations;
+using CSN.WebApi.Config.ApplicationConfigurations;
+using CSN.WebApi.Config.ServiceConfigurations;
 
 var builder = WebApplication.CreateBuilder(args);
 var config = builder.Configuration;

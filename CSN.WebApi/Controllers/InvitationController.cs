@@ -1,6 +1,6 @@
 using CSN.Application.Services.Interfaces;
 using CSN.Application.Services.Models.InvitationDto;
-using CSN.WebApi.Models.Invite;
+using CSN.WebApi.Controllers.Models.Invite;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 
@@ -41,7 +41,7 @@ public class InvitationController : ControllerBase
         var response = await invitationService.GetInvitesAsync(new InvitationGetAllRequest()
         {
             PageNumber = request.PageNumber,
-            PageSize = request.PageSize
+            PageSize = request.PageSize,
         });
 
         return Ok(new
@@ -50,6 +50,8 @@ public class InvitationController : ControllerBase
             response.PagesCount,
             response.PageNumber,
             response.InvitationsCount,
+            response.AcceptedCount,
+            response.ActiveCount,
             response.Invitations
         });
     }

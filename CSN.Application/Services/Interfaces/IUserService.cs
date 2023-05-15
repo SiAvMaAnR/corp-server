@@ -1,8 +1,9 @@
+using CSN.Application.Services.Common;
 using CSN.Application.Services.Models.UserDto;
 
 namespace CSN.Application.Services.Interfaces;
 
-public interface IUserService
+public interface IUserService : IBaseService
 {
-    Task<UserStateResponse> SetState(UserStateRequest request);
+    Task<UserGetAllOfCompanyResponse> GetAllOfCompanyAsync(UserGetAllOfCompanyRequest request);
 }
