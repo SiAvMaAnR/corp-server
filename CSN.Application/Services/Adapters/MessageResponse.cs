@@ -1,3 +1,4 @@
+using System.Net.Http;
 using CSN.Application.AppData.Interfaces;
 using CSN.Application.Services.Models.ChannelDto;
 using CSN.Application.Services.Models.MessageDto;
@@ -21,7 +22,8 @@ namespace CSN.Application.Services.Adapters
                 IsRead = message.IsRead,
                 AuthorId = message.AuthorId,
                 TargetMessageId = message.TargetMessageId,
-                ChannelId = message.ChannelId
+                ChannelId = message.ChannelId,
+                CreatedAt = message.CreatedAt
             };
         }
     }

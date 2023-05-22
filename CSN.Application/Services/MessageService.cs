@@ -25,7 +25,7 @@ public class MessageService : BaseService, IMessageService
     public MessageService(IUnitOfWork unitOfWork, IHttpContextAccessor context, IConfiguration configuration, IAppData appData)
     : base(unitOfWork, context)
     {
-        this.configuration = configuration;
+        this.configuration =  configuration;
         this.appData = appData;
     }
 

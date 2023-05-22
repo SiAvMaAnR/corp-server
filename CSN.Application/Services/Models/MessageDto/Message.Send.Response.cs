@@ -14,6 +14,8 @@ public class MessageResponse
     public int AuthorId { get; set; }
     public int? TargetMessageId { get; set; }
     public int ChannelId { get; set; }
+    public DateTime? CreatedAt { get; set; }
+    
 }
 
 public class MessageSendResponse

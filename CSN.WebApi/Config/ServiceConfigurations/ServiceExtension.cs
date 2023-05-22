@@ -37,6 +37,7 @@ namespace CSN.WebApi.Config.ServiceConfigurations
             serviceCollection.AddScoped<IChannelService, ChannelService>();
             serviceCollection.AddScoped<IInvitationService, InvitationService>();
             serviceCollection.AddScoped<IMessageService, MessageService>();
+            serviceCollection.AddScoped<IProjectService, ProjectService>();
             serviceCollection.AddScoped<IAppDataService, AppDataService>();
             return serviceCollection;
         }

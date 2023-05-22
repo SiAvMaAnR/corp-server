@@ -20,7 +20,6 @@ namespace CSN.Application.Services
 
         }
 
-
         public async Task<ProjectGetAllResponse> GetProjectsAsync(ProjectGetAllRequest request)
         {
             if (this.claimsPrincipal == null)
@@ -41,11 +40,27 @@ namespace CSN.Application.Services
             if (projects == null)
                 throw new NotFoundException("Projects not found");
 
-            var adaptedProjects = projects?.Select(project => project.ToProjectResponse());
+            int projectsCount = projects?.ToList().Count ?? 0;
+
+            int projectsActiveCount = projects?.Count(project => project.State == ProjectState.Active) ?? 0;
+            int projectsCompletedCount = projects?.Count(project => project.State == ProjectState.Completed) ?? 0;
+
+            var adaptedProjects = projects?
+                .Skip(request.PageNumber * request.PageSize)
+                .Take(request.PageSize)
+                .Select(project => project.ToProjectResponse());
+
+            int pagesCount = (int)Math.Ceiling(((decimal)projectsCount / request.PageSize));
 
             return new ProjectGetAllResponse()
             {
-                Projects = adaptedProjects
+                Projects = adaptedProjects,
+                PageSize = request.PageSize,
+                PageNumber = request.PageNumber,
+                ProjectsCount = projectsCount,
+                ActiveCount = projectsActiveCount,
+                CompletedCount = projectsCompletedCount,
+                PagesCount = pagesCount,
             };
         }
 
@@ -87,7 +102,7 @@ namespace CSN.Application.Services
                 Customer = request.Customer,
                 Description = request.Description,
                 Link = request.Link,
-                State = ProjectState.Active,
+                State = request.State ?? ProjectState.Active,
                 Priority = Priority.Default,
                 CompanyId = companyId,
                 Users = { user }

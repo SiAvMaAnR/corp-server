@@ -23,7 +23,7 @@ namespace CSN.WebApi.Config.PolicyConfigurations
                 .AllowAnyHeader()
                 .AllowCredentials()
                 .WithOrigins("http://localhost:3000", "https://localhost:3000"));
-                // .AllowAnyOrigin());
+            // .AllowAnyOrigin());
 
         }
     }

@@ -13,6 +13,7 @@ namespace CSN.Application.Services.Adapters
         {
             return new ProjectResponse()
             {
+                Id = project.Id,
                 Name = project.Name,
                 Customer = project.Customer,
                 CompanyId = project.CompanyId,

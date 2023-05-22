@@ -4,9 +4,9 @@ using System.Linq;
 using System.Threading.Tasks;
 using CSN.Domain.Shared.Enums;
 
-namespace CSN.Application.Services.Models.ProjectDto
+namespace CSN.WebApi.Controllers.Models.Project
 {
-    public class ProjectCreateRequest
+    public class ProjectCreate
     {
         public string Name { get; set; } = null!;
         public string? Customer { get; set; }
