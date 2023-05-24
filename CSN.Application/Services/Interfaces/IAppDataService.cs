@@ -11,5 +11,6 @@ namespace CSN.Application.Services.Interfaces
         Task<UserConnectResponse> ConnectUserAsync(UserConnectRequest request);
         Task<UserDisconnectResponse> DisconnectUserAsync(UserDisconnectRequest request);
         IReadOnlyList<string> GetConnectionIds(ICollection<User>? users, HubType type);
+        IReadOnlyList<string> GetConnectionIds(IEnumerable<User>? users, HubType type);
     }
 }

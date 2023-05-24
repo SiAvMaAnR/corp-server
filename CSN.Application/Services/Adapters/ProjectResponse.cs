@@ -1,3 +1,4 @@
+using Microsoft.VisualBasic.CompilerServices;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -21,6 +22,8 @@ namespace CSN.Application.Services.Adapters
                 Link = project.Link,
                 Priority = project.Priority,
                 State = project.State,
+                CreatedAt = project.CreatedAt,
+                UpdatedAt = project.UpdatedAt,
             };
         }
     }

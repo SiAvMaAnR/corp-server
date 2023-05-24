@@ -43,6 +43,28 @@ public class AppData : IAppData
         return hubIds ?? new List<string>();
     }
 
+
+    public IReadOnlyList<string> GetConnectionIds(IEnumerable<User>? users, HubType type)
+    {
+        var connectionUsers = this.ConnectedUsers?.Where(userC => users?.Any(user => user.Id == userC.Id) ?? false).ToList();
+
+        List<string>? hubIds = type switch
+        {
+            HubType.Chat => connectionUsers?
+                .Select(user => user.ChatHubId!)?
+                .ToList(),
+            HubType.State => connectionUsers?
+                .Select(user => user.StateHubId!)?
+                .ToList(),
+            HubType.Notification => connectionUsers?
+                .Select(user => user.NotificationHubId!)
+                .ToList(),
+            _ => throw new BadRequestException("Unknown filter")
+        };
+
+        return hubIds ?? new List<string>();
+    }
+
     public void SetState(int userId, UserState state)
     {
         lock (_lock)

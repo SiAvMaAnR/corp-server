@@ -1,3 +1,4 @@
+using System.Linq;
 using CSN.Application.AppData.Interfaces;
 using CSN.Application.Extensions;
 using CSN.Application.Services.Common;
@@ -210,7 +211,7 @@ namespace CSN.Application.Services
 
             foreach (var message in channel.Messages)
             {
-                if (message.AuthorId != user.Id)
+                if (!message.IsRead && message.AuthorId != user.Id)
                 {
                     message.IsRead = true;
                 }
@@ -225,9 +226,11 @@ namespace CSN.Application.Services
 
             var unreadMessagesCount = channel.Messages.Count(message => !message.IsContainsReadUser(user));
 
+            var users = channel.Users.Where(cUser => cUser.Id != user.Id);
+
             return new MessageReadResponse()
             {
-                Users = channel.Users,
+                Users = users,
                 ChannelId = channel.Id,
                 UnReadMessageIds = unReadMessages.Select(message => message.Id),
                 UnreadMessagesCount = unreadMessagesCount

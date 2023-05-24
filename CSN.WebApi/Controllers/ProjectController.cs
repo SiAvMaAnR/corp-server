@@ -1,6 +1,5 @@
 using CSN.Application.Services.Interfaces;
 using CSN.Application.Services.Models.ProjectDto;
-using CSN.WebApi.Controllers.Models.Channel;
 using CSN.WebApi.Controllers.Models.Project;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;

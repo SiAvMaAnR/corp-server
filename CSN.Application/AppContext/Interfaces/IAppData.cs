@@ -16,4 +16,5 @@ public interface IAppData
     void AddUserConnected(User user, HubType type, string? connectionId);
     bool RemoveUserConnected(int userId, HubType type);
     IReadOnlyList<string> GetConnectionIds(ICollection<User>? users, HubType type);
+    IReadOnlyList<string> GetConnectionIds(IEnumerable<User>? users, HubType type);
 }

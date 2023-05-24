@@ -31,6 +31,11 @@ namespace CSN.Application.Services
             return this.appData.GetConnectionIds(users, type);
         }
 
+        public IReadOnlyList<string> GetConnectionIds(IEnumerable<User>? users, HubType type)
+        {
+            return this.appData.GetConnectionIds(users, type);
+        }
+
         public async Task<UserStateResponse> SetStateAsync(UserStateRequest request)
         {
             if (this.claimsPrincipal == null)
