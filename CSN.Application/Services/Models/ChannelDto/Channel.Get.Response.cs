@@ -20,6 +20,7 @@ namespace CSN.Application.Services.Models.ChannelDto
         public string? Email { get; set; }
         public string? Image { get; set; }
         public string? Role { get; set; }
+        public string? Post { get; set; }
         public UserState State { get; set; }
         public DateTime? CreatedAt { get; set; }
         public DateTime? UpdatedAt { get; set; }

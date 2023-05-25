@@ -5,6 +5,7 @@ using System.Threading.Tasks;
 using CSN.Application.AppData.Interfaces;
 using CSN.Application.Services.Models.ChannelDto;
 using CSN.Domain.Entities.Channels;
+using CSN.Domain.Entities.Employees;
 using CSN.Domain.Entities.Users;
 using CSN.Domain.Shared.Enums;
 
@@ -48,7 +49,7 @@ namespace CSN.Application.Services.Adapters
                 .ToList()
             });
         }
-        
+
         public static ChannelResponseForOne ToChannelResponseForOne(this Channel channel, User targetUser, IAppData appData)
         {
             return new ChannelResponseForOne()
@@ -72,6 +73,7 @@ namespace CSN.Application.Services.Adapters
                     CreatedAt = user.CreatedAt,
                     UpdatedAt = user.UpdatedAt,
                     Role = user.Role,
+                    Post = (user as Employee)?.Post.ToString(),
                     State = appData.GetById(user.Id)?.State ?? UserState.Offline,
                     Image = user.Image,
                 }).ToList(),

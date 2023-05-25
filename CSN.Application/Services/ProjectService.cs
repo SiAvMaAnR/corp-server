@@ -1,3 +1,4 @@
+using System.Data;
 using CSN.Application.Extensions;
 using CSN.Application.Services.Adapters;
 using CSN.Application.Services.Common;
@@ -33,9 +34,10 @@ namespace CSN.Application.Services
 
             string searchField = request.Search?.ToLower() ?? "";
 
-            var projects = await this.unitOfWork.Project.GetAllAsync(
-                (project) => project.CompanyId == companyId &&
-                    project.Name.ToLower().Contains(searchField));
+            var projects = await this.unitOfWork.Project.GetAllAsync((project) =>
+                project.CompanyId == companyId &&
+                (project.Users.Contains(user) || user.Role == "Company") &&
+                project.Name.ToLower().Contains(searchField));
 
             if (projects == null)
                 throw new NotFoundException("Projects not found");
@@ -76,8 +78,10 @@ namespace CSN.Application.Services
             int companyId = user.GetCompanyId() ??
                 throw new BadRequestException("Company not found");
 
-            Project? project = await this.unitOfWork.Project.GetAsync(
-                (project) => project.Id == request.ProjectId && project.CompanyId == companyId);
+            Project? project = await this.unitOfWork.Project.GetAsync((project) =>
+                project.Id == request.ProjectId &&
+                (project.Users.Contains(user) || user.Role == "Company") &&
+                project.CompanyId == companyId);
 
             return new ProjectGetResponse()
             {
@@ -105,7 +109,6 @@ namespace CSN.Application.Services
                 State = request.State ?? ProjectState.Active,
                 Priority = Priority.Default,
                 CompanyId = companyId,
-                Users = { user }
             };
 
             await this.unitOfWork.Project.AddAsync(project);
