@@ -193,16 +193,17 @@ public class ChatHub : BaseHub, IHub
             });
             var ids = this.appDataService.GetConnectionIds(result.Users, HubType.Chat);
 
-            var response = new
+            await Clients.Caller.SendAsync("CreateDialogChannel", new
             {
                 channel = result.Channel,
                 isSuccess = result.IsSuccess,
+            });
+
+            await Clients.Clients(ids).SendAsync("NotifyCreation", new
+            {
+                isSuccess = result.IsSuccess,
                 users = result.Users
-            };
-
-            await Clients.Caller.SendAsync("CreateDialogChannel", response);
-
-            await Clients.Clients(ids).SendAsync("CreateDialogTellEvery", response);
+            });
         }
         catch (Exception exception)
         {
@@ -277,7 +278,7 @@ public class ChatHub : BaseHub, IHub
 
             await Clients.Caller.SendAsync("AddUser", response);
 
-            await Clients.Clients(ids).SendAsync("AddUserTellEvery", response);
+            await Clients.Clients(ids).SendAsync("NotifyNewUser", response);
         }
         catch (Exception exception)
         {
