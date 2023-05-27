@@ -192,12 +192,17 @@ public class ChatHub : BaseHub, IHub
                 TargetUserId = targetUserId
             });
             var ids = this.appDataService.GetConnectionIds(result.Users, HubType.Chat);
-            await Clients.Clients(ids).SendAsync("CreateDialogChannel", new
+
+            var response = new
             {
                 channel = result.Channel,
                 isSuccess = result.IsSuccess,
                 users = result.Users
-            });
+            };
+
+            await Clients.Caller.SendAsync("CreateDialogChannel", response);
+
+            await Clients.Clients(ids).SendAsync("CreateDialogTellEvery", response);
         }
         catch (Exception exception)
         {
@@ -261,14 +266,18 @@ public class ChatHub : BaseHub, IHub
                 TargetUserId = targetUserId,
                 ChannelId = channelId
             });
-            string connectionId = Context.ConnectionId;
 
             var ids = this.appDataService.GetConnectionIds(result.Users, HubType.Chat);
-            await Clients.Clients(ids).SendAsync("AddUser", new
+
+            var response = new
             {
                 channel = result.Channel,
                 isSuccess = result.IsSuccess,
-            });
+            };
+
+            await Clients.Caller.SendAsync("AddUser", response);
+
+            await Clients.Clients(ids).SendAsync("AddUserTellEvery", response);
         }
         catch (Exception exception)
         {
