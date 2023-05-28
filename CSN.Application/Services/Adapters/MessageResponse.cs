@@ -6,6 +6,7 @@ using CSN.Domain.Entities.Channels;
 using CSN.Domain.Entities.Messages;
 using CSN.Domain.Entities.Users;
 using CSN.Domain.Shared.Enums;
+using CSN.Persistence.Extensions;
 
 namespace CSN.Application.Services.Adapters
 {
@@ -23,7 +24,14 @@ namespace CSN.Application.Services.Adapters
                 AuthorId = message.AuthorId,
                 TargetMessageId = message.TargetMessageId,
                 ChannelId = message.ChannelId,
-                CreatedAt = message.CreatedAt
+                CreatedAt = message.CreatedAt,
+                Attachments = message.Attachments.Select(attachment => new AttachmentResponse()
+                {
+                    Id = attachment.Id,
+                    Content = Convert.ToBase64String(attachment.Content.ReadToBytes() ?? new byte[0]),
+                    ContentType = attachment.ContentType,
+                    CreatedAt = attachment.CreatedAt
+                }).ToList()
             };
         }
     }

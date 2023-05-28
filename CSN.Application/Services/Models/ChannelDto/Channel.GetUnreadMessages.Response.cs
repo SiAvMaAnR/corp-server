@@ -7,6 +7,6 @@ namespace CSN.Application.Services.Models.ChannelDto
 {
     public class ChannelGetUnreadMessagesResponse
     {
-        public int UnreadMessages { get; set; }
+        public int UnreadMessagesCount { get; set; }
     }
 }

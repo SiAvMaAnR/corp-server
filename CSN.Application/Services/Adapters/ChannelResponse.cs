@@ -4,10 +4,12 @@ using System.Linq;
 using System.Threading.Tasks;
 using CSN.Application.AppData.Interfaces;
 using CSN.Application.Services.Models.ChannelDto;
+using CSN.Application.Services.Models.MessageDto;
 using CSN.Domain.Entities.Channels;
 using CSN.Domain.Entities.Employees;
 using CSN.Domain.Entities.Users;
 using CSN.Domain.Shared.Enums;
+using CSN.Persistence.Extensions;
 
 namespace CSN.Application.Services.Adapters
 {
@@ -85,7 +87,14 @@ namespace CSN.Application.Services.Adapters
                     Text = message.Text,
                     Html = message.HtmlText,
                     CreatedAt = message.CreatedAt,
-                    IsRead = message.IsRead
+                    IsRead = message.IsRead,
+                    Attachments = message.Attachments.Select(attachment => new AttachmentResponse()
+                    {
+                        Id = attachment.Id,
+                        Content = Convert.ToBase64String(attachment.Content.ReadToBytes() ?? new byte[0]),
+                        ContentType = attachment.ContentType,
+                        CreatedAt = attachment.CreatedAt
+                    }).ToList()
                 }).ToList(),
             };
         }

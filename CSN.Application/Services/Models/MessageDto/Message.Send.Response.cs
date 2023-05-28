@@ -1,8 +1,17 @@
 using System.Threading.Channels;
 using CSN.Domain.Entities.Messages;
 using CSN.Domain.Entities.Users;
+using Microsoft.AspNetCore.Http;
 
 namespace CSN.Application.Services.Models.MessageDto;
+
+public class AttachmentResponse
+{
+    public int Id { get; set; }
+    public string Content { get; set; } = null!;
+    public string ContentType { get; set; } = null!;
+    public DateTime? CreatedAt { get; set; }
+}
 
 public class MessageResponse
 {
@@ -15,7 +24,7 @@ public class MessageResponse
     public int? TargetMessageId { get; set; }
     public int ChannelId { get; set; }
     public DateTime? CreatedAt { get; set; }
-    
+    public IList<AttachmentResponse>? Attachments { get; set; }
 }
 
 public class MessageSendResponse

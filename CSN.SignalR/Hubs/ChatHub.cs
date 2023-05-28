@@ -1,3 +1,4 @@
+using System.Net.Mail;
 using System.Diagnostics;
 using System.Security.Claims;
 using CSN.Application.Services.Helpers;
@@ -9,7 +10,9 @@ using CSN.Application.Services.Models.MessageDto;
 using CSN.Domain.Entities.Channels;
 using CSN.SignalR.Hubs.Common;
 using CSN.SignalR.Hubs.Interfaces;
+using CSN.SignalR.Models.Channel;
 using Microsoft.AspNetCore.Authorization;
+using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.SignalR;
 using static CSN.Application.Services.Filters.ChannelFilters;
 
@@ -44,7 +47,7 @@ public class ChatHub : BaseHub, IHub
     }
 
     [Authorize]
-    public async Task SendAsync(int channelId, string text, string html, int? targetMessageId)
+    public async Task SendAsync(int channelId, string text, string html, List<AttachmentRequest>? attachments, int? targetMessageId)
     {
         try
         {
@@ -53,15 +56,16 @@ public class ChatHub : BaseHub, IHub
                 ChannelId = channelId,
                 Text = text,
                 Html = html,
-                TargetMessageId = targetMessageId
+                TargetMessageId = targetMessageId,
+                Attachments = attachments
             });
 
             var ids = this.appDataService.GetConnectionIds(result.Users, HubType.Chat);
             await Clients.Clients(ids).SendAsync("Send", new
             {
-                channelId = result.ChannelId,
-                message = result.Message,
-                lastActivity = result.LastActivity
+                result.ChannelId,
+                result.Message,
+                result.LastActivity,
             });
 
             foreach (var id in ids)
@@ -74,8 +78,8 @@ public class ChatHub : BaseHub, IHub
 
                 await Clients.Client(id).SendAsync("UnreadMessages", new
                 {
-                    unreadMessagesCount = response.UnreadMessages,
-                    channelId = channelId,
+                    response.UnreadMessagesCount,
+                    channelId,
                 });
             }
         }
@@ -97,14 +101,14 @@ public class ChatHub : BaseHub, IHub
 
             await Clients.Clients(ids).SendAsync("ReadChannel", new
             {
-                channelId = result.ChannelId,
-                unReadMessageIds = result.UnReadMessageIds,
+                result.ChannelId,
+                result.UnReadMessageIds,
             });
 
             await Clients.Caller.SendAsync("UnreadMessages", new
             {
-                unreadMessagesCount = result.UnreadMessagesCount,
-                channelId = result.ChannelId,
+                result.UnreadMessagesCount,
+                result.ChannelId,
             });
         }
         catch (Exception exception)
@@ -122,7 +126,7 @@ public class ChatHub : BaseHub, IHub
             var result = await this.channelService.GetAsync(new ChannelGetRequest(id, count));
             await Clients.Caller.SendAsync("GetChannel", new
             {
-                channel = result.Channel
+                result.Channel
             });
         }
         catch (Exception exception)
@@ -143,8 +147,8 @@ public class ChatHub : BaseHub, IHub
 
             await Clients.Caller.SendAsync("GetUsersOfChannel", new
             {
-                users = result.Users,
-                usersCount = result.UsersCount,
+                result.Users,
+                result.UsersCount,
             });
         }
         catch (Exception exception)
@@ -168,12 +172,12 @@ public class ChatHub : BaseHub, IHub
 
             await Clients.Caller.SendAsync("GetAllChannels", new
             {
-                channels = result.Channels,
-                channelsCount = result.ChannelsCount,
-                pageNumber = result.PageNumber,
-                pageSize = result.PageSize,
-                pageCount = result.PagesCount,
-                unreadChannelsCount = result.UnreadChannelsCount
+                result.Channels,
+                result.ChannelsCount,
+                result.PageNumber,
+                result.PageSize,
+                result.PagesCount,
+                result.UnreadChannelsCount
             });
         }
         catch (Exception exception)
@@ -195,14 +199,14 @@ public class ChatHub : BaseHub, IHub
 
             await Clients.Caller.SendAsync("CreateDialogChannel", new
             {
-                channel = result.Channel,
-                isSuccess = result.IsSuccess,
+                result.Channel,
+                result.IsSuccess,
             });
 
             await Clients.Clients(ids).SendAsync("NotifyCreation", new
             {
-                isSuccess = result.IsSuccess,
-                users = result.Users
+                result.IsSuccess,
+                result.Users
             });
         }
         catch (Exception exception)
@@ -223,9 +227,9 @@ public class ChatHub : BaseHub, IHub
 
             await Clients.Caller.SendAsync("CreatePublicChannel", new
             {
-                channel = result.Channel,
-                isSuccess = result.IsSuccess,
-                users = result.Users
+                result.Channel,
+                result.IsSuccess,
+                result.Users
             });
         }
         catch (Exception exception)
@@ -246,9 +250,9 @@ public class ChatHub : BaseHub, IHub
 
             await Clients.Caller.SendAsync("CreatePrivateChannel", new
             {
-                channel = result.Channel,
-                isSuccess = result.IsSuccess,
-                users = result.Users
+                result.Channel,
+                result.IsSuccess,
+                result.Users
             });
         }
         catch (Exception exception)
@@ -272,8 +276,8 @@ public class ChatHub : BaseHub, IHub
 
             var response = new
             {
-                channel = result.Channel,
-                isSuccess = result.IsSuccess,
+                result.Channel,
+                result.IsSuccess,
             };
 
             await Clients.Caller.SendAsync("AddUser", response);

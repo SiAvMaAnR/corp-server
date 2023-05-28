@@ -75,7 +75,10 @@ namespace CSN.WebApi.Config.ServiceConfigurations
             serviceCollection.AddAuthentication(JwtBearerDefaults.AuthenticationScheme)
                 .AddJwtBearer(options => options.Config(config));
             serviceCollection.AddDataProtection();
-            serviceCollection.AddSignalR().AddJsonProtocol(options =>
+            serviceCollection.AddSignalR((options) =>
+            {
+                options.MaximumReceiveMessageSize = 20 * 1024 * 1024;
+            }).AddJsonProtocol(options =>
             {
                 options.PayloadSerializerOptions.ReferenceHandler = ReferenceHandler.IgnoreCycles;
             });

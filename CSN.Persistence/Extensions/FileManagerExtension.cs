@@ -16,6 +16,10 @@ namespace CSN.Persistence.Extensions
 
             if (image == null || image.Length <= 0) return null;
 
+            if (!Directory.Exists(path))
+            {
+                Directory.CreateDirectory(path);
+            }
             await File.WriteAllBytesAsync(fullPath, image);
             return fullPath;
         }

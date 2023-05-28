@@ -12,10 +12,10 @@ using CSN.Domain.Entities.Users;
 using CSN.Domain.Exceptions;
 using CSN.Domain.Interfaces.UnitOfWork;
 using Microsoft.AspNetCore.Http;
-using static CSN.Application.Services.Filters.ChannelFilters;
 using CSN.Application.Services.Adapters;
 using Microsoft.EntityFrameworkCore;
 using CSN.Application.Services.Models.MessageDto;
+using static CSN.Application.Services.Filters.ChannelFilters;
 
 namespace CSN.Application.Services
 {
@@ -170,16 +170,20 @@ namespace CSN.Application.Services
             User? user = await this.claimsPrincipal.GetUserAsync(this.unitOfWork) ??
                 throw new BadRequestException("Account is not found");
 
-            Channel? channel = await this.unitOfWork.Channel.GetAsync(
-                (channel) =>
-                    channel.IsDeleted == false &&
-                    channel.Users.Contains(user) &&
-                    channel.Id == request.Id,
-                (channel) => channel.Messages
+            var customChannelQuery = await this.unitOfWork.Channel.CustomAsync();
+
+            Channel? channel = await customChannelQuery
+                .Include(channel => channel.Messages
                     .Where(message => !message.IsDelete)
                     .OrderByDescending(message => message.CreatedAt)
-                    .Take(request.Count),
-                (channel) => channel.Users);
+                    .Take(request.Count))
+                        .ThenInclude(message => message.Attachments)
+                .Include((channel) => channel.Users)
+                .FirstOrDefaultAsync((channel) =>
+                    channel.IsDeleted == false &&
+                    channel.Users.Contains(user) &&
+                    channel.Id == request.Id);
+
 
             if (channel == null)
                 throw new NotFoundException("Channel not found");
