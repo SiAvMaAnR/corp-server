@@ -75,36 +75,7 @@ public class MessageService : BaseService, IMessageService
         if (channel == null)
             throw new BadRequestException("Channel is not found");
 
-        var attachmentsList = request.Attachments?.Select(async attach =>
-        {
-            var contentType = attach.ContentType;
-            Attachment? attachment = null;
-
-            switch (contentType)
-            {
-                case "image":
-                    {
-                        var content = (attach.Content ?? "").Replace("data:image/png;base64,", "");
-                        var imageBytes = Convert.FromBase64String(content);
-                        var imagePath = await imageBytes.WriteToFileAsync(contentType);
-
-                        attachment = new Attachment()
-                        {
-                            Content = imagePath ?? "",
-                            ContentType = contentType
-                        };
-                        break;
-                    }
-                default:
-                    throw new BadRequestException("Unknown format");
-            }
-
-            return attachment;
-        });
-
-        var attachments = await Task.WhenAll(attachmentsList ?? new List<Task<Attachment>>());
-
-        var filteredAttachments = attachments.Where(attach => !string.IsNullOrEmpty(attach.Content));
+        var attachments = await request.Attachments.ToAttachmentsAsync();
 
         Message message = new Message()
         {
@@ -113,7 +84,7 @@ public class MessageService : BaseService, IMessageService
             TargetMessageId = request.TargetMessageId,
             Author = user,
             ReadUsers = { user },
-            Attachments = filteredAttachments.ToList()
+            Attachments = attachments.ToList()
         };
 
         channel.Messages.Add(message);
