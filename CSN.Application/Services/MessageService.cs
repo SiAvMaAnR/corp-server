@@ -84,7 +84,7 @@ public class MessageService : BaseService, IMessageService
             TargetMessageId = request.TargetMessageId,
             Author = user,
             ReadUsers = { user },
-            Attachments = attachments.ToList()
+            Attachments = attachments?.ToList() ?? new List<Attachment>()
         };
 
         channel.Messages.Add(message);

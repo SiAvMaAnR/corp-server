@@ -1,64 +1,36 @@
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Threading.Tasks;
+using CSN.Application.Services.Models.MessageDto;
+using CSN.Domain.Entities.Attachments;
+using CSN.Domain.Exceptions;
+using CSN.Persistence.Extensions;
 
 namespace CSN.Application.Services.Adapters
 {
     public static class AttachmentsExtension
     {
-        public async static IEnumerable<Attachment> ToAttachmentsAsync(this IEnumerable<AttachmentResponse> attachmentsResponse) {
+        public async static Task<IEnumerable<Attachment>> ToAttachmentsAsync(this IEnumerable<AttachmentRequest>? attachmentsResponse)
+        {
             var attachmentsList = attachmentsResponse?.Select(async attach =>
             {
                 var contentType = attach.ContentType;
-                // Attachment? attachment = null;
 
-    var content = contentType switch{
-        "image" => (attach.Content ?? "").Replace("data:image/png;base64,", ""),
-        "file" => (attach.Content ?? "").Replace("data:image/png;base64,", ""),
-        _ => throw new BadRequestException("Unknown format")
-    }
+                var content = contentType switch
+                {
+                    "image/png" => (attach.Content ?? "").Replace("data:image/png;base64,", ""),
+                    "image/jpeg" => (attach.Content ?? "").Replace("data:image/jpeg;base64,", ""),
+                    "image/jpg" => (attach.Content ?? "").Replace("data:image/jpg;base64,", ""),
+                    "image/gif" => (attach.Content ?? "").Replace("data:image/gif;base64,", ""),
+                    "file" => (attach.Content ?? "").Replace("data", ""),
+                    _ => throw new BadRequestException("Unknown format")
+                };
 
-var imageBytes = Convert.FromBase64String(content);
-                        var imagePath = await imageBytes.WriteToFileAsync(contentType);
+                var imageBytes = Convert.FromBase64String(content);
+                var imagePath = await imageBytes.WriteToFileAsync(contentType.Replace("/", "."));
 
-                        Attachment attachment = new Attachment()
-                        {
-                            Content = imagePath ?? "",
-                            ContentType = contentType
-                        };
-
-                // switch (contentType)
-                // {
-                //     case "image":
-                //     {
-                //         var content = (attach.Content ?? "").Replace("data:image/png;base64,", "");
-                //         var imageBytes = Convert.FromBase64String(content);
-                //         var imagePath = await imageBytes.WriteToFileAsync(contentType);
-
-                //         attachment = new Attachment()
-                //         {
-                //             Content = imagePath ?? "",
-                //             ContentType = contentType
-                //         };
-                //         break;
-                //     }
-                //     case "file":
-                //     {
-                //         var content = (attach.Content ?? "").Replace("data:image/png;base64,", "");
-                //         var imageBytes = Convert.FromBase64String(content);
-                //         var imagePath = await imageBytes.WriteToFileAsync(contentType);
-
-                //         attachment = new Attachment()
-                //         {
-                //             Content = imagePath ?? "",
-                //             ContentType = contentType
-                //         };
-                //         break;
-                //     }
-                //     default:
-                //         throw new BadRequestException("Unknown format");
-                // }
+                Attachment attachment = new Attachment()
+                {
+                    Content = imagePath ?? "",
+                    ContentType = contentType
+                };
 
                 return attachment;
             });
