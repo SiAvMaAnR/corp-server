@@ -39,6 +39,7 @@ namespace CSN.Application.Services
                 (project.Users.Contains(user) || user.Role == "Company") &&
                 project.Name.ToLower().Contains(searchField));
 
+
             if (projects == null)
                 throw new NotFoundException("Projects not found");
 
@@ -48,6 +49,7 @@ namespace CSN.Application.Services
             int projectsCompletedCount = projects?.Count(project => project.State == ProjectState.Completed) ?? 0;
 
             var adaptedProjects = projects?
+                .OrderByDescending(project => project.CreatedAt)
                 .Skip(request.PageNumber * request.PageSize)
                 .Take(request.PageSize)
                 .Select(project => project.ToProjectResponse());
