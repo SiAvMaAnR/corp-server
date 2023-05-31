@@ -1,6 +1,5 @@
 ﻿using CSN.Application.Services;
 using CSN.Application.Services.Interfaces;
-
 using CSN.Domain.Interfaces.UnitOfWork;
 using CSN.Infrastructure.Extensions;
 using CSN.Persistence.DBContext;
@@ -58,10 +57,12 @@ namespace CSN.WebApi.Config.ServiceConfigurations
             {
                 options.SuppressModelStateInvalidFilter = true;
             });
+            serviceCollection.AddAntiforgery(options => options.HeaderName = "X-CSRF-TOKEN");
             serviceCollection.AddControllers(config =>
             {
-                config.Filters.Add(new ValidationFilterAttribute());
-                config.Filters.Add(new AntiDuplicateFilterAttribute());
+                config.Filters.Add<ValidationAntiForgeryTokenAttribute>();
+                config.Filters.Add<ValidationFilterAttribute>();
+                config.Filters.Add<AntiDuplicateFilterAttribute>();
             }).AddJsonOptions(options =>
             {
                 options.JsonSerializerOptions.ReferenceHandler = ReferenceHandler.IgnoreCycles;
