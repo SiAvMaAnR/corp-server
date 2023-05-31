@@ -13,6 +13,7 @@ using CSN.Email.Handlers;
 using CSN.Email.Models;
 using CSN.Infrastructure.AuthOptions;
 using CSN.Persistence.Extensions;
+using Microsoft.AspNetCore.Antiforgery;
 using Microsoft.AspNetCore.DataProtection;
 using Microsoft.AspNetCore.Http;
 using Microsoft.Extensions.Configuration;
@@ -27,13 +28,17 @@ public class CompanyService : BaseService, ICompanyService
     public readonly IDataProtectionProvider protection;
     private readonly EmailClient emailClient;
     private readonly IAppData appData;
+    private readonly IAntiforgery antiforgery;
+    private readonly IHttpContextAccessor context;
 
     public CompanyService(IUnitOfWork unitOfWork, IHttpContextAccessor context, IAppData appData,
-        IConfiguration configuration, IDataProtectionProvider protection) : base(unitOfWork, context)
+        IConfiguration configuration, IDataProtectionProvider protection, IAntiforgery antiforgery) : base(unitOfWork, context)
     {
         this.configuration = configuration;
         this.protection = protection;
         this.appData = appData;
+        this.antiforgery = antiforgery;
+        this.context = context;
 
         var smtpModel = new SmtpModel()
         {
@@ -77,6 +82,22 @@ public class CompanyService : BaseService, ICompanyService
                         ?? throw new BadRequestException("Missing authorization lifeTime") },
             }
         );
+
+        var context = this.context.HttpContext;
+        if (context != null)
+        {
+            var csrfTokens = antiforgery.GetAndStoreTokens(context);
+
+            if (csrfTokens.RequestToken != null)
+            {
+                context.Response.Cookies.Append("CSRF-TOKEN", csrfTokens.RequestToken, new CookieOptions
+                {
+                    HttpOnly = true,
+                    Secure = true,
+                    SameSite = SameSiteMode.Strict
+                });
+            }
+        }
 
         return new CompanyLoginResponse()
         {

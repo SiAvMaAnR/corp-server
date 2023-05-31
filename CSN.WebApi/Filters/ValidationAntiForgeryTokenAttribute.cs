@@ -15,33 +15,17 @@ public class ValidationAntiForgeryTokenAttribute : IAsyncActionFilter
 
     public async Task OnActionExecutionAsync(ActionExecutingContext context, ActionExecutionDelegate next)
     {
-        if (context.HttpContext.Request.Method == "POST")
+        try
         {
-            if (await this.antiforgery.IsRequestValidAsync(context.HttpContext))
-            {
-                await this.antiforgery.ValidateRequestAsync(context.HttpContext);
-            }
-            else
-            {
-                throw new BadRequestException("Invalid request");
-            }
+            await this.antiforgery.ValidateRequestAsync(context.HttpContext);
         }
-        await next.Invoke();
-    }
+        catch (Exception)
+        {
+            string message = "The CSRF token is missing or does not match the expected value. Please refresh the page and try again.";
+            throw new BadRequestException(message);
+        }
 
-    public async Task OnActionExecutedAsync(ActionExecutedContext context)
-    {
-        if (context.HttpContext.Request.Method == "GET")
-        {
-            var tokens = this.antiforgery.GetAndStoreTokens(context.HttpContext);
-            if (tokens?.RequestToken != null)
-            {
-                context.HttpContext.Response.Cookies.Append("XSRF-TOKEN", tokens.RequestToken, new CookieOptions
-                {
-                    HttpOnly = false
-                });
-            }
-        }
-        await Task.CompletedTask;
+
+        await next.Invoke();
     }
 }
