@@ -38,7 +38,7 @@ namespace CSN.Application.Services.Adapters
                     CreatedAt = user.CreatedAt,
                     UpdatedAt = user.UpdatedAt,
                     Role = user.Role,
-                    Image = user.Image,
+                    Image = Convert.ToBase64String(user.Image.ReadToBytes() ?? new byte[0]),
                 }).ToList(),
                 Messages = channel.Messages.Select(message => new MessageResponseForAll()
                 {
@@ -77,7 +77,7 @@ namespace CSN.Application.Services.Adapters
                     Role = user.Role,
                     Post = (user as Employee)?.Post.ToString(),
                     State = appData.GetById(user.Id)?.State ?? UserState.Offline,
-                    Image = user.Image,
+                    Image = Convert.ToBase64String(user.Image.ReadToBytes() ?? new byte[0]),
                 }).ToList(),
                 Messages = channel.Messages.Select(message => new MessageResponseForOne()
                 {

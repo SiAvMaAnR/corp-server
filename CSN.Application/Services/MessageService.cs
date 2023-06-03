@@ -91,6 +91,7 @@ public class MessageService : BaseService, IMessageService
         channel.LastActivity = DateTime.Now;
 
         await this.unitOfWork.SaveChangesAsync();
+
         return new MessageSendResponse()
         {
             Users = channel.Users,

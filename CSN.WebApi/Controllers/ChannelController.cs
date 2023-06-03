@@ -64,5 +64,21 @@ namespace CSN.WebApi.Controllers
                 response.UnreadChannelsCount
             });
         }
+
+        [HttpGet("GetUsersWhoAreNotInChannel"), Authorize]
+        public async Task<IActionResult> GetUsersWhoAreNotInChannel([FromQuery] ChannelGetUsersNotInChannel request)
+        {
+            var response = await channelService.GetUsersNotInChannelAsync(new ChannelGetUsersRequest()
+            {
+                ChannelId = request.ChannelId,
+                Search = request.Search
+            });
+
+            return Ok(new
+            {
+                response.Users,
+                response.UsersCount,
+            });
+        }
     }
 }

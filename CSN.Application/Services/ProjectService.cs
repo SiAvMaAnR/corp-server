@@ -39,7 +39,6 @@ namespace CSN.Application.Services
                 (project.Users.Contains(user) || user.Role == "Company") &&
                 project.Name.ToLower().Contains(searchField));
 
-
             if (projects == null)
                 throw new NotFoundException("Projects not found");
 
@@ -67,7 +66,6 @@ namespace CSN.Application.Services
                 PagesCount = pagesCount,
             };
         }
-
 
         public async Task<ProjectGetResponse> GetProjectAsync(ProjectGetRequest request)
         {

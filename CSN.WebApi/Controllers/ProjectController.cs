@@ -57,5 +57,23 @@ namespace CSN.WebApi.Controllers
                 response.IsSuccess
             });
         }
+
+
+        [HttpPost("AddUser"), Authorize(Policy = "OnlyCompany")]
+        public async Task<IActionResult> AddUserToProject([FromBody] ProjectAddUser request)
+        {
+            var response = await this.projectService.AddUserToProjectAsync(new ProjectAddUserRequest()
+            {
+                TargetProjectId = request.TargetProjectId,
+                TargetUserId = request.TargetUserId
+            });
+
+            return Ok(new
+            {
+                response.IsSuccess
+            });
+        }
+
+        
     }
 }

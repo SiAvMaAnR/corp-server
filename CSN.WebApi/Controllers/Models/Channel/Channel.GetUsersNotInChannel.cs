@@ -3,12 +3,11 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
 
-namespace CSN.Application.Services.Models.ChannelDto
+namespace CSN.WebApi.Controllers.Models.Channel
 {
-    public class ChannelGetUsersRequest
+    public class ChannelGetUsersNotInChannel
     {
-        public int ChannelId { get; set; }
         public string? Search { get; set; }
-
+        public int ChannelId { get; set; }
     }
 }

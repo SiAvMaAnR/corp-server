@@ -15,4 +15,5 @@ public interface IChannelService : IBaseService
     Task<ChannelGetAllOfCompanyResponse> GetAllOfCompanyAsync(ChannelGetAllOfCompanyRequest request);
     Task<ChannelGetUsersResponse> GetUsersOfChannelAsync(ChannelGetUsersRequest request);
     Task<MessageReadResponse> ReadAsync(MessageReadRequest request);
+    Task<ChannelGetUsersResponse> GetUsersNotInChannelAsync(ChannelGetUsersRequest request);
 }

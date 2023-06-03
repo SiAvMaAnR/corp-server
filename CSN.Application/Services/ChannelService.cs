@@ -44,7 +44,40 @@ namespace CSN.Application.Services
                 (channel) => channel.CompanyId == companyId,
                 (channel) => channel.Users);
 
-            List<User>? users = channelWithUsers?.Users.ToList();
+            var users = channelWithUsers?.Users?
+                .Select(user => user.ToUserResponse())
+                .ToList();
+
+            return new ChannelGetUsersResponse()
+            {
+                Users = users,
+                UsersCount = users?.Count ?? 0
+            };
+        }
+
+        public async Task<ChannelGetUsersResponse> GetUsersNotInChannelAsync(ChannelGetUsersRequest request)
+        {
+            if (this.claimsPrincipal == null)
+                throw new ForbiddenException("Forbidden");
+
+            User user = await this.claimsPrincipal.GetUserAsync(this.unitOfWork) ??
+                throw new BadRequestException("Account is not found");
+
+            int companyId = user.GetCompanyId() ??
+                throw new BadRequestException("Account is not found");
+
+            string searchFilter = request.Search?.ToLower() ?? "";
+
+            var usersOfChannel = await this.unitOfWork.User.GetAllAsync(
+                (cUser) =>
+                    !cUser.Channels.Any(channel => channel.Id == request.ChannelId) &&
+                    cUser.Login.ToLower().Contains(searchFilter),
+                (cUser) => cUser.Channels);
+
+            var users = usersOfChannel?
+                .Where(cUser => cUser.GetCompanyId() == companyId)
+                .Select(user => user.ToUserResponse())
+                .ToList();
 
             return new ChannelGetUsersResponse()
             {
@@ -115,10 +148,10 @@ namespace CSN.Application.Services
             var channelsQuery = await this.unitOfWork.Channel.CustomAsync();
 
             IEnumerable<Channel>? channelsAll = channelsQuery
-            .Include(channel => channel.Users)
-            .Include(channel => channel.Messages.OrderByDescending(message => message.CreatedAt))
-                .ThenInclude(message => message.ReadUsers)
-            .Where(channel => !channel.IsDeleted && channel.Users.Contains(user));
+                .Include(channel => channel.Users)
+                .Include(channel => channel.Messages.OrderByDescending(message => message.CreatedAt))
+                    .ThenInclude(message => message.ReadUsers)
+                .Where(channel => !channel.IsDeleted && channel.Users.Contains(user));
 
             int unreadChannelsCount = channelsAll?.Count(channel =>
                 channel.Messages.Any((message) => message.ReadUsers.Contains(user))) ?? 0;
@@ -183,7 +216,6 @@ namespace CSN.Application.Services
                     channel.IsDeleted == false &&
                     channel.Users.Contains(user) &&
                     channel.Id == request.Id);
-
 
             if (channel == null)
                 throw new NotFoundException("Channel not found");

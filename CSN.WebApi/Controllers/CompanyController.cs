@@ -54,7 +54,7 @@ namespace CSN.WebApi.Controllers
             });
         }
 
-        [HttpPost("Edit"), Authorize(Policy = "OnlyCompany")]
+        [HttpPut("Edit"), Authorize(Policy = "OnlyCompany")]
         public async Task<IActionResult> Edit([FromBody] CompanyEdit request)
         {
             var response = await companyService.EditAsync(new CompanyEditRequest()
