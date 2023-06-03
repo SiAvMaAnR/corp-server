@@ -262,7 +262,9 @@ namespace CSN.Application.Services
 
             var unreadMessagesCount = channel.Messages.Count(message => !message.IsContainsReadUser(user));
 
-            var users = channel.Users.Where(cUser => cUser.Id != user.Id);
+            var users = channel.Users
+                .Where(cUser => cUser.Id != user.Id)
+                .Select(user => user.ToUserResponse());
 
             return new MessageReadResponse()
             {
@@ -301,10 +303,12 @@ namespace CSN.Application.Services
                 CompanyId = companyId
             };
 
+
             await this.unitOfWork.PublicChannel.AddAsync(publicChannel);
             await this.unitOfWork.SaveChangesAsync();
 
-            return new PublicChannelCreateResponse(true, publicChannel.Users, publicChannel);
+            var users = publicChannel.Users.Select(user => user.ToUserResponse());
+            return new PublicChannelCreateResponse(true, users, publicChannel);
         }
 
         public async Task<PrivateChannelCreateResponse> CreateAsync(PrivateChannelCreateRequest request)
@@ -338,7 +342,9 @@ namespace CSN.Application.Services
             await this.unitOfWork.PrivateChannel.AddAsync(privateChannel);
             await this.unitOfWork.SaveChangesAsync();
 
-            return new PrivateChannelCreateResponse(true, privateChannel.Users, privateChannel);
+            var users = privateChannel.Users.Select(user => user.ToUserResponse());
+
+            return new PrivateChannelCreateResponse(true, users, privateChannel);
         }
 
         public async Task<DialogChannelCreateResponse> CreateAsync(DialogChannelCreateRequest request)
@@ -383,7 +389,9 @@ namespace CSN.Application.Services
                 dialogChannel = newDialogChannel;
             }
 
-            return new DialogChannelCreateResponse(true, dialogChannel.Users, dialogChannel);
+            var users = dialogChannel.Users.Select(user => user.ToUserResponse());
+
+            return new DialogChannelCreateResponse(true, users, dialogChannel);
         }
 
         public async Task<ChannelAddUserResponse> AddUserAsync(ChannelAddUserRequest request)
@@ -425,7 +433,9 @@ namespace CSN.Application.Services
             channel?.Users.Add(targetUser);
             await this.unitOfWork.SaveChangesAsync();
 
-            return new ChannelAddUserResponse(true, channel!.Users, channel);
+            var users = channel?.Users.Select(user => user.ToUserResponse());
+
+            return new ChannelAddUserResponse(true, users, channel?.ToChannelResponseForOne(currentUser, appData));
         }
     }
 }

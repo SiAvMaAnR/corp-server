@@ -1,6 +1,7 @@
 using CSN.Application.AppContext.Models;
 using CSN.Application.AppData.Interfaces;
 using CSN.Application.Services.Helpers.Enums;
+using CSN.Application.Services.Models.Common;
 using CSN.Domain.Entities.Users;
 using CSN.Domain.Exceptions;
 using CSN.Domain.Shared.Enums;
@@ -21,28 +22,6 @@ public class AppData : IAppData
     {
         return this.ConnectedUsers.FirstOrDefault(user => user.ChatHubId == chatCId);
     }
-
-    public IReadOnlyList<string> GetConnectionIds(ICollection<User>? users, HubType type)
-    {
-        var connectionUsers = this.ConnectedUsers?.Where(userC => users?.Any(user => user.Id == userC.Id) ?? false).ToList();
-
-        List<string>? hubIds = type switch
-        {
-            HubType.Chat => connectionUsers?
-                .Select(user => user.ChatHubId!)?
-                .ToList(),
-            HubType.State => connectionUsers?
-                .Select(user => user.StateHubId!)?
-                .ToList(),
-            HubType.Notification => connectionUsers?
-                .Select(user => user.NotificationHubId!)
-                .ToList(),
-            _ => throw new BadRequestException("Unknown filter")
-        };
-
-        return hubIds ?? new List<string>();
-    }
-
 
     public IReadOnlyList<string> GetConnectionIds(IEnumerable<User>? users, HubType type)
     {
