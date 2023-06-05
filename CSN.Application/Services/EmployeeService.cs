@@ -16,7 +16,6 @@ using CSN.Persistence.Extensions;
 using CSN.Domain.Entities.Invitations;
 using CSN.Application.AppData.Interfaces;
 using CSN.Domain.Shared.Enums;
-using Microsoft.AspNetCore.Antiforgery;
 
 namespace CSN.Application.Services;
 
@@ -25,16 +24,14 @@ public class EmployeeService : BaseService, IEmployeeService
     public readonly IConfiguration configuration;
     public readonly IDataProtectionProvider protection;
     public readonly IAppData appData;
-    private readonly IAntiforgery antiforgery;
     private readonly IHttpContextAccessor context;
 
     public EmployeeService(IUnitOfWork unitOfWork, IHttpContextAccessor context, IConfiguration configuration,
-        IAppData appData, IDataProtectionProvider protection, IAntiforgery antiforgery) : base(unitOfWork, context)
+        IAppData appData, IDataProtectionProvider protection) : base(unitOfWork, context)
     {
         this.configuration = configuration;
         this.protection = protection;
         this.appData = appData;
-        this.antiforgery = antiforgery;
         this.context = context;
     }
 
@@ -70,22 +67,6 @@ public class EmployeeService : BaseService, IEmployeeService
             { "issuer" , this.configuration["Authorization:Issuer"] ?? throw new BadRequestException("Missing authorization issuer") },
             { "lifeTime" , this.configuration["Authorization:LifeTime"] ?? throw new BadRequestException("Missing authorization lifeTime") },
         });
-
-        var context = this.context.HttpContext;
-        if (context != null)
-        {
-            var csrfTokens = antiforgery.GetAndStoreTokens(context);
-
-            if (csrfTokens.RequestToken != null)
-            {
-                context.Response.Cookies.Append("CSRF-TOKEN", csrfTokens.RequestToken, new CookieOptions
-                {
-                    HttpOnly = true,
-                    Secure = true,
-                    SameSite = SameSiteMode.Strict
-                });
-            }
-        }
 
         return new EmployeeLoginResponse()
         {

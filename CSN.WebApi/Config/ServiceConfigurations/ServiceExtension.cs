@@ -57,10 +57,8 @@ namespace CSN.WebApi.Config.ServiceConfigurations
             {
                 options.SuppressModelStateInvalidFilter = true;
             });
-            serviceCollection.AddAntiforgery(options => options.HeaderName = "X-CSRF-TOKEN");
             serviceCollection.AddControllers(config =>
             {
-                // config.Filters.Add<ValidationAntiForgeryTokenAttribute>();
                 config.Filters.Add<ValidationFilterAttribute>();
                 config.Filters.Add<AntiDuplicateFilterAttribute>();
             }).AddJsonOptions(options =>

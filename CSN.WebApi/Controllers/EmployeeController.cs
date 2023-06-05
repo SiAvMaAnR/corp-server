@@ -20,7 +20,6 @@ namespace CSN.WebApi.Controllers
         }
 
         [HttpPost("Login")]
-        [IgnoreAntiforgeryToken]
         public async Task<IActionResult> Login([FromBody] EmployeeLogin request)
         {
             var response = await this.employeeService.LoginAsync(new EmployeeLoginRequest()
