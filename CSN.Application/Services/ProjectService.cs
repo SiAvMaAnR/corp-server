@@ -1,3 +1,4 @@
+using System.Data;
 using CSN.Application.Extensions;
 using CSN.Application.Services.Adapters;
 using CSN.Application.Services.Common;
@@ -20,7 +21,6 @@ namespace CSN.Application.Services
 
         }
 
-
         public async Task<ProjectGetAllResponse> GetProjectsAsync(ProjectGetAllRequest request)
         {
             if (this.claimsPrincipal == null)
@@ -34,21 +34,38 @@ namespace CSN.Application.Services
 
             string searchField = request.Search?.ToLower() ?? "";
 
-            var projects = await this.unitOfWork.Project.GetAllAsync(
-                (project) => project.CompanyId == companyId &&
-                    project.Name.ToLower().Contains(searchField));
+            var projects = await this.unitOfWork.Project.GetAllAsync((project) =>
+                project.CompanyId == companyId &&
+                (project.Users.Contains(user) || user.Role == "Company") &&
+                project.Name.ToLower().Contains(searchField));
 
             if (projects == null)
                 throw new NotFoundException("Projects not found");
 
-            var adaptedProjects = projects?.Select(project => project.ToProjectResponse());
+            int projectsCount = projects?.ToList().Count ?? 0;
+
+            int projectsActiveCount = projects?.Count(project => project.State == ProjectState.Active) ?? 0;
+            int projectsCompletedCount = projects?.Count(project => project.State == ProjectState.Completed) ?? 0;
+
+            var adaptedProjects = projects?
+                .OrderByDescending(project => project.CreatedAt)
+                .Skip(request.PageNumber * request.PageSize)
+                .Take(request.PageSize)
+                .Select(project => project.ToProjectResponse());
+
+            int pagesCount = (int)Math.Ceiling(((decimal)projectsCount / request.PageSize));
 
             return new ProjectGetAllResponse()
             {
-                Projects = adaptedProjects
+                Projects = adaptedProjects,
+                PageSize = request.PageSize,
+                PageNumber = request.PageNumber,
+                ProjectsCount = projectsCount,
+                ActiveCount = projectsActiveCount,
+                CompletedCount = projectsCompletedCount,
+                PagesCount = pagesCount,
             };
         }
-
 
         public async Task<ProjectGetResponse> GetProjectAsync(ProjectGetRequest request)
         {
@@ -61,8 +78,10 @@ namespace CSN.Application.Services
             int companyId = user.GetCompanyId() ??
                 throw new BadRequestException("Company not found");
 
-            Project? project = await this.unitOfWork.Project.GetAsync(
-                (project) => project.Id == request.ProjectId && project.CompanyId == companyId);
+            Project? project = await this.unitOfWork.Project.GetAsync((project) =>
+                project.Id == request.ProjectId &&
+                (project.Users.Contains(user) || user.Role == "Company") &&
+                project.CompanyId == companyId);
 
             return new ProjectGetResponse()
             {
@@ -87,10 +106,9 @@ namespace CSN.Application.Services
                 Customer = request.Customer,
                 Description = request.Description,
                 Link = request.Link,
-                State = ProjectState.Active,
+                State = request.State ?? ProjectState.Active,
                 Priority = Priority.Default,
                 CompanyId = companyId,
-                Users = { user }
             };
 
             await this.unitOfWork.Project.AddAsync(project);

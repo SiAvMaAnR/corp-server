@@ -27,6 +27,7 @@ public class CompanyService : BaseService, ICompanyService
     public readonly IDataProtectionProvider protection;
     private readonly EmailClient emailClient;
     private readonly IAppData appData;
+    private readonly IHttpContextAccessor context;
 
     public CompanyService(IUnitOfWork unitOfWork, IHttpContextAccessor context, IAppData appData,
         IConfiguration configuration, IDataProtectionProvider protection) : base(unitOfWork, context)
@@ -34,6 +35,7 @@ public class CompanyService : BaseService, ICompanyService
         this.configuration = configuration;
         this.protection = protection;
         this.appData = appData;
+        this.context = context;
 
         var smtpModel = new SmtpModel()
         {

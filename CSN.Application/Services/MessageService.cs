@@ -6,11 +6,13 @@ using CSN.Application.Services.Common;
 using CSN.Application.Services.Interfaces;
 using CSN.Application.Services.Models.ChannelDto;
 using CSN.Application.Services.Models.MessageDto;
+using CSN.Domain.Entities.Attachments;
 using CSN.Domain.Entities.Channels;
 using CSN.Domain.Entities.Messages;
 using CSN.Domain.Entities.Users;
 using CSN.Domain.Exceptions;
 using CSN.Domain.Interfaces.UnitOfWork;
+using CSN.Persistence.Extensions;
 using Microsoft.AspNetCore.Http;
 using Microsoft.Extensions.Configuration;
 
@@ -50,7 +52,7 @@ public class MessageService : BaseService, IMessageService
 
         return new ChannelGetUnreadMessagesResponse()
         {
-            UnreadMessages = unreadMessagesCount
+            UnreadMessagesCount = unreadMessagesCount
         };
     }
 
@@ -70,7 +72,10 @@ public class MessageService : BaseService, IMessageService
             (channel) => channel.Users,
             (channel) => channel.Messages);
 
-        if (channel == null) throw new BadRequestException("Channel is not found");
+        if (channel == null)
+            throw new BadRequestException("Channel is not found");
+
+        var attachments = await request.Attachments.ToAttachmentsAsync();
 
         Message message = new Message()
         {
@@ -78,13 +83,15 @@ public class MessageService : BaseService, IMessageService
             HtmlText = request.Html,
             TargetMessageId = request.TargetMessageId,
             Author = user,
-            ReadUsers = { user }
+            ReadUsers = { user },
+            Attachments = attachments?.ToList() ?? new List<Attachment>()
         };
 
         channel.Messages.Add(message);
         channel.LastActivity = DateTime.Now;
 
         await this.unitOfWork.SaveChangesAsync();
+
         return new MessageSendResponse()
         {
             Users = channel.Users,

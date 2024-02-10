@@ -24,6 +24,7 @@ public class EmployeeService : BaseService, IEmployeeService
     public readonly IConfiguration configuration;
     public readonly IDataProtectionProvider protection;
     public readonly IAppData appData;
+    private readonly IHttpContextAccessor context;
 
     public EmployeeService(IUnitOfWork unitOfWork, IHttpContextAccessor context, IConfiguration configuration,
         IAppData appData, IDataProtectionProvider protection) : base(unitOfWork, context)
@@ -31,6 +32,7 @@ public class EmployeeService : BaseService, IEmployeeService
         this.configuration = configuration;
         this.protection = protection;
         this.appData = appData;
+        this.context = context;
     }
 
     public async Task<EmployeeLoginResponse> LoginAsync(EmployeeLoginRequest request)

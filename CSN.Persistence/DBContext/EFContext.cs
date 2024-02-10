@@ -7,6 +7,8 @@ using CSN.Domain.Entities.Companies;
 using CSN.Domain.Entities.Employees;
 using CSN.Domain.Entities.Invitations;
 using CSN.Domain.Entities.Messages;
+using CSN.Domain.Entities.Projects;
+using CSN.Domain.Entities.Tasks;
 using CSN.Domain.Entities.Users;
 using CSN.Persistence.EntityConfigurations;
 using Microsoft.EntityFrameworkCore;
@@ -20,6 +22,8 @@ namespace CSN.Persistence.DBContext
         public DbSet<Company> Companies { get; set; } = null!;
         public DbSet<Message> Messages { get; set; } = null!;
         public DbSet<Channel> Channels { get; set; } = null!;
+        public DbSet<Project> Projects { get; set; } = null!;
+        public DbSet<ProjectTask> Tasks { get; set; } = null!;
         public DbSet<PublicChannel> PublicChannels { get; set; } = null!;
         public DbSet<PrivateChannel> PrivateChannels { get; set; } = null!;
         public DbSet<DialogChannel> DialogChannels { get; set; } = null!;

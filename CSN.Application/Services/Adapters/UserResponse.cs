@@ -1,9 +1,7 @@
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Threading.Tasks;
-using CSN.Application.Services.Models.ProjectDto;
+using CSN.Application.Services.Models.Common;
+using CSN.Domain.Entities.Employees;
 using CSN.Domain.Entities.Users;
+using CSN.Persistence.Extensions;
 
 namespace CSN.Application.Services.Adapters
 {
@@ -16,8 +14,9 @@ namespace CSN.Application.Services.Adapters
                 Id = user.Id,
                 Email = user.Email,
                 Login = user.Login,
-                Image = user.Image,
+                Image = Convert.ToBase64String(user.Image.ReadToBytes() ?? new byte[0]),
                 Role = user.Role,
+                Post = (user as Employee)?.Post.ToString()
             };
         }
     }

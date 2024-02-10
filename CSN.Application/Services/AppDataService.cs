@@ -10,6 +10,7 @@ using CSN.Application.Extensions;
 using CSN.Application.Services.Helpers.Enums;
 using CSN.Application.AppContext.Models;
 using CSN.Domain.Shared.Enums;
+using CSN.Application.Services.Models.Common;
 
 namespace CSN.Application.Services
 {
@@ -29,6 +30,25 @@ namespace CSN.Application.Services
         public IReadOnlyList<string> GetConnectionIds(ICollection<User>? users, HubType type)
         {
             return this.appData.GetConnectionIds(users, type);
+        }
+
+        public IReadOnlyList<string> GetConnectionIds(IEnumerable<User>? users, HubType type)
+        {
+            return this.appData.GetConnectionIds(users, type);
+        }
+
+        public IReadOnlyList<string> GetConnectionIds(IEnumerable<UserResponse>? users, HubType type)
+        {
+            var adaptUsers = users?.Select(user => new User()
+            {
+                Id = user.Id,
+                Login = user.Login,
+                Email = user.Email,
+                Role = user.Role,
+                Image = user.Image
+            });
+
+            return this.appData.GetConnectionIds(adaptUsers, type);
         }
 
         public async Task<UserStateResponse> SetStateAsync(UserStateRequest request)

@@ -8,5 +8,7 @@ namespace CSN.Application.Services.Models.ChannelDto
     public class ChannelGetUsersRequest
     {
         public int ChannelId { get; set; }
+        public string? Search { get; set; }
+
     }
 }

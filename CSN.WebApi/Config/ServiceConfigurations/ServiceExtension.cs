@@ -1,6 +1,5 @@
 ﻿using CSN.Application.Services;
 using CSN.Application.Services.Interfaces;
-
 using CSN.Domain.Interfaces.UnitOfWork;
 using CSN.Infrastructure.Extensions;
 using CSN.Persistence.DBContext;
@@ -37,6 +36,7 @@ namespace CSN.WebApi.Config.ServiceConfigurations
             serviceCollection.AddScoped<IChannelService, ChannelService>();
             serviceCollection.AddScoped<IInvitationService, InvitationService>();
             serviceCollection.AddScoped<IMessageService, MessageService>();
+            serviceCollection.AddScoped<IProjectService, ProjectService>();
             serviceCollection.AddScoped<IAppDataService, AppDataService>();
             return serviceCollection;
         }
@@ -59,8 +59,8 @@ namespace CSN.WebApi.Config.ServiceConfigurations
             });
             serviceCollection.AddControllers(config =>
             {
-                config.Filters.Add(new ValidationFilterAttribute());
-                config.Filters.Add(new AntiDuplicateFilterAttribute());
+                config.Filters.Add<ValidationFilterAttribute>();
+                config.Filters.Add<AntiDuplicateFilterAttribute>();
             }).AddJsonOptions(options =>
             {
                 options.JsonSerializerOptions.ReferenceHandler = ReferenceHandler.IgnoreCycles;
@@ -74,7 +74,10 @@ namespace CSN.WebApi.Config.ServiceConfigurations
             serviceCollection.AddAuthentication(JwtBearerDefaults.AuthenticationScheme)
                 .AddJwtBearer(options => options.Config(config));
             serviceCollection.AddDataProtection();
-            serviceCollection.AddSignalR().AddJsonProtocol(options =>
+            serviceCollection.AddSignalR((options) =>
+            {
+                options.MaximumReceiveMessageSize = 20 * 1024 * 1024;
+            }).AddJsonProtocol(options =>
             {
                 options.PayloadSerializerOptions.ReferenceHandler = ReferenceHandler.IgnoreCycles;
             });

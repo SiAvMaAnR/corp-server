@@ -1,3 +1,4 @@
+using CSN.Application.Services.Models.MessageDto;
 using CSN.Domain.Shared.Enums;
 
 namespace CSN.Application.Services.Models.ChannelDto
@@ -11,6 +12,7 @@ namespace CSN.Application.Services.Models.ChannelDto
         public string? Html { get; set; }
         public bool IsRead { get; set; } = false;
         public DateTime? CreatedAt { get; set; }
+        public IList<AttachmentResponse> Attachments { get; set; } = new List<AttachmentResponse>();
     }
 
     public class UserResponseForOne
@@ -20,6 +22,7 @@ namespace CSN.Application.Services.Models.ChannelDto
         public string? Email { get; set; }
         public string? Image { get; set; }
         public string? Role { get; set; }
+        public string? Post { get; set; }
         public UserState State { get; set; }
         public DateTime? CreatedAt { get; set; }
         public DateTime? UpdatedAt { get; set; }

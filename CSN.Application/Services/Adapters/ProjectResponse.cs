@@ -1,3 +1,4 @@
+using Microsoft.VisualBasic.CompilerServices;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -13,6 +14,7 @@ namespace CSN.Application.Services.Adapters
         {
             return new ProjectResponse()
             {
+                Id = project.Id,
                 Name = project.Name,
                 Customer = project.Customer,
                 CompanyId = project.CompanyId,
@@ -20,6 +22,8 @@ namespace CSN.Application.Services.Adapters
                 Link = project.Link,
                 Priority = project.Priority,
                 State = project.State,
+                CreatedAt = project.CreatedAt,
+                UpdatedAt = project.UpdatedAt,
             };
         }
     }

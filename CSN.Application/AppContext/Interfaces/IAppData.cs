@@ -1,5 +1,6 @@
 using CSN.Application.AppContext.Models;
 using CSN.Application.Services.Helpers.Enums;
+using CSN.Application.Services.Models.Common;
 using CSN.Domain.Entities.Companies;
 using CSN.Domain.Entities.Employees;
 using CSN.Domain.Entities.Users;
@@ -15,5 +16,5 @@ public interface IAppData
     void SetState(int userId, UserState state);
     void AddUserConnected(User user, HubType type, string? connectionId);
     bool RemoveUserConnected(int userId, HubType type);
-    IReadOnlyList<string> GetConnectionIds(ICollection<User>? users, HubType type);
+    IReadOnlyList<string> GetConnectionIds(IEnumerable<User>? users, HubType type);
 }
